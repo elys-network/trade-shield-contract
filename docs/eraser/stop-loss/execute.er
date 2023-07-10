@@ -1,0 +1,41 @@
+title Sequence Diagram for Executing a Stop Loss Order
+
+Stop Loss Contract [icon: rust] > Stop Loss Contract Store [icon: database]: Query all orders (token asset, token amount, stop value, user's address, order ID)
+
+Stop Loss Contract < Stop Loss Contract Store: Send back the list of orders
+
+Stop Loss Contract > Oracle Module [icon: eye]: Query the price of all assets by calling the oracle module's PriceAll Query
+
+Stop Loss Contract < Oracle Module: Response (all asset prices)
+
+Stop Loss Contract > AMM Module [icon: aperture]: Query all pools by calling the AMM module's PoolAll Query
+
+Stop Loss Contract < AMM Module: Response (all pools)
+
+Stop Loss Contract > Stop Loss Contract: Iterate over the list of orders
+
+Stop Loss Contract > Stop Loss Contract: If the price of the selling asset is above the stop-loss price, move to the next order
+
+Stop Loss Contract > Stop Loss Contract: Match the order with the corresponding pool based on the assets
+
+Stop Loss Contract > AMM Module: Swap the selling token from the smart contract wallet to the Pool using the AMM module's SwapExactAmountIn Msg
+
+Stop Loss Contract < AMM Module: Response with the amount of buying token they're valued for
+
+Stop Loss Contract > Bank Module [icon: api]: Send the converted token to the user using the Bank module's Send Msg
+
+Bank Module > User : send converted Token to the user
+
+Stop Loss Contract < Bank Module: Token successfully sent.
+
+Stop Loss Contract > Stop Loss Contract Store: Delete the order (order ID)
+
+Stop Loss Contract < Stop Loss Contract Store: Order successfully deleted
+
+Stop Loss Contract > WASM Module [icon: webassembly]: Emit a successful stop loss orders execution flow
+
+WASM Module > Cosmos Event Manager [icon: mail]:Emit a successful stop loss orders execution flow
+
+Cosmos Event Manager > User [icon: user]: Inform the User that the Order has been successfully executed
+
+order  Stop Loss Contract, Stop Loss Contract Store, Oracle Module, AMM Module, Bank Module, WASM Module,Cosmos Event Manager, User

@@ -1,0 +1,22 @@
+title Sequence Diagram for Canceling a Take Profit Order
+
+User [icon: user] > Elys RPC : Send a Request to cancel a Take Profit order\n(order's ID, user's address)
+Elys RPC [icon: tool] > WASM Module: Send a Request to cancel a Take Profit order\n(order's ID, user's address)
+WASM Module [icon: webassembly] > Take Profit Contract [icon : Rust]: Send a Request to cancel a Take Profit order\n(order's ID, user's address)
+
+Take Profit Contract > Take Profit Contract Store [icon : database]: Query information of the order
+Take Profit Contract < Take Profit Contract Store : Sending back information necessary to cancel the order\n(amount and asset of user's tokens)
+
+Take Profit Contract > Bank Module [icon : api]: Send user's tokens back to his wallet from the Take Profit contract wallet\nby calling the Bank module's Send Msg
+User < Bank Module: Send token to the User
+Take Profit Contract < Bank Module : Token Successfully sended
+
+Take Profit Contract > Take Profit Contract Store  : Delete the order\n(order's ID)
+
+Take Profit Contract < Take Profit Contract Store: Order Successfully Deleted
+
+Take Profit Contract > WASM Module: Return succes status
+
+WASM Module > Elys RPC: Return succes status
+
+Elys RPC > User: Tell the User that the Order as successfully be canceled
