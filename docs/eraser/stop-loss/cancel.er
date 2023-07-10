@@ -1,0 +1,21 @@
+title Sequence Diagram for Canceling a Stop Loss Order
+User [icon: user] > Elys RPC : Cancel a Stop Loss order\n(order's ID, user's address)
+Elys RPC [icon: tool] > WASM Module: Cancel a Stop Loss order\n(order's ID, user's address)
+WASM Module [icon: webassembly] > Stop Loss Contract [icon : Rust]: Cancel a Stop Loss order\n(order's ID, user's address)
+
+Stop Loss Contract > Stop Loss Contract Store [icon : database]: Query information of the order\n(order's ID)
+Stop Loss Contract < Stop Loss Contract Store : Sending back information necessary to cancel the order\n(amount and asset of user's tokens)
+
+Stop Loss Contract > Bank Module [icon : api]: msgSend\nSend user's tokens back to his wallet from the Stop Loss contract wallet\n(amount and asset of user's tokens, user's address, Stop Loss contract wallet address)
+
+Stop Loss Contract < Bank Module : Token Successfully sended
+
+Stop Loss Contract > Stop Loss Contract Store  : Delete the order\n(order's ID)
+
+Stop Loss Contract < Stop Loss Contract Store: Order Successfully Deleted
+
+Stop Loss Contract > WASM Module: Return succes status
+
+WASM Module > Elys RPC: Return succes status
+
+Elys RPC > User: Tell the User that the Order as successfully be canceled

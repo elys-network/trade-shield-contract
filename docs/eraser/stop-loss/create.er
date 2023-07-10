@@ -1,0 +1,23 @@
+title Sequence Diagram for Creating a Stop Loss Order
+
+User [icon: user] > Elys RPC : Create a Stop Loss order\n(amount of tokens to place under the stop loss order, token asset to buy, token asset to sell, stop loss price, user's address)
+Elys RPC [icon: tool] > WASM Module: Create a Stop Loss order\n(amount of tokens to place under the stop loss order, token asset to buy, token asset to sell, stop loss price, user's address)
+WASM Module [icon: webassembly] > Stop Loss Contract [icon : Rust]: Create a Stop Loss order\n(amount of tokens to place under the stop loss order, token asset to buy, token asset to sell, stop loss price, user's address)
+
+Stop Loss Contract > Bank Module [icon : api]: msgSend\nSend user's tokens to the Stop Loss contract wallet\n(amount of user's tokens, user's address, Stop Loss contract wallet address)
+
+Stop Loss Contract <-- Bank Module : Return a failure  response,\nwich will cancel the creation of the contract and return the error to the Stop Loss Contract
+Stop Loss Contract  --> WASM Module: Return the error to the WASM Module
+WASM Module  --> Elys RPC: Return the error to the Elys RPC
+Elys RPC  --> User: Return the error to the User
+
+Stop Loss Contract < Bank Module : Stop Loss order successfully created
+
+Stop Loss Contract > Stop Loss Contract Store [icon : database] : Store the order\n(amount of tokens to place under the stop loss order, token asset to buy, token asset to sell, stop loss price, user's address)
+Stop Loss Contract < Stop Loss Contract Store: Return the ID of the order
+
+Stop Loss Contract > WASM Module: Return the ID of the order to the WASM Module
+
+WASM Module > Elys RPC: Return the ID of the order to the Elys RPC
+
+Elys RPC > User: Return the code status of the call to the User

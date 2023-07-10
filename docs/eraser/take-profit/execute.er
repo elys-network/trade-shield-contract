@@ -1,0 +1,40 @@
+title Sequence Diagram for Executing a Take Profit Order
+Take Profit Contract [icon: rust] > Take Profit Contract Store [icon: database]: Query all orders (token asset, token amount, stop value, user's address, order ID)
+
+Take Profit Contract < Take Profit Contract Store: Send back the list of orders
+
+Take Profit Contract > Oracle Module [icon: eye]: Query the price of all assets by calling the oracle module's PriceAll Query
+
+Take Profit Contract < Oracle Module: Response (all asset prices)
+
+Take Profit Contract > AMM Module [icon: aperture]: Query all pools by calling the AMM module's PoolAll Query
+
+Take Profit Contract < AMM Module: Response (all pools)
+
+Take Profit Contract > Take Profit Contract: Iterate over the list of orders
+
+Take Profit Contract > Take Profit Contract: If the price of the selling asset is under the stop-loss price, move to the next order
+
+Take Profit Contract > Take Profit Contract: Match the order with the corresponding pool based on the assets
+
+Take Profit Contract > AMM Module: Swap the selling token from the smart contract wallet to the Pool using the AMM module's SwapExactAmountIn Msg
+
+Take Profit Contract < AMM Module: Response with the amount of buying token they're valued for
+
+Take Profit Contract > Bank Module [icon: api]: Send the converted token to the user using the Bank module's Send Msg
+
+Bank Module > User : send converted Token to the user
+
+Take Profit Contract < Bank Module: Token successfully sent.
+
+Take Profit Contract > Take Profit Contract Store: Delete the order (order ID)
+
+Take Profit Contract < Take Profit Contract Store: Order successfully deleted
+
+Take Profit Contract > WASM Module [icon: webassembly]: Emit a successful Take Profit orders execution flow
+
+WASM Module > Cosmos Event Manager [icon: mail]:Emit a successful Take Profit orders execution flow
+
+Cosmos Event Manager > User [icon: user]: Inform the User that the Order has been successfully executed
+
+order  Take Profit Contract, Take Profit Contract Store, Oracle Module, AMM Module, Bank Module, WASM Module,Cosmos Event Manager, User
