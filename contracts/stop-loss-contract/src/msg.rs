@@ -1,43 +1,26 @@
-#[cfg(not(feature = "library"))]
-use cosmwasm_std::entry_point;
-use cosmwasm_std::{Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult};
-// use cw2::set_contract_version;
+use cosmwasm_schema::{cw_serde, QueryResponses};
 
-use crate::error::ContractError;
-use crate::msg::{ExecuteMsg, StopLossCreateMsgIn, QueryMsg};
-
-/*
-// version info for migration info
-const CONTRACT_NAME: &str = "crates.io:contract-template";
-const CONTRACT_VERSION: &str = env!("CARGO_PKG_VERSION");
-*/
-
-#[cfg_attr(not(feature = "library"), entry_point)]
-
-pub fn createStopLossOrder(
-    _deps: DepsMut,
-    _env: Env,
-    _info: MessageInfo,
-    _msg: StopLossCreateMsgIn,
-) -> Result<Response, ContractError> {
-    
-    unimplemented!()
+#[cw_serde]
+pub struct InstantiateMsg {
+    pub count: i32,
 }
 
-#[cfg_attr(not(feature = "library"), entry_point)]
-pub fn execute(
-    _deps: DepsMut,
-    _env: Env,
-    _info: MessageInfo,
-    _msg: ExecuteMsg,
-) -> Result<Response, ContractError> {
-    unimplemented!()
+#[cw_serde]
+pub enum ExecuteMsg {
+    Increment {},
+    Reset { count: i32 },
 }
 
-#[cfg_attr(not(feature = "library"), entry_point)]
-pub fn query(_deps: Deps, _env: Env, _msg: QueryMsg) -> StdResult<Binary> {
-    unimplemented!()
+#[cw_serde]
+#[derive(QueryResponses)]
+pub enum QueryMsg {
+    // GetCount returns the current count as a json-encoded number
+    #[returns(GetCountResponse)]
+    GetCount {},
 }
 
-#[cfg(test)]
-mod tests {}
+// We define a custom struct for each query response
+#[cw_serde]
+pub struct GetCountResponse {
+    pub count: i32,
+}
