@@ -36,3 +36,5 @@ TradeShield is released under the [Apache License](LICENSE). You are free to use
 ## Issue Tracker
 
 If you encounter any issues, bugs, or have any suggestions for improvement, please open an issue on the [Issue Tracker](https://github.com/elys-network/trade-shield-contract/issues). We appreciate your feedback and will address the concerns as soon as possible.
+
+## Compiling 

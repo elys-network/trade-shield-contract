@@ -1,6 +1,6 @@
 use cosmwasm_schema::write_api;
 
-use complete_template::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
+use trade_shield_contract::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
 
 fn main() {
     write_api! {
