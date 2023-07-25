@@ -11,6 +11,8 @@ mod action {
 #[cfg(test)]
 mod tests {
     mod query_message;
+    mod create_order;
+    mod cancel_order;
 }
 
 use cosmwasm_std::{entry_point, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult};
@@ -39,6 +41,6 @@ pub fn execute(
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]
-pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> StdResult<Binary> {
+pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> Result<Binary, ContractError> {
     contract::query(deps, env, msg)
 }

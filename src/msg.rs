@@ -1,4 +1,4 @@
-use crate::state::Order;
+use crate::state::{Order, OrderType};
 use cosmwasm_schema::{cw_serde, QueryResponses};
 
 #[cw_serde]
@@ -21,7 +21,7 @@ pub enum QueryMsg {
 #[cw_serde]
 pub enum ExecuteMsg {
     CreateOrder {
-        order_type: String,
+        order_type: OrderType,
         stop_price: u128,
         selling_denom: String,
     },

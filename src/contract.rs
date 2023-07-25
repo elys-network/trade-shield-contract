@@ -18,13 +18,13 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> Result<Binary, ContractErr
     use QueryMsg::*;
 
     match msg {
-        GetOrder { order_id } => to_binary(&action::query::get_order(deps, order_id)?),
+        GetOrder { order_id } => Ok(to_binary(&action::query::get_order(deps, order_id)?)?),
     }
 }
 
 pub fn execute(
     deps: DepsMut,
-    _env: Env,
+    env: Env,
     info: MessageInfo,
     msg: ExecuteMsg,
 ) -> Result<Response, ContractError> {
@@ -35,8 +35,8 @@ pub fn execute(
             order_type,
             stop_price,
             selling_denom,
-        } => action::execute::create_order(deps, info, order_type, stop_price, selling_denom),
-        CancelOrder { order_id: String } => action::execute::cancel_order(info, deps, order_id),
+        } => action::execute::create_order(env, deps, info, order_type, stop_price, selling_denom),
+        CancelOrder { order_id } => action::execute::cancel_order(info, deps, order_id),
         ExecuteOrder {} => action::execute::execute_order(deps, info),
     }
 }

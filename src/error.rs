@@ -8,14 +8,14 @@ pub enum ContractError {
     StdError(#[from] StdError),
     #[error("Payment error: {0}")]
     Payment(#[from] PaymentError),
-    #[error("{0} : Not Found")]
+    #[error("{order_id} : Not Found")]
     OrderNotFound{order_id : String},
     #[error("{sender} is not the owner of the order")]
     Unauthorized { sender: Addr },
-    #[error("invalid number of coins send")]
+    #[error("Incorrect number of funds. Only one fund is allowed.")]
     CoinNumber,
     #[error ("stop price already been reached")]
     StopPriceReached,
-    #[error("no such order type: {0}")]
+    #[error("no such order type: {order_type}")]
     OrderType {order_type : String}
 }

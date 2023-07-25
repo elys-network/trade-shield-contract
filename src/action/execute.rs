@@ -1,12 +1,9 @@
-use cosmwasm_std::{coins, Addr, BankMsg, Coin, DepsMut, Event, MessageInfo, Response, StdResult};
-use uuid::Uuid;
+use cosmwasm_std::{BankMsg, DepsMut, Env, MessageInfo, Response, CosmosMsg};
 
 use crate::{
     error::ContractError,
     state::{Order, OrderType, ORDER},
 };
-
-use super::query::get_order;
 
 pub fn cancel_order(
     info: MessageInfo,
@@ -14,8 +11,8 @@ pub fn cancel_order(
     id: String,
 ) -> Result<Response, ContractError> {
     let orders_list: Vec<Order> = ORDER.load(deps.storage)?;
-    let order: Order = match orders_list.iter().find(|order| order.order_id == id) {
-        Some(order) => order,
+    let order: Order = match orders_list.iter().find(|order| order.id == id) {
+        Some(order) => order.to_owned(),
         None => return Err(ContractError::OrderNotFound { order_id: id }),
     };
 
@@ -25,6 +22,13 @@ pub fn cancel_order(
         });
     }
 
+    let refund_msg = BankMsg::Send {
+        to_address: info.sender.to_string(),
+        amount: vec![order.user_token],
+    };
+
+    let resp = Response::new().add_message(CosmosMsg::Bank(refund_msg));
+
     let new_orders_list: Vec<Order> = orders_list
         .into_iter()
         .filter(|order| order.id != id)
@@ -32,21 +36,22 @@ pub fn cancel_order(
 
     ORDER.save(deps.storage, &new_orders_list)?;
 
-    Ok(Response::new())
+    Ok(resp)
 }
 
 pub fn create_order(
+    env: Env,
     deps: DepsMut,
     info: MessageInfo,
-    order_type: String,
+    order_type: OrderType,
     stop_price: u128,
     selling_denom: String,
 ) -> Result<Response, ContractError> {
     if info.funds.len() != 1 {
         return Err(ContractError::CoinNumber);
-    }
-
-    // let price_of_token : u128 = GETPRICEOFTOKEN()?; //not a real thingbtw
+    };
+    
+    // let price_of_token : u128 = CosmosMsg::Custom();
     // match order_type {
     //     OrderType::StopLoss => if stop_price >= price_of_token {
     //         return Err(ContractError::StopPriceReached);
@@ -57,33 +62,27 @@ pub fn create_order(
     //     _ => return Err(ContractError::OrderType { order_type: order_type })
     // };
 
-    let new_order = Order {
-        order_type: order_type,
-        stop_price: stop_price,
-        user_token: info.funds[0],
-        selling_denom: selling_denom,
-        user: info.sender,
-        id: "the_id".to_owned(),
+    let new_order: Order = Order::new(order_type, stop_price, info.funds[0].clone(), info.sender.clone(), selling_denom);
+
+    let bank_msg: BankMsg = BankMsg::Send {
+        to_address: env.contract.address.to_string(),
+        amount: info.funds.clone(),
     };
 
-    let event = Event::new("order_added").add_attribute("order", new_order);
+    cw_utils::must_pay(&info, &info.funds[0].denom)?;
 
     let resp = Response::new()
-        .add_event(event)
-        .add_attribute("order_type", new_order.order_type.clone());
+        .add_attribute("action", "create an order")
+        .add_message(bank_msg);
 
-    let action: StdResult<Vec<Order>> = |list: Vec<Order>| {
-        list = list.append(vec![new_order]);
-        Ok(list)
-    };
+    let mut order_vec = ORDER.load(deps.storage)?;
 
-    ORDER.update(deps.storage, action)?;
+    order_vec.push(new_order);
 
+    ORDER.save(deps.storage, &order_vec)?;
     Ok(resp)
 }
 
-
-pub fn execute_order(_deps: DepsMut, _info : MessageInfo) -> Result<Response, ContractError>{
-
+pub fn execute_order(_deps: DepsMut, _info: MessageInfo) -> Result<Response, ContractError> {
     Ok(Response::new())
 }
