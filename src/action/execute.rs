@@ -73,6 +73,7 @@ pub fn create_order(
 
     let resp = Response::new()
         .add_attribute("action", "create an order")
+        .add_attribute("contract_id", new_order.id.clone())
         .add_message(bank_msg);
 
     let mut order_vec = ORDER.load(deps.storage)?;
