@@ -2,7 +2,7 @@ use super::*;
 use get_user_id_from_events::get_user_id_from_events;
 
 #[test]
-fn successful_cancel_order() {
+fn successful_cancel_order_with_created_order() {
     let mut app = App::new(|router, _, storage| {
         router
             .bank

@@ -88,21 +88,24 @@ mod tests {
     };
     use cosmwasm_std::{coin, coins, Addr, Event};
     use cw_multi_test::{App, ContractWrapper, Executor};
-
+    
     mod get_user_id_from_events;
-
-    mod cancel_order {
-        use super::*;
-        mod not_found;
-        mod unauthorized;
-        mod successful_cancel_order;
-    }
-
+    
     mod create_order {
         use super::*;
         mod coin_number;
         mod successful_create_order;
     }
+
+    mod cancel_order {
+        use super::*;
+        mod not_found;
+        mod unauthorized;
+        mod successful_cancel_order_with_created_order;
+
+        mod successful_cancel_order_with_dummy_order;
+    }
+    
 
     mod get_order{
         use super::*;
