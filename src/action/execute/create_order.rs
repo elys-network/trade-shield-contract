@@ -10,10 +10,16 @@ pub fn create_order(
     if info.funds.len() != 1 {
         return Err(ContractError::CoinNumber);
     };
-    
+
     let mut order_vec = ORDER.load(deps.storage)?;
 
-    let new_order: Order = Order::new(order_type, stop_price, info.funds[0].clone(), info.sender.clone(), order_vec.len() as u128);
+    let new_order: Order = Order::new(
+        order_type,
+        stop_price,
+        info.funds[0].clone(),
+        info.sender.clone(),
+        &order_vec,
+    );
 
     let bank_msg: BankMsg = BankMsg::Send {
         to_address: env.contract.address.to_string(),
@@ -26,7 +32,6 @@ pub fn create_order(
         .add_attribute("action", "create an order")
         .add_attribute("order_id", new_order.id.to_string())
         .add_message(bank_msg);
-
 
     order_vec.push(new_order);
 

@@ -7,9 +7,14 @@ impl Order {
         stop_price: Coin,
         user_token: Coin,
         user_address: Addr,
-        nuber_of_order: u128,
+        order_vec : &Vec<Order>
     ) -> Order {
-        let id = nuber_of_order + 1;
+
+        let id: u128 = match order_vec.iter().max_by_key(|s| s.id) {
+            Some(x) => x.id + 1,
+            None => 0,
+        };
+    
         Order {
             order_type,
             stop_price,
