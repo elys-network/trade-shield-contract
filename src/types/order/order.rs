@@ -1,7 +1,6 @@
-use cosmwasm_schema::cw_serde;
-use cosmwasm_std::{Coin, Addr};
 use crate::types::order_type::OrderType;
-
+use cosmwasm_schema::cw_serde;
+use cosmwasm_std::{Addr, Coin};
 
 #[cw_serde]
 pub struct Order {

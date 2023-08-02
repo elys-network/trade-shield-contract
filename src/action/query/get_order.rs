@@ -8,7 +8,7 @@ pub fn get_order(deps: Deps, order_id: u128) -> Result<GetOrderResp, ContractErr
     let resp = GetOrderResp {
         order: match have_order {
             Some(order) => order.to_owned(),
-            None => return Err(ContractError::OrderNotFound{ order_id: order_id }),
+            None => return Err(ContractError::OrderNotFound { order_id: order_id }),
         },
     };
 

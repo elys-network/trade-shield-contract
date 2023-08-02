@@ -1,7 +1,7 @@
-use cosmwasm_schema::cw_serde;
 use crate::types::Order;
+use cosmwasm_schema::cw_serde;
 
 #[cw_serde]
 pub struct InstantiateMsg {
-    pub orders : Vec<Order>
+    pub orders: Vec<Order>,
 }

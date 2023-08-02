@@ -2,7 +2,7 @@ use super::*;
 
 #[test]
 fn not_enough_fund() {
- let mut app = App::new(|router, _, storage| {
+    let mut app = App::new(|router, _, storage| {
         router
             .bank
             .init_balance(storage, &Addr::unchecked("user"), coins(40, "eth"))
@@ -35,7 +35,7 @@ fn not_enough_fund() {
         )
         .unwrap_err();
     let error_msg = "error executing WasmMsg:\nsender: user\nExecute { contract_addr: \"contract0\", msg: {\"create_order\":{\"order_type\":\"take_profit\",\"order_price\":{\"denom\":\"btc\",\"amount\":\"255\"}}}, funds: [Coin { 45 \"eth\" }] }";
-    
+
     assert_eq!(error_msg.to_owned(), err.to_string());
 
     assert_eq!(
@@ -55,5 +55,4 @@ fn not_enough_fund() {
             .u128(),
         0
     );
-
 }

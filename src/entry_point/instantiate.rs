@@ -1,6 +1,6 @@
 use super::*;
-use msg::InstantiateMsg;
 use crate::state::ORDER;
+use msg::InstantiateMsg;
 
 pub fn instantiate(
     deps: DepsMut,

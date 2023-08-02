@@ -7,8 +7,8 @@ pub fn execute(
     info: MessageInfo,
     msg: ExecuteMsg,
 ) -> Result<Response, ContractError> {
-    use ExecuteMsg::*;
     use action::execute::*;
+    use ExecuteMsg::*;
 
     match msg {
         CreateOrder {

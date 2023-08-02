@@ -1,16 +1,16 @@
 pub mod entry_point {
     use crate::action;
     use crate::error::ContractError;
-    use cosmwasm_std::{to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult};
     use crate::msg;
-    
+    use cosmwasm_std::{to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult};
+
     mod execute;
     mod instantiate;
     mod query;
 
     pub use execute::execute;
-    pub use query::query;
     pub use instantiate::instantiate;
+    pub use query::query;
 }
 
 pub mod msg {
@@ -38,8 +38,8 @@ pub mod types {
         }
     }
 
-    pub use order_type::OrderType;
     pub use order::order::Order;
+    pub use order_type::OrderType;
 }
 
 mod error;
@@ -49,11 +49,7 @@ pub use error::ContractError;
 pub use state::ORDER;
 
 mod action {
-    use crate::{
-        ContractError,
-        ORDER,
-        types::*,
-    };
+    use crate::{types::*, ContractError, ORDER};
 
     pub mod query {
         mod get_order;
@@ -65,15 +61,15 @@ mod action {
     }
 
     pub mod execute {
-        mod create_order;
         mod cancel_order;
+        mod create_order;
         mod process_order;
-        
+
         use super::*;
         use cosmwasm_std::{BankMsg, Coin, CosmosMsg, DepsMut, Env, MessageInfo, Response};
-        
-        pub use create_order::create_order;
+
         pub use cancel_order::cancel_order;
+        pub use create_order::create_order;
         pub use process_order::process_order;
     }
 }
@@ -88,27 +84,26 @@ mod tests {
     };
     use cosmwasm_std::{coin, coins, Addr, Event};
     use cw_multi_test::{App, ContractWrapper, Executor};
-    
+
     mod get_user_id_from_events;
-    
+
     mod create_order {
         use super::*;
         mod coin_number;
-        mod successful_create_order;
         mod not_enough_fund;
+        mod successful_create_order;
     }
 
     mod cancel_order {
         use super::*;
         mod not_found;
-        mod unauthorized;
         mod successful_cancel_order_with_created_order;
+        mod unauthorized;
 
         mod successful_cancel_order_with_dummy_order;
     }
-    
 
-    mod get_order{
+    mod get_order {
         use super::*;
         use cosmwasm_std::{Binary, StdError};
         mod not_found;

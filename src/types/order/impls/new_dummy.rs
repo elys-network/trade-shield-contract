@@ -1,5 +1,5 @@
-use cosmwasm_std::{coin, Addr};
 use crate::types::{order::order::Order, order_type::OrderType};
+use cosmwasm_std::{coin, Addr};
 
 impl Order {
     pub fn new_dummy() -> Order {

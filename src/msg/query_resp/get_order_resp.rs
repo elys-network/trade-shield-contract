@@ -6,4 +6,3 @@ use cosmwasm_schema::cw_serde;
 pub struct GetOrderResp {
     pub order: Order,
 }
-
