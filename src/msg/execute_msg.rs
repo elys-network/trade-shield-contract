@@ -11,5 +11,5 @@ pub enum ExecuteMsg {
     CancelOrder {
         order_id: u128,
     },
-    ExecuteOrder {},
+    ProcessOrder {},
 }

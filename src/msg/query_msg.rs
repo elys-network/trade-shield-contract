@@ -1,4 +1,5 @@
 use cosmwasm_schema::{cw_serde,QueryResponses};
+#[allow(unused_imports)]
 use super::query_resp::GetOrderResp;
 
 #[cw_serde]

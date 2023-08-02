@@ -16,6 +16,6 @@ pub fn execute(
             stop_price,
         } => create_order(env, deps, info, order_type, stop_price),
         CancelOrder { order_id } => cancel_order(info, deps, order_id),
-        ExecuteOrder {} => execute_order(deps, info),
+        ProcessOrder {} => process_order(deps, info),
     }
 }
