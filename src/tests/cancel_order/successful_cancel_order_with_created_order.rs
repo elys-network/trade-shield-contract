@@ -1,5 +1,5 @@
 use super::*;
-use get_user_id_from_events::get_user_id_from_events;
+use get_order_id_from_events::get_order_id_from_events;
 
 #[test]
 fn successful_cancel_order_with_created_order() {
@@ -35,7 +35,7 @@ fn successful_cancel_order_with_created_order() {
             &coins(45, "eth"),
         )
         .unwrap();
-    let id = get_user_id_from_events(&resp.events, "order_id").unwrap();
+    let id = get_order_id_from_events(&resp.events).unwrap();
 
     app.execute_contract(
         Addr::unchecked("user"),

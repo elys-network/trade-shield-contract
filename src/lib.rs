@@ -85,7 +85,7 @@ mod tests {
     use cosmwasm_std::{coin, coins, Addr, Event};
     use cw_multi_test::{App, ContractWrapper, Executor};
 
-    mod get_user_id_from_events;
+    mod get_order_id_from_events;
 
     mod create_order {
         use super::*;
