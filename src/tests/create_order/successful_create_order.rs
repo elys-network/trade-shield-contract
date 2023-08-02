@@ -1,3 +1,5 @@
+use crate::tests::get_order_id_from_events::get_order_id_from_events;
+
 use super::*;
 
 #[test]
@@ -53,6 +55,5 @@ fn successful_create_order() {
         45
     );
 
-    let expected_event = Event::new("wasm").add_attribute("action", "create an order");
-    assert_eq!(resp.has_event(&expected_event), true);
+    assert!(get_order_id_from_events(&resp.events).is_some());
 }
