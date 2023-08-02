@@ -29,9 +29,8 @@ pub fn create_order(
     cw_utils::must_pay(&info, &info.funds[0].denom)?;
 
     let resp = Response::new()
-        .add_attribute("action", "create an order")
         .add_attribute("order_id", new_order.order_id.to_string())
-        .add_message(bank_msg);
+        .add_message(bank_msg); // information message
 
     order_vec.push(new_order);
 
