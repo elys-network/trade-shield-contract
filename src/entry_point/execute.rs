@@ -13,8 +13,8 @@ pub fn execute(
     match msg {
         CreateOrder {
             order_type,
-            stop_price,
-        } => create_order(env, deps, info, order_type, stop_price),
+            order_price,
+        } => create_order(env, deps, info, order_type, order_price),
         CancelOrder { order_id } => cancel_order(info, deps, order_id),
         ProcessOrder {} => process_order(deps, info),
     }

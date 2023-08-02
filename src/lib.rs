@@ -95,6 +95,7 @@ mod tests {
         use super::*;
         mod coin_number;
         mod successful_create_order;
+        mod not_enough_fund;
     }
 
     mod cancel_order {

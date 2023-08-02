@@ -23,7 +23,7 @@ fn coin_number() {
             addr,
             &ExecuteMsg::CreateOrder {
                 order_type: OrderType::StopLoss,
-                stop_price: coin(100, "eth"),
+                order_price: coin(100, "eth"),
             },
             &[],
         )

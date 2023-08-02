@@ -6,7 +6,7 @@ use crate::types::OrderType;
 pub enum ExecuteMsg {
     CreateOrder {
         order_type: OrderType,
-        stop_price: Coin,
+        order_price: Coin,
     },
     CancelOrder {
         order_id: u128,

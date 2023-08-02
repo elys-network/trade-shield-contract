@@ -14,8 +14,8 @@ pub enum ContractError {
     Unauthorized { sender: Addr },
     #[error("Incorrect number of funds. Only one fund is allowed.")]
     CoinNumber,
-    #[error ("stop price already been reached")]
-    StopPriceReached,
+    #[error ("order price already been reached")]
+    OrderPriceReached,
     #[error("no such order type: {order_type}")]
     OrderType {order_type : String}
 }

@@ -4,7 +4,7 @@ use cosmwasm_std::{Addr, Coin};
 impl Order {
     pub fn new(
         order_type: OrderType,
-        stop_price: Coin,
+        order_price: Coin,
         user_token: Coin,
         user_address: Addr,
         order_vec : &Vec<Order>
@@ -17,7 +17,7 @@ impl Order {
     
         Order {
             order_type,
-            stop_price,
+            order_price,
             user_token,
             user_address,
             id,

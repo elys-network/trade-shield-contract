@@ -7,7 +7,7 @@ use crate::types::order_type::OrderType;
 pub struct Order {
     pub order_type: OrderType,
     pub id: u128,
-    pub stop_price: Coin,
+    pub order_price: Coin,
     pub user_token: Coin,
     pub user_address: Addr,
 }

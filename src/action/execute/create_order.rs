@@ -5,7 +5,7 @@ pub fn create_order(
     deps: DepsMut,
     info: MessageInfo,
     order_type: OrderType,
-    stop_price: Coin,
+    order_price: Coin,
 ) -> Result<Response, ContractError> {
     if info.funds.len() != 1 {
         return Err(ContractError::CoinNumber);
@@ -15,7 +15,7 @@ pub fn create_order(
 
     let new_order: Order = Order::new(
         order_type,
-        stop_price,
+        order_price,
         info.funds[0].clone(),
         info.sender.clone(),
         &order_vec,

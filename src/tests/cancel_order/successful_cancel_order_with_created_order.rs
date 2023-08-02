@@ -30,7 +30,7 @@ fn successful_cancel_order_with_created_order() {
             addr.clone(),
             &ExecuteMsg::CreateOrder {
                 order_type: OrderType::TakeProfit,
-                stop_price: coin(255, "eth"),
+                order_price: coin(255, "eth"),
             },
             &coins(45, "eth"),
         )

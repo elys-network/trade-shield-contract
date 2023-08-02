@@ -1,11 +1,11 @@
 use super::*;
 
 #[test]
-fn successful_create_order() {
-    let mut app = App::new(|router, _, storage| {
+fn not_enough_fund() {
+ let mut app = App::new(|router, _, storage| {
         router
             .bank
-            .init_balance(storage, &Addr::unchecked("user"), coins(150, "eth"))
+            .init_balance(storage, &Addr::unchecked("user"), coins(40, "eth"))
             .unwrap()
     });
 
@@ -23,7 +23,7 @@ fn successful_create_order() {
         )
         .unwrap();
 
-    let resp = app
+    let err = app
         .execute_contract(
             Addr::unchecked("user"),
             addr.clone(),
@@ -33,7 +33,10 @@ fn successful_create_order() {
             },
             &coins(45, "eth"),
         )
-        .unwrap();
+        .unwrap_err();
+    let error_msg = "error executing WasmMsg:\nsender: user\nExecute { contract_addr: \"contract0\", msg: {\"create_order\":{\"order_type\":\"take_profit\",\"order_price\":{\"denom\":\"btc\",\"amount\":\"255\"}}}, funds: [Coin { 45 \"eth\" }] }";
+    
+    assert_eq!(error_msg.to_owned(), err.to_string());
 
     assert_eq!(
         app.wrap()
@@ -41,7 +44,7 @@ fn successful_create_order() {
             .unwrap()
             .amount
             .u128(),
-        105
+        40
     );
 
     assert_eq!(
@@ -50,9 +53,7 @@ fn successful_create_order() {
             .unwrap()
             .amount
             .u128(),
-        45
+        0
     );
 
-    let expected_event = Event::new("wasm").add_attribute("action", "create an order");
-    assert_eq!(resp.has_event(&expected_event), true);
 }

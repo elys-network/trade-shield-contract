@@ -6,7 +6,7 @@ impl Order {
         Order {
             id: 777,
             order_type: OrderType::StopLoss,
-            stop_price: coin(255, "eth"),
+            order_price: coin(255, "eth"),
             user_token: coin(1000, "btc"),
             user_address: Addr::unchecked("user"),
         }
