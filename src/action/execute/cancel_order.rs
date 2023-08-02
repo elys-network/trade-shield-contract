@@ -18,7 +18,7 @@ pub fn cancel_order(
     }
 
     let refund_msg = BankMsg::Send {
-        to_address: info.sender.to_string(),
+        to_address: order.owner_address.to_string(),
         amount: vec![order.order_amount],
     };
 
