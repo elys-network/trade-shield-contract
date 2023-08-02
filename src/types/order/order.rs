@@ -5,8 +5,8 @@ use cosmwasm_std::{Addr, Coin};
 #[cw_serde]
 pub struct Order {
     pub order_type: OrderType,
-    pub id: u128,
+    pub order_id: u128,
     pub order_price: Coin,
-    pub user_token: Coin,
-    pub user_address: Addr,
+    pub order_amount: Coin,
+    pub owner_address: Addr,
 }

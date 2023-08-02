@@ -35,7 +35,7 @@ fn successful_cancel_order_with_dummy_order() {
         Addr::unchecked("user"),
         addr.clone(),
         &ExecuteMsg::CancelOrder {
-            order_id: dummy_order.id,
+            order_id: dummy_order.order_id,
         },
         &[],
     )

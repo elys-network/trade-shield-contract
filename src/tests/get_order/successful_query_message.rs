@@ -8,7 +8,7 @@ fn successful_query_message() {
     let instantiate_msg = InstantiateMsg {
         orders: vec![Order::new_dummy()],
     };
-    let id = instantiate_msg.orders[0].id.clone().to_owned();
+    let id = instantiate_msg.orders[0].order_id.clone().to_owned();
 
     let code = ContractWrapper::new(execute, instantiate, query);
     let code_id = app.store_code(Box::new(code));

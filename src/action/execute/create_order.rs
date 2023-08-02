@@ -30,7 +30,7 @@ pub fn create_order(
 
     let resp = Response::new()
         .add_attribute("action", "create an order")
-        .add_attribute("order_id", new_order.id.to_string())
+        .add_attribute("order_id", new_order.order_id.to_string())
         .add_message(bank_msg);
 
     order_vec.push(new_order);
