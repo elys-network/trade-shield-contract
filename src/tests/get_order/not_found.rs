@@ -4,7 +4,10 @@ use super::*;
 fn not_found() {
     let mut app: App = App::default();
 
-    let instantiate_msg: InstantiateMsg = InstantiateMsg { orders: vec![] };
+    let instantiate_msg: InstantiateMsg = InstantiateMsg {
+        orders: vec![],
+        prices: vec![],
+    };
     let id: u128 = 0;
 
     let code = ContractWrapper::new(execute, instantiate, query);
@@ -20,12 +23,9 @@ fn not_found() {
         )
         .unwrap();
 
-    let err: Result<Binary, StdError> = app.wrap().query_wasm_smart(
-        &addr,
-        &QueryMsg::GetOrder {
-            order_id: id,
-        },
-    );
+    let err: Result<Binary, StdError> = app
+        .wrap()
+        .query_wasm_smart(&addr, &QueryMsg::GetOrder { order_id: id });
     let err = err.unwrap_err();
     let error_reference = StdError::GenericErr {
         msg: format!(

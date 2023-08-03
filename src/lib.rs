@@ -43,13 +43,18 @@ pub mod types {
 }
 
 mod error;
-mod state;
-
 pub use error::ContractError;
-pub use state::ORDER;
+
+mod states {
+    mod order;
+    mod prices;
+
+    pub use order::ORDER;
+    pub use prices::PRICES;
+}
 
 mod action {
-    use crate::{types::*, ContractError, ORDER};
+    use crate::{states::ORDER, types::*, ContractError};
 
     pub mod query {
         mod get_order;

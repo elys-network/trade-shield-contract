@@ -11,6 +11,11 @@ fn successful_create_order() {
             .unwrap()
     });
 
+    let instantiate_msg = InstantiateMsg {
+        orders: vec![],
+        prices: vec![],
+    };
+
     let code = ContractWrapper::new(execute, instantiate, query);
     let code_id = app.store_code(Box::new(code));
 
@@ -18,7 +23,7 @@ fn successful_create_order() {
         .instantiate_contract(
             code_id,
             Addr::unchecked("owner"),
-            &InstantiateMsg { orders: vec![] },
+            &instantiate_msg,
             &[],
             "Contract",
             None,

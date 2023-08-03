@@ -14,17 +14,21 @@ fn successful_cancel_order_with_dummy_order() {
             .unwrap();
     });
 
+    let dummy_order = Order::new_dummy();
+
+    let instantiate_msg = InstantiateMsg {
+        orders: vec![dummy_order.clone()],
+        prices: vec![],
+    };
+
     let code = ContractWrapper::new(execute, instantiate, query);
     let code_id = app.store_code(Box::new(code));
-    let dummy_order = Order::new_dummy();
 
     let addr = app
         .instantiate_contract(
             code_id,
             Addr::unchecked("owner"),
-            &InstantiateMsg {
-                orders: vec![dummy_order.clone()],
-            },
+            &instantiate_msg,
             &coins(1200, "btc"),
             "Contract",
             None,

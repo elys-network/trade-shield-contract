@@ -1,5 +1,5 @@
 use super::*;
-use crate::state::ORDER;
+use crate::states::*;
 use msg::InstantiateMsg;
 
 pub fn instantiate(
@@ -9,5 +9,7 @@ pub fn instantiate(
     msg: InstantiateMsg,
 ) -> StdResult<Response> {
     ORDER.save(deps.storage, &msg.orders)?;
+    PRICES.save(deps.storage, &msg.prices)?;
+
     Ok(Response::new())
 }

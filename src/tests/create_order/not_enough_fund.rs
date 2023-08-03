@@ -9,6 +9,11 @@ fn not_enough_fund() {
             .unwrap()
     });
 
+    let instantiate_msg = InstantiateMsg {
+        orders: vec![],
+        prices: vec![],
+    };
+
     let code = ContractWrapper::new(execute, instantiate, query);
     let code_id = app.store_code(Box::new(code));
 
@@ -16,7 +21,7 @@ fn not_enough_fund() {
         .instantiate_contract(
             code_id,
             Addr::unchecked("owner"),
-            &InstantiateMsg { orders: vec![] },
+            &instantiate_msg,
             &[],
             "Contract",
             None,
