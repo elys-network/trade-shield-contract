@@ -6,17 +6,12 @@ use super::*;
 
 #[test]
 fn successful_process_stop_loss_order() {
-    let mut app = App::new(|router, _, storage| {
-        router
-            .bank
-            .init_balance(storage, &Addr::unchecked("user"), coins(150, "eth"))
-            .unwrap();
+    let list_of_user: Vec<(String, Vec<Coin>)> = vec![
+        ("user".to_owned(), coins(150, "eth")),
+        ("owner".to_owned(), coins(1200, "btc")),
+    ];
 
-        router
-            .bank
-            .init_balance(storage, &Addr::unchecked("owner"), coins(1200, "btc"))
-            .unwrap();
-    });
+    let mut app = new_app(&list_of_user);
 
     let dummy_order = Order::new_dummy();
 
@@ -24,19 +19,7 @@ fn successful_process_stop_loss_order() {
         orders: vec![dummy_order.clone()],
     };
 
-    let code = ContractWrapper::new(execute, instantiate, query);
-    let code_id = app.store_code(Box::new(code));
-
-    let addr = app
-        .instantiate_contract(
-            code_id,
-            Addr::unchecked("owner"),
-            &instantiate_msg,
-            &coins(1200, "btc"),
-            "Contract",
-            None,
-        )
-        .unwrap();
+    let addr = new_contract_addr(&mut app, &instantiate_msg, &list_of_user);
 
     let resp = app
         .execute_contract(

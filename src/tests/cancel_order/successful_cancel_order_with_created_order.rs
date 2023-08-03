@@ -3,28 +3,15 @@ use get_order_id_from_events::get_order_id_from_events;
 
 #[test]
 fn successful_cancel_order_with_created_order() {
-    let mut app = App::new(|router, _, storage| {
-        router
-            .bank
-            .init_balance(storage, &Addr::unchecked("user"), coins(150, "eth"))
-            .unwrap()
-    });
+    let list_of_user: Vec<(String, Vec<Coin>)> = vec![("user".to_owned(), coins(150, "eth"))];
 
-    let instantiate_msg = InstantiateMsg { orders: vec![] };
+    let mut app = new_app(&list_of_user);
 
-    let code = ContractWrapper::new(execute, instantiate, query);
-    let code_id = app.store_code(Box::new(code));
+    let instantiate_msg = InstantiateMsg {
+        orders: vec![Order::new_dummy()],
+    };
 
-    let addr = app
-        .instantiate_contract(
-            code_id,
-            Addr::unchecked("owner"),
-            &instantiate_msg,
-            &[],
-            "Contract",
-            None,
-        )
-        .unwrap();
+    let addr = new_contract_addr(&mut app, &instantiate_msg, &list_of_user);
 
     let resp = app
         .execute_contract(

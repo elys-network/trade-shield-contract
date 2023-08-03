@@ -3,25 +3,20 @@ use query_resp::GetOrderResp;
 
 #[test]
 fn successful_query_message() {
-    let mut app = App::default();
+    let list_of_user: Vec<(String, Vec<Coin>)> = vec![
+        ("user".to_owned(), coins(150, "eth")),
+        ("owner".to_owned(), coins(1200, "btc")),
+    ];
+
+    let mut app = new_app(&list_of_user);
 
     let instantiate_msg = InstantiateMsg {
         orders: vec![Order::new_dummy()],
     };
-    let id = instantiate_msg.orders[0].order_id.clone().to_owned();
 
-    let code = ContractWrapper::new(execute, instantiate, query);
-    let code_id = app.store_code(Box::new(code));
-    let addr = app
-        .instantiate_contract(
-            code_id,
-            Addr::unchecked("owner"),
-            &instantiate_msg,
-            &[],
-            "Contract",
-            None,
-        )
-        .unwrap();
+    let addr = new_contract_addr(&mut app, &instantiate_msg, &list_of_user);
+
+    let id = instantiate_msg.orders[0].order_id;
 
     let resp: GetOrderResp = app
         .wrap()

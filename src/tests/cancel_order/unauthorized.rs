@@ -7,20 +7,10 @@ fn unauthorized() {
     let instantiate_msg = InstantiateMsg {
         orders: vec![Order::new_dummy()],
     };
+
     let id = instantiate_msg.orders[0].order_id.clone().to_owned();
 
-    let code = ContractWrapper::new(execute, instantiate, query);
-    let code_id = app.store_code(Box::new(code));
-    let addr = app
-        .instantiate_contract(
-            code_id,
-            Addr::unchecked("owner"),
-            &instantiate_msg,
-            &[],
-            "Contract",
-            None,
-        )
-        .unwrap();
+    let addr = new_contract_addr(&mut app, &instantiate_msg, &vec![]);
 
     let err = app
         .execute_contract(
