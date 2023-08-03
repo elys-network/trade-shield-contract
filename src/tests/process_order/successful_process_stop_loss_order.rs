@@ -1,6 +1,8 @@
-use cosmwasm_std::Coin;
-
 use super::*;
+
+// in this exemple we assume :
+//  Bitcoin have a value of 10
+//  Ethereum have a value of 2
 
 #[test]
 fn successful_process_stop_loss_order() {
@@ -17,11 +19,9 @@ fn successful_process_stop_loss_order() {
     });
 
     let dummy_order = Order::new_dummy();
-    let denom_values: Vec<Coin> = vec![coin(10, "btc"), coin(2, "eth")];
 
     let instantiate_msg = InstantiateMsg {
         orders: vec![dummy_order.clone()],
-        prices: denom_values,
     };
 
     let code = ContractWrapper::new(execute, instantiate, query);

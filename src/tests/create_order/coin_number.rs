@@ -4,10 +4,7 @@ use super::*;
 fn coin_number() {
     let mut app = App::default();
 
-    let instantiate_msg = InstantiateMsg {
-        orders: vec![],
-        prices: vec![],
-    };
+    let instantiate_msg = InstantiateMsg { orders: vec![] };
 
     let code = ContractWrapper::new(execute, instantiate, query);
     let code_id = app.store_code(Box::new(code));

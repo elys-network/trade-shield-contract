@@ -9,7 +9,6 @@ pub fn instantiate(
     msg: InstantiateMsg,
 ) -> StdResult<Response> {
     ORDER.save(deps.storage, &msg.orders)?;
-    PRICES.save(deps.storage, &msg.prices)?;
 
     Ok(Response::new())
 }

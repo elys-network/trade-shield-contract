@@ -18,7 +18,6 @@ fn successful_cancel_order_with_dummy_order() {
 
     let instantiate_msg = InstantiateMsg {
         orders: vec![dummy_order.clone()],
-        prices: vec![],
     };
 
     let code = ContractWrapper::new(execute, instantiate, query);

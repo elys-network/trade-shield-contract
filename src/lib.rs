@@ -47,10 +47,8 @@ pub use error::ContractError;
 
 mod states {
     mod order;
-    mod prices;
 
     pub use order::ORDER;
-    pub use prices::PRICES;
 }
 
 mod action {

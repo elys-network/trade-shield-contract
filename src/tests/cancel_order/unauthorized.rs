@@ -6,7 +6,6 @@ fn unauthorized() {
 
     let instantiate_msg = InstantiateMsg {
         orders: vec![Order::new_dummy()],
-        prices: vec![],
     };
     let id = instantiate_msg.orders[0].order_id.clone().to_owned();
 

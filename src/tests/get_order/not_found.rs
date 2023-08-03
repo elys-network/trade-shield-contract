@@ -4,10 +4,7 @@ use super::*;
 fn not_found() {
     let mut app: App = App::default();
 
-    let instantiate_msg: InstantiateMsg = InstantiateMsg {
-        orders: vec![],
-        prices: vec![],
-    };
+    let instantiate_msg: InstantiateMsg = InstantiateMsg { orders: vec![] };
     let id: u128 = 0;
 
     let code = ContractWrapper::new(execute, instantiate, query);

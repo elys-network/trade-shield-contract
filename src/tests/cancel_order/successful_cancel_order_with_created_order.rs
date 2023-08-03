@@ -10,10 +10,7 @@ fn successful_cancel_order_with_created_order() {
             .unwrap()
     });
 
-    let instantiate_msg = InstantiateMsg {
-        orders: vec![],
-        prices: vec![],
-    };
+    let instantiate_msg = InstantiateMsg { orders: vec![] };
 
     let code = ContractWrapper::new(execute, instantiate, query);
     let code_id = app.store_code(Box::new(code));
