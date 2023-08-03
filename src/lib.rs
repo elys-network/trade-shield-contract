@@ -114,6 +114,11 @@ mod tests {
         mod not_found;
         mod successful_query_message;
     }
+
+    mod process_order {
+        use super::*;
+        mod successful_process_stop_loss_order;
+    }
 }
 
 use cosmwasm_std::{entry_point, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult};
