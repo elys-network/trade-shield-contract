@@ -69,7 +69,7 @@ fn successful_process_stop_loss_order() {
         e.attributes
             .iter()
             .find(|attr| {
-                attr.key == "order_refunded_id" && attr.value == dummy_order.order_id.to_string()
+                attr.key == "refunded_order_id" && attr.value == dummy_order.order_id.to_string()
             })
             .and_then(|attr| attr.value.parse::<u128>().ok())
     });
