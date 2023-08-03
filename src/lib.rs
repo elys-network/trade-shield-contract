@@ -85,10 +85,16 @@ mod tests {
         types::{Order, OrderType},
         ContractError,
     };
-    use cosmwasm_std::{coin, coins, Addr, Event};
+    use cosmwasm_std::{coin, coins, Addr, Coin, Event};
     use cw_multi_test::{App, ContractWrapper, Executor};
 
     mod get_order_id_from_events;
+    mod new_app;
+    mod new_contract_addr;
+    mod new_instantiate_msg;
+
+    use new_app::new_app;
+    use new_contract_addr::new_contract_addr;
 
     mod create_order {
         use super::*;
