@@ -1,4 +1,6 @@
 use super::*;
+use cw_multi_test::AppResponse;
+use mock::oracle::*;
 
 // in this exemple we assume :
 //  USDC have a value of 1
@@ -44,14 +46,49 @@ fn successful_process_stop_loss_order() {
         )
         .unwrap();
 
-    let resp = app
-        .execute_contract(
-            addr.clone(),
-            addr.clone(),
-            &ExecuteMsg::ProcessOrder {},
-            &[],
-        )
-        .unwrap();
+    let mut service: Box<dyn OracleQuery> = Box::new(ElysOracle);
+
+    let values = vec![coin(1, "usdc"), coin(30000, "btc")];
+    mock_oracle(&mut service, values, &mut app, addr.clone());
+
+    assert_eq!(
+        app.wrap()
+            .query_balance(&addr, "btc")
+            .unwrap()
+            .amount
+            .u128(),
+        2
+    );
+
+    assert_eq!(
+        app.wrap()
+            .query_balance(&addr, "usdc")
+            .unwrap()
+            .amount
+            .u128(),
+        0
+    );
+
+    assert_eq!(
+        app.wrap()
+            .query_balance("user", "usdc")
+            .unwrap()
+            .amount
+            .u128(),
+        0
+    );
+
+    assert_eq!(
+        app.wrap()
+            .query_balance("user", "btc")
+            .unwrap()
+            .amount
+            .u128(),
+        0
+    );
+
+    let values = vec![coin(1, "usdc"), coin(20000, "btc")];
+    let resp = mock_oracle(&mut service, values, &mut app, addr.clone());
 
     assert_eq!(
         app.wrap()
@@ -100,4 +137,21 @@ fn successful_process_stop_loss_order() {
     });
 
     assert!(refunded_id.is_some());
+}
+
+fn mock_oracle(
+    service: &mut Box<dyn OracleQuery>,
+    values: Vec<Coin>,
+    app: &mut App,
+    addr: Addr,
+) -> AppResponse {
+    *service = Box::new(MockOracleQuery { values });
+
+    app.execute_contract(
+        addr.clone(),
+        addr.clone(),
+        &ExecuteMsg::ProcessOrder {},
+        &[],
+    )
+    .unwrap()
 }
