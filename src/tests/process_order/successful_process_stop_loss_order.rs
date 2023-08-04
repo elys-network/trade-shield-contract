@@ -1,27 +1,33 @@
 use super::*;
 
 // in this exemple we assume :
-//  Bitcoin have a value of 10
-//  Ethereum have a value of 2
+//  USDC have a value of 1
+//  Bitcoin have a value of 20 000
 
 #[test]
 fn successful_process_stop_loss_order() {
     let mut app = App::new(|router, _, storage| {
         router
             .bank
-            .init_balance(storage, &Addr::unchecked("user"), coins(150, "eth"))
+            .init_balance(storage, &Addr::unchecked("user"), vec![])
             .unwrap();
 
         router
             .bank
-            .init_balance(storage, &Addr::unchecked("owner"), coins(1200, "btc"))
+            .init_balance(storage, &Addr::unchecked("owner"), coins(2, "btc"))
             .unwrap();
     });
 
-    let dummy_order = Order::new_dummy();
+    let dummy_order = Order::new(
+        OrderType::StopLoss,
+        coin(20000, "usdc"),
+        coin(2, "btc"),
+        Addr::unchecked("user"),
+        &vec![],
+    );
 
     let instantiate_msg = InstantiateMsg {
-        orders: vec![dummy_order.clone()],
+        orders: vec![dummy_order],
     };
 
     let code = ContractWrapper::new(execute, instantiate, query);
@@ -32,7 +38,7 @@ fn successful_process_stop_loss_order() {
             code_id,
             Addr::unchecked("owner"),
             &instantiate_msg,
-            &coins(1200, "btc"),
+            &coins(2, "btc"),
             "Contract",
             None,
         )
@@ -53,23 +59,33 @@ fn successful_process_stop_loss_order() {
             .unwrap()
             .amount
             .u128(),
-        200
+        0
     );
 
     assert_eq!(
         app.wrap()
-            .query_balance("user", "eth")
+            .query_balance(&addr, "usdc")
             .unwrap()
             .amount
             .u128(),
-        350
+        0
+    );
+
+    assert_eq!(
+        app.wrap()
+            .query_balance("user", "usdc")
+            .unwrap()
+            .amount
+            .u128(),
+        40000
     );
 
     let refunded_id: Option<u128> = resp.events.iter().find_map(|e| {
         e.attributes
             .iter()
             .find(|attr| {
-                attr.key == "refunded_order_id" && attr.value == dummy_order.order_id.to_string()
+                attr.key == "refunded_order_id"
+                    && attr.value == instantiate_msg.orders[0].order_id.to_string()
             })
             .and_then(|attr| attr.value.parse::<u128>().ok())
     });
