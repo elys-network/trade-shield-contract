@@ -80,6 +80,15 @@ fn successful_process_stop_loss_order() {
         40000
     );
 
+    assert_eq!(
+        app.wrap()
+            .query_balance("user", "btc")
+            .unwrap()
+            .amount
+            .u128(),
+        0
+    );
+
     let refunded_id: Option<u128> = resp.events.iter().find_map(|e| {
         e.attributes
             .iter()
