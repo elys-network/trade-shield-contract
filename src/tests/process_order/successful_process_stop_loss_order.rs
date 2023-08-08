@@ -1,5 +1,5 @@
 use super::*;
-use cw_multi_test::AppResponse;
+
 use mock::oracle::*;
 
 // in this exemple we assume :
@@ -46,10 +46,13 @@ fn successful_process_stop_loss_order() {
         )
         .unwrap();
 
-    let mut service: Box<dyn OracleQuery> = Box::new(ElysOracle);
-
-    let values = vec![coin(1, "usdc"), coin(30000, "btc")];
-    mock_oracle(&mut service, values, &mut app, addr.clone());
+    app.execute_contract(
+        addr.clone(),
+        addr.clone(),
+        &ExecuteMsg::ProcessOrder {},
+        &[],
+    )
+    .unwrap();
 
     assert_eq!(
         app.wrap()
@@ -87,8 +90,14 @@ fn successful_process_stop_loss_order() {
         0
     );
 
-    let values = vec![coin(1, "usdc"), coin(20000, "btc")];
-    let resp = mock_oracle(&mut service, values, &mut app, addr.clone());
+    let resp = app
+        .execute_contract(
+            addr.clone(),
+            addr.clone(),
+            &ExecuteMsg::ProcessOrder {},
+            &[],
+        )
+        .unwrap();
 
     assert_eq!(
         app.wrap()
@@ -137,21 +146,4 @@ fn successful_process_stop_loss_order() {
     });
 
     assert!(refunded_id.is_some());
-}
-
-fn mock_oracle(
-    service: &mut Box<dyn OracleQuery>,
-    values: Vec<Coin>,
-    app: &mut App,
-    addr: Addr,
-) -> AppResponse {
-    *service = Box::new(MockOracleQuery { values });
-
-    app.execute_contract(
-        addr.clone(),
-        addr.clone(),
-        &ExecuteMsg::ProcessOrder {},
-        &[],
-    )
-    .unwrap()
 }

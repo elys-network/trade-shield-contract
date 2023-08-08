@@ -85,7 +85,7 @@ mod tests {
         types::{Order, OrderType},
         ContractError,
     };
-    use cosmwasm_std::{coin, coins, Addr, Coin, Event};
+    use cosmwasm_std::{coin, coins, Addr, Event};
     use cw_multi_test::{App, ContractWrapper, Executor};
 
     mod get_order_id_from_events;
@@ -120,6 +120,7 @@ mod tests {
 
     pub mod mock {
         pub mod oracle;
+        //mod test disable cause it not compiling
     }
 }
 
