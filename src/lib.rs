@@ -118,7 +118,7 @@ mod tests {
         mod successful_process_stop_loss_order;
     }
 
-    pub mod mock {
+    mod mock {
         pub mod oracle;
         //mod test disable cause it not compiling
     }
