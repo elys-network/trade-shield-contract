@@ -1,6 +1,9 @@
 use cosmwasm_schema::{cw_serde, QueryResponses};
 use cosmwasm_std::testing::{MockApi, MockQuerier, MockStorage};
-use cosmwasm_std::{Coin, Empty, OwnedDeps, Querier, QuerierResult, QueryRequest, SystemError};
+use cosmwasm_std::{
+    to_binary, Coin, Empty, OwnedDeps, Querier, QuerierResult, QueryRequest, SystemError,
+    SystemResult,
+};
 use std::marker::PhantomData;
 
 // Define custom query enum
@@ -23,17 +26,40 @@ pub struct OracleMock {
     prices: Vec<Coin>,
 }
 
-impl OracleMock {
-    pub fn new() -> OracleMock {
-        OracleMock { prices: vec![] }
+pub struct OracleMockWithQuerier {
+    oracle_mock: OracleMock,
+    base: MockQuerier,
+}
+
+impl OracleMockWithQuerier {
+    fn new() -> Self {
+        OracleMockWithQuerier {
+            oracle_mock: OracleMock { prices: vec![] },
+            base: MockQuerier::default(),
+        }
     }
 
-    pub fn change_prices(&mut self, prices: Vec<Coin>) {
-        self.prices = prices;
+    pub fn update_price(&mut self, prices: &[Coin]) {
+        self.oracle_mock.prices = prices.to_vec();
+    }
+
+    pub fn handle_query(&self, request: &QueryRequest<OracleElys>) -> QuerierResult {
+        match &request {
+            QueryRequest::Custom(custom) => match custom {
+                OracleElys::GetAllPrices {} => SystemResult::Ok(
+                    to_binary(&GetAllPricesResp {
+                        prices: self.oracle_mock.prices.clone(),
+                    })
+                    .into(),
+                ),
+            },
+
+            _ => self.base.handle_query(&QueryRequest::Custom(Empty {})),
+        }
     }
 }
 
-impl Querier for OracleMock {
+impl Querier for OracleMockWithQuerier {
     fn raw_query(&self, bin_request: &[u8]) -> QuerierResult {
         let request: QueryRequest<OracleElys> = match cosmwasm_std::from_slice(bin_request) {
             Ok(v) => v,
@@ -44,56 +70,18 @@ impl Querier for OracleMock {
                 })
             }
         };
-
-        match request {
-            QueryRequest::Custom(custom_query) => {
-                // Process the custom query and return a mock response
-                let response = match custom_query {
-                    OracleElys::GetAllPrices {} => {
-                        // Simulate a response based on the parameter
-                        GetAllPricesResp {
-                            prices: self.prices.clone(),
-                        }
-                    } // Handle other query types if needed
-                };
-
-                // Return the mock response as a QuerierResult::Ok
-                QuerierResult::Ok(cosmwasm_std::to_binary(&response).into())
-            }
-            // Handle other query types if needed
-            _ => QuerierResult::Err(SystemError::InvalidRequest {
-                error: "Unsupported query request".to_string(),
-                request: bin_request.into(),
-            }),
-        }
-    }
-}
-
-// Define a wrapper struct that combines both OracleMock and MockQuerier traits
-pub struct OracleMockWithQuerier {
-    pub oracle_mock: OracleMock,
-    pub querier: MockQuerier,
-}
-
-// Implement the Querier trait for the wrapper struct
-impl Querier for OracleMockWithQuerier {
-    fn raw_query(&self, bin_request: &[u8]) -> QuerierResult {
-        self.oracle_mock.raw_query(bin_request)
+        self.handle_query(&request)
     }
 }
 
 // You can use the OracleMockWithQuerier in your tests using mock_dependencies
 pub fn mock_dependencies() -> OwnedDeps<MockStorage, MockApi, OracleMockWithQuerier, Empty> {
-    let oracle_mock = OracleMock::new();
-    let querier = MockQuerier::new(&[]);
+    let querier: OracleMockWithQuerier = OracleMockWithQuerier::new();
 
     OwnedDeps {
         storage: MockStorage::default(),
         api: MockApi::default(),
-        querier: OracleMockWithQuerier {
-            oracle_mock,
-            querier,
-        },
+        querier,
         custom_query_type: PhantomData,
     }
 }
