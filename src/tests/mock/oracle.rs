@@ -1,25 +1,12 @@
-use cosmwasm_schema::{cw_serde, QueryResponses};
 use cosmwasm_std::testing::{MockApi, MockQuerier, MockStorage};
 use cosmwasm_std::{
-    to_binary, Coin, Empty, OwnedDeps, Querier, QuerierResult, QueryRequest, SystemError,
-    SystemResult,
+    to_binary, BankQuery, Coin, Empty, OwnedDeps, Querier, QuerierResult, QueryRequest,
+    SystemError, SystemResult,
 };
 use std::marker::PhantomData;
 
-// Define custom query enum
-#[cw_serde]
-#[derive(QueryResponses)]
-pub enum OracleElys {
-    #[returns(GetAllPricesResp)]
-    GetAllPrices {},
-    // Define other query variants if needed
-}
-
-// Define the response struct for GetAllPrices query
-#[cw_serde]
-pub struct GetAllPricesResp {
-    pub prices: Vec<Coin>,
-}
+use crate::tests::elys_oracle::query::ElysQuery;
+use crate::tests::elys_oracle::query_resp::GetAllPricesResp;
 
 // Define the mock querier struct
 pub struct OracleMock {
@@ -32,10 +19,10 @@ pub struct OracleMockWithQuerier {
 }
 
 impl OracleMockWithQuerier {
-    fn new() -> Self {
+    fn new(balances: &[(&str, &[Coin])]) -> Self {
         OracleMockWithQuerier {
             oracle_mock: OracleMock { prices: vec![] },
-            base: MockQuerier::default(),
+            base: MockQuerier::new(balances),
         }
     }
 
@@ -43,10 +30,10 @@ impl OracleMockWithQuerier {
         self.oracle_mock.prices = prices.to_vec();
     }
 
-    pub fn handle_query(&self, request: &QueryRequest<OracleElys>) -> QuerierResult {
+    pub fn handle_query(&self, request: &QueryRequest<ElysQuery>) -> QuerierResult {
         match &request {
             QueryRequest::Custom(custom) => match custom {
-                OracleElys::GetAllPrices {} => SystemResult::Ok(
+                ElysQuery::GetAllPrices {} => SystemResult::Ok(
                     to_binary(&GetAllPricesResp {
                         prices: self.oracle_mock.prices.clone(),
                     })
@@ -57,11 +44,16 @@ impl OracleMockWithQuerier {
             _ => self.base.handle_query(&QueryRequest::Custom(Empty {})),
         }
     }
+    pub fn check_wallet(&self, address: &str, denom: &str) -> QuerierResult {
+        let (address, denom) = (address.to_string(), denom.to_string());
+        let request = QueryRequest::Bank(BankQuery::Balance { address, denom });
+        self.base.handle_query(&request)
+    }
 }
 
 impl Querier for OracleMockWithQuerier {
     fn raw_query(&self, bin_request: &[u8]) -> QuerierResult {
-        let request: QueryRequest<OracleElys> = match cosmwasm_std::from_slice(bin_request) {
+        let request: QueryRequest<ElysQuery> = match cosmwasm_std::from_slice(bin_request) {
             Ok(v) => v,
             Err(e) => {
                 return QuerierResult::Err(SystemError::InvalidRequest {
@@ -75,8 +67,15 @@ impl Querier for OracleMockWithQuerier {
 }
 
 // You can use the OracleMockWithQuerier in your tests using mock_dependencies
-pub fn mock_dependencies() -> OwnedDeps<MockStorage, MockApi, OracleMockWithQuerier, Empty> {
-    let querier: OracleMockWithQuerier = OracleMockWithQuerier::new();
+pub fn mock_dependencies(
+    balances: &Vec<(&str, Vec<Coin>)>,
+) -> OwnedDeps<MockStorage, MockApi, OracleMockWithQuerier, Empty> {
+    let balances: &[(&str, &[Coin])] = &balances
+        .iter()
+        .map(|(addr, coins)| (*addr, coins.as_slice()))
+        .collect::<Vec<(&str, &[Coin])>>();
+
+    let querier: OracleMockWithQuerier = OracleMockWithQuerier::new(balances);
 
     OwnedDeps {
         storage: MockStorage::default(),

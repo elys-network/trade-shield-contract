@@ -117,10 +117,15 @@ mod tests {
         use super::*;
         mod successful_process_stop_loss_order;
     }
+    mod elys_oracle {
+        pub mod querier;
+        pub mod query;
+        pub mod query_resp;
+    }
 
     mod mock {
         pub mod oracle;
-        mod test; // disable cause it not compiling
+        mod test;
     }
 }
 
