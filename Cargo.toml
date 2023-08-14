@@ -14,6 +14,7 @@ thiserror = "1"
 schemars = "0.8.1"
 cosmwasm-schema = "1.1.4"
 cw-utils = "0.13"
+anyhow = "1"
 
 [dev-dependencies]
 cw-multi-test = "0.13.4"

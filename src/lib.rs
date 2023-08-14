@@ -124,7 +124,9 @@ mod tests {
     }
 
     mod mock {
-        pub mod oracle;
+        mod mock_deps;
+        pub use mock_deps::mock_dependencies;
+        pub mod multitest;
         mod test;
     }
 }

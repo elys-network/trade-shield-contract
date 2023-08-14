@@ -1,24 +1,35 @@
+use cosmwasm_std::{coin, Coin};
+
 use crate::tests::elys_oracle::{query::ElysQuery, query_resp::GetAllPricesResp};
 
-use super::oracle::*;
-use cosmwasm_std::{coin, from_binary, Coin};
+use super::multitest::*;
+
+fn check_prices(app: &mut OracleApp, prices: &Vec<Coin>) {
+    let prices = prices.to_owned();
+    let request = ElysQuery::GetAllPrices {}.into();
+    let actual_prices: GetAllPricesResp = app.wrap().query(&request).unwrap();
+    assert_eq!(prices, actual_prices.prices);
+}
 
 #[test]
-fn test_get_all_prices_query() {
-    let mut deps = mock_dependencies(&vec![]);
-    let prices: Vec<Coin> = vec![coin(1000000, "uusd"), coin(8000000, "ukrw")];
-    deps.querier.update_price(&prices);
-
-    let bin = deps
-        .querier
-        .handle_query(&cosmwasm_std::QueryRequest::Custom(
-            ElysQuery::GetAllPrices {},
-        ))
-        .unwrap()
+fn query_price() {
+    let mut prices: Vec<Coin> = vec![coin(20000, "btc"), coin(1, "usdc")];
+    let mut app = OracleApp::new();
+    app.init_modules(|router, _, storage| router.custom.set_prices(storage, &prices))
         .unwrap();
-    let get_all_prices_response: GetAllPricesResp = from_binary(&bin).unwrap();
-    assert_eq!(get_all_prices_response.prices[0].denom, prices[0].denom);
-    assert_eq!(get_all_prices_response.prices[0].amount, prices[0].amount);
-    assert_eq!(get_all_prices_response.prices[1].denom, prices[1].denom);
-    assert_eq!(get_all_prices_response.prices[1].amount, prices[1].amount);
+
+    check_prices(&mut app, &prices);
+
+    let new_price = coin(1700, "eth");
+    app.init_modules(|router, _, storage| router.custom.new_price(storage, &new_price))
+        .unwrap();
+    prices.push(new_price);
+
+    check_prices(&mut app, &prices);
+
+    let new_price: Coin = coin(1200, "eth");
+    app.init_modules(|router, _, storage| router.custom.new_price(storage, &new_price))
+        .unwrap();
+    prices[2].amount = new_price.amount;
+    check_prices(&mut app, &prices);
 }
