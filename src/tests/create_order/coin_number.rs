@@ -1,10 +1,13 @@
+use crate::tests::mock::multitest::ElysApp;
+
 use super::*;
 
 #[test]
 fn coin_number() {
-    let mut app = App::default();
+    let mut app = ElysApp::new();
 
     let instantiate_msg = InstantiateMsg { orders: vec![] };
+
     let code = ContractWrapper::new(execute, instantiate, query);
     let code_id = app.store_code(Box::new(code));
     let addr = app

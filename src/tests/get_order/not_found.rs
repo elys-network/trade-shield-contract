@@ -1,8 +1,10 @@
+use crate::tests::mock::multitest::ElysApp;
+
 use super::*;
 
 #[test]
 fn not_found() {
-    let mut app: App = App::default();
+    let mut app = ElysApp::new();
 
     let instantiate_msg: InstantiateMsg = InstantiateMsg { orders: vec![] };
     let id: u128 = 0;
@@ -20,12 +22,9 @@ fn not_found() {
         )
         .unwrap();
 
-    let err: Result<Binary, StdError> = app.wrap().query_wasm_smart(
-        &addr,
-        &QueryMsg::GetOrder {
-            order_id: id,
-        },
-    );
+    let err: Result<Binary, StdError> = app
+        .wrap()
+        .query_wasm_smart(&addr, &QueryMsg::GetOrder { order_id: id });
     let err = err.unwrap_err();
     let error_reference = StdError::GenericErr {
         msg: format!(

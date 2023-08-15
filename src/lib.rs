@@ -13,6 +13,12 @@ pub mod entry_point {
     pub use query::query;
 }
 
+mod bindings {
+    pub mod querier;
+    pub mod query;
+    pub mod query_resp;
+}
+
 pub mod msg {
     mod execute_msg;
     mod instantiate_msg;
@@ -43,13 +49,17 @@ pub mod types {
 }
 
 mod error;
-mod state;
-
+use bindings::query::ElysQuery;
 pub use error::ContractError;
-pub use state::ORDER;
+
+mod states {
+    mod order;
+
+    pub use order::ORDER;
+}
 
 mod action {
-    use crate::{types::*, ContractError, ORDER};
+    use crate::{states::ORDER, types::*, ContractError};
 
     pub mod query {
         mod get_order;
@@ -83,7 +93,7 @@ mod tests {
         ContractError,
     };
     use cosmwasm_std::{coin, coins, Addr, Event};
-    use cw_multi_test::{App, ContractWrapper, Executor};
+    use cw_multi_test::{ContractWrapper, Executor};
 
     mod get_order_id_from_events;
 
@@ -109,6 +119,16 @@ mod tests {
         mod not_found;
         mod successful_query_message;
     }
+
+    mod process_order {
+        use super::*;
+        mod successful_process_stop_loss_order;
+    }
+
+    mod mock {
+        pub mod multitest;
+        mod test;
+    }
 }
 
 use cosmwasm_std::{entry_point, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult};
@@ -116,7 +136,7 @@ use msg::*;
 
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn instantiate(
-    deps: DepsMut,
+    deps: DepsMut<ElysQuery>,
     env: Env,
     info: MessageInfo,
     msg: InstantiateMsg,
@@ -126,7 +146,7 @@ pub fn instantiate(
 
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn execute(
-    deps: DepsMut,
+    deps: DepsMut<ElysQuery>,
     env: Env,
     info: MessageInfo,
     msg: ExecuteMsg,
@@ -135,6 +155,6 @@ pub fn execute(
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]
-pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> Result<Binary, ContractError> {
+pub fn query(deps: Deps<ElysQuery>, env: Env, msg: QueryMsg) -> Result<Binary, ContractError> {
     entry_point::query(deps, env, msg)
 }

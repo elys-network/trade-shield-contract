@@ -1,9 +1,11 @@
+use crate::tests::mock::multitest::ElysApp;
+
 use super::*;
 use query_resp::GetOrderResp;
 
 #[test]
 fn successful_query_message() {
-    let mut app = App::default();
+    let mut app = ElysApp::new();
 
     let instantiate_msg = InstantiateMsg {
         orders: vec![Order::new_dummy()],

@@ -1,7 +1,9 @@
+use crate::bindings::query::ElysQuery;
+
 use super::*;
 use msg::QueryMsg;
 
-pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> Result<Binary, ContractError> {
+pub fn query(deps: Deps<ElysQuery>, _env: Env, msg: QueryMsg) -> Result<Binary, ContractError> {
     use action::query;
     use QueryMsg::*;
 

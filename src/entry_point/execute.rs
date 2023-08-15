@@ -1,8 +1,10 @@
+use crate::bindings::query::ElysQuery;
+
 use super::*;
 use msg::ExecuteMsg;
 
 pub fn execute(
-    deps: DepsMut,
+    deps: DepsMut<ElysQuery>,
     env: Env,
     info: MessageInfo,
     msg: ExecuteMsg,

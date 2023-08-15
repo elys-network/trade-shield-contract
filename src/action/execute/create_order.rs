@@ -1,8 +1,10 @@
+use crate::bindings::query::ElysQuery;
+
 use super::*;
 
 pub fn create_order(
     env: Env,
-    deps: DepsMut,
+    deps: DepsMut<ElysQuery>,
     info: MessageInfo,
     order_type: OrderType,
     order_price: Coin,
