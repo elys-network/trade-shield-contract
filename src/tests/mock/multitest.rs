@@ -1,7 +1,6 @@
-use crate::tests::elys_oracle::{query::ElysQuery, query_resp::GetAllPricesResp};
+use crate::bindings::{query::ElysQuery, query_resp::GetAllPricesResp};
 use anyhow::{bail, Result as AnyResult};
 use cosmwasm_std::{
-    coin,
     testing::{MockApi, MockStorage},
     to_binary, Addr, BlockInfo, Coin, Empty, Querier, StdResult, Storage,
 };
@@ -46,10 +45,10 @@ impl Module for OracleModule {
 
     fn query(
         &self,
-        api: &dyn cosmwasm_std::Api,
+        _api: &dyn cosmwasm_std::Api,
         storage: &dyn cosmwasm_std::Storage,
-        querier: &dyn cosmwasm_std::Querier,
-        block: &cosmwasm_std::BlockInfo,
+        _querier: &dyn cosmwasm_std::Querier,
+        _block: &cosmwasm_std::BlockInfo,
         request: Self::QueryT,
     ) -> AnyResult<cosmwasm_std::Binary> {
         match request {
@@ -59,12 +58,12 @@ impl Module for OracleModule {
 
     fn execute<ExecC, QueryC>(
         &self,
-        api: &dyn cosmwasm_std::Api,
-        storage: &mut dyn cosmwasm_std::Storage,
-        router: &dyn cw_multi_test::CosmosRouter<ExecC = ExecC, QueryC = QueryC>,
-        block: &cosmwasm_std::BlockInfo,
-        sender: cosmwasm_std::Addr,
-        msg: Self::ExecT,
+        _api: &dyn cosmwasm_std::Api,
+        _storage: &mut dyn cosmwasm_std::Storage,
+        _router: &dyn cw_multi_test::CosmosRouter<ExecC = ExecC, QueryC = QueryC>,
+        _block: &cosmwasm_std::BlockInfo,
+        _sender: cosmwasm_std::Addr,
+        _msg: Self::ExecT,
     ) -> AnyResult<cw_multi_test::AppResponse>
     where
         ExecC: std::fmt::Debug
@@ -80,11 +79,11 @@ impl Module for OracleModule {
 
     fn sudo<ExecC, QueryC>(
         &self,
-        api: &dyn cosmwasm_std::Api,
-        storage: &mut dyn cosmwasm_std::Storage,
-        router: &dyn cw_multi_test::CosmosRouter<ExecC = ExecC, QueryC = QueryC>,
-        block: &cosmwasm_std::BlockInfo,
-        msg: Self::SudoT,
+        _api: &dyn cosmwasm_std::Api,
+        _storage: &mut dyn cosmwasm_std::Storage,
+        _router: &dyn cw_multi_test::CosmosRouter<ExecC = ExecC, QueryC = QueryC>,
+        _block: &cosmwasm_std::BlockInfo,
+        _msg: Self::SudoT,
     ) -> AnyResult<cw_multi_test::AppResponse>
     where
         ExecC: std::fmt::Debug
@@ -99,37 +98,37 @@ impl Module for OracleModule {
     }
 }
 
-pub type OracleAppWrapped =
+pub type ElysAppWrapped =
     App<BankKeeper, MockApi, MockStorage, OracleModule, WasmKeeper<Empty, ElysQuery>>;
 
-pub struct OracleApp(OracleAppWrapped);
+pub struct ElysApp(ElysAppWrapped);
 
-impl Deref for OracleApp {
-    type Target = OracleAppWrapped;
+impl Deref for ElysApp {
+    type Target = ElysAppWrapped;
     fn deref(&self) -> &Self::Target {
         &self.0
     }
 }
 
-impl DerefMut for OracleApp {
+impl DerefMut for ElysApp {
     fn deref_mut(&mut self) -> &mut Self::Target {
         &mut self.0
     }
 }
 
-impl Querier for OracleApp {
+impl Querier for ElysApp {
     fn raw_query(&self, bin_request: &[u8]) -> cosmwasm_std::QuerierResult {
         self.0.raw_query(bin_request)
     }
 }
 
-impl Default for OracleApp {
+impl Default for ElysApp {
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl OracleApp {
+impl ElysApp {
     pub fn new_with_wallets(wallets: Vec<(&str, Vec<Coin>)>) -> Self {
         Self(
             BasicAppBuilder::<Empty, ElysQuery>::new_custom()

@@ -1,9 +1,9 @@
 use super::*;
-use crate::states::*;
+use crate::{bindings::query::ElysQuery, states::*};
 use msg::InstantiateMsg;
 
 pub fn instantiate(
-    deps: DepsMut,
+    deps: DepsMut<ElysQuery>,
     _env: Env,
     _info: MessageInfo,
     msg: InstantiateMsg,

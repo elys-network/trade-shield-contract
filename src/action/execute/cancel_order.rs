@@ -1,8 +1,10 @@
+use crate::bindings::query::ElysQuery;
+
 use super::*;
 
 pub fn cancel_order(
     info: MessageInfo,
-    deps: DepsMut,
+    deps: DepsMut<ElysQuery>,
     order_id: u128,
 ) -> Result<Response, ContractError> {
     let orders_list: Vec<Order> = ORDER.load(deps.storage)?;

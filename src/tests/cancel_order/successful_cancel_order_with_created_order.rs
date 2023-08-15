@@ -1,17 +1,14 @@
+use crate::tests::mock::multitest::ElysApp;
+
 use super::*;
 use get_order_id_from_events::get_order_id_from_events;
 
 #[test]
 fn successful_cancel_order_with_created_order() {
-    let mut app = App::new(|router, _, storage| {
-        router
-            .bank
-            .init_balance(storage, &Addr::unchecked("user"), coins(150, "eth"))
-            .unwrap()
-    });
+    let wallets = vec![("user", coins(150, "eth"))];
+    let mut app = ElysApp::new_with_wallets(wallets);
 
     let instantiate_msg = InstantiateMsg { orders: vec![] };
-
     let code = ContractWrapper::new(execute, instantiate, query);
     let code_id = app.store_code(Box::new(code));
 

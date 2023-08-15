@@ -1,19 +1,11 @@
+use crate::tests::mock::multitest::ElysApp;
+
 use super::*;
 
 #[test]
 fn successful_cancel_order_with_dummy_order() {
-    let mut app = App::new(|router, _, storage| {
-        router
-            .bank
-            .init_balance(storage, &Addr::unchecked("user"), coins(150, "eth"))
-            .unwrap();
-
-        router
-            .bank
-            .init_balance(storage, &Addr::unchecked("owner"), coins(1200, "btc"))
-            .unwrap();
-    });
-
+    let wallets = vec![("user", coins(150, "eth")), ("owner", coins(1200, "btc"))];
+    let mut app = ElysApp::new_with_wallets(wallets);
     let dummy_order = Order::new_dummy();
 
     let instantiate_msg = InstantiateMsg {

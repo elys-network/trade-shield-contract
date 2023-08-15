@@ -1,10 +1,10 @@
 use cosmwasm_std::{coin, Coin};
 
-use crate::tests::elys_oracle::{query::ElysQuery, query_resp::GetAllPricesResp};
+use crate::bindings::{query::ElysQuery, query_resp::GetAllPricesResp};
 
 use super::multitest::*;
 
-fn check_prices(app: &mut OracleApp, prices: &Vec<Coin>) {
+fn check_prices(app: &mut ElysApp, prices: &Vec<Coin>) {
     let prices = prices.to_owned();
     let request = ElysQuery::GetAllPrices {}.into();
     let actual_prices: GetAllPricesResp = app.wrap().query(&request).unwrap();
@@ -14,7 +14,7 @@ fn check_prices(app: &mut OracleApp, prices: &Vec<Coin>) {
 #[test]
 fn query_price() {
     let mut prices: Vec<Coin> = vec![coin(20000, "btc"), coin(1, "usdc")];
-    let mut app = OracleApp::new();
+    let mut app = ElysApp::new();
     app.init_modules(|router, _, storage| router.custom.set_prices(storage, &prices))
         .unwrap();
 

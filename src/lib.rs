@@ -13,6 +13,12 @@ pub mod entry_point {
     pub use query::query;
 }
 
+mod bindings {
+    pub mod querier;
+    pub mod query;
+    pub mod query_resp;
+}
+
 pub mod msg {
     mod execute_msg;
     mod instantiate_msg;
@@ -43,6 +49,7 @@ pub mod types {
 }
 
 mod error;
+use bindings::query::ElysQuery;
 pub use error::ContractError;
 
 mod states {
@@ -86,7 +93,7 @@ mod tests {
         ContractError,
     };
     use cosmwasm_std::{coin, coins, Addr, Event};
-    use cw_multi_test::{App, ContractWrapper, Executor};
+    use cw_multi_test::{ContractWrapper, Executor};
 
     mod get_order_id_from_events;
 
@@ -117,15 +124,8 @@ mod tests {
         use super::*;
         mod successful_process_stop_loss_order;
     }
-    mod elys_oracle {
-        pub mod querier;
-        pub mod query;
-        pub mod query_resp;
-    }
 
     mod mock {
-        mod mock_deps;
-        pub use mock_deps::mock_dependencies;
         pub mod multitest;
         mod test;
     }
@@ -136,7 +136,7 @@ use msg::*;
 
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn instantiate(
-    deps: DepsMut,
+    deps: DepsMut<ElysQuery>,
     env: Env,
     info: MessageInfo,
     msg: InstantiateMsg,
@@ -146,7 +146,7 @@ pub fn instantiate(
 
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn execute(
-    deps: DepsMut,
+    deps: DepsMut<ElysQuery>,
     env: Env,
     info: MessageInfo,
     msg: ExecuteMsg,
@@ -155,6 +155,6 @@ pub fn execute(
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]
-pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> Result<Binary, ContractError> {
+pub fn query(deps: Deps<ElysQuery>, env: Env, msg: QueryMsg) -> Result<Binary, ContractError> {
     entry_point::query(deps, env, msg)
 }

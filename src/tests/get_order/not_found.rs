@@ -1,8 +1,10 @@
+use crate::tests::mock::multitest::ElysApp;
+
 use super::*;
 
 #[test]
 fn not_found() {
-    let mut app: App = App::default();
+    let mut app = ElysApp::new();
 
     let instantiate_msg: InstantiateMsg = InstantiateMsg { orders: vec![] };
     let id: u128 = 0;

@@ -1,8 +1,10 @@
+use crate::tests::mock::multitest::ElysApp;
+
 use super::*;
 
 #[test]
 fn coin_number() {
-    let mut app = App::default();
+    let mut app = ElysApp::new();
 
     let instantiate_msg = InstantiateMsg { orders: vec![] };
 

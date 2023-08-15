@@ -1,16 +1,11 @@
-use crate::tests::get_order_id_from_events::get_order_id_from_events;
+use crate::tests::{get_order_id_from_events::get_order_id_from_events, mock::multitest::ElysApp};
 
 use super::*;
 
 #[test]
 fn successful_create_order() {
-    let mut app = App::new(|router, _, storage| {
-        router
-            .bank
-            .init_balance(storage, &Addr::unchecked("user"), coins(150, "eth"))
-            .unwrap()
-    });
-
+    let wallet = vec![("user", coins(150, "eth"))];
+    let mut app = ElysApp::new_with_wallets(wallet);
     let instantiate_msg = InstantiateMsg { orders: vec![] };
 
     let code = ContractWrapper::new(execute, instantiate, query);

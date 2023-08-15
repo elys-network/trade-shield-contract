@@ -1,13 +1,11 @@
+use crate::tests::mock::multitest::ElysApp;
+
 use super::*;
 
 #[test]
 fn not_enough_fund() {
-    let mut app = App::new(|router, _, storage| {
-        router
-            .bank
-            .init_balance(storage, &Addr::unchecked("user"), coins(40, "eth"))
-            .unwrap()
-    });
+    let wallets = vec![("user", coins(40, "eth"))];
+    let mut app = ElysApp::new_with_wallets(wallets);
 
     let instantiate_msg = InstantiateMsg { orders: vec![] };
 
