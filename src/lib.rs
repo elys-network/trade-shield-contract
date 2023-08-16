@@ -125,6 +125,7 @@ mod tests {
         mod successful_process_5_of_10_orders;
         mod successful_process_stop_loss_order;
         mod successful_process_take_profit_order;
+        mod unauthorize;
     }
 
     mod mock {
