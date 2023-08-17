@@ -38,14 +38,17 @@ pub mod types {
     mod order {
         pub mod order;
         mod impls {
-            pub mod new;
+            mod new;
             #[cfg(test)]
-            pub mod new_dummy;
+            mod new_dummy;
         }
     }
-
+    mod price;
     pub use order::order::Order;
+
+    pub mod page_response;
     pub use order_type::OrderType;
+    pub use price::Price;
 }
 
 mod error;

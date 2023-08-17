@@ -1,7 +1,9 @@
 use cosmwasm_schema::cw_serde;
-use cosmwasm_std::Coin;
+
+use crate::types::{page_response::PageResponse, Price};
 
 #[cw_serde]
 pub struct GetAllPricesResp {
-    pub prices: Vec<Coin>,
+    pub prices: Vec<Price>,
+    pub page_response: PageResponse,
 }
