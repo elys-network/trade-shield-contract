@@ -45,7 +45,8 @@ pub mod types {
     }
     mod price;
     pub use order::order::Order;
-
+    mod page_request;
+    pub use page_request::PageRequest;
     pub mod page_response;
     pub use order_type::OrderType;
     pub use price::Price;

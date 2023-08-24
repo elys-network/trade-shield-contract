@@ -1,6 +1,6 @@
-use cosmwasm_std::{coin, Coin, PageRequest, QuerierWrapper, QueryRequest, StdResult};
+use cosmwasm_std::{coin, Coin, QuerierWrapper, QueryRequest, StdResult};
 
-use crate::bindings::query_resp::GetAllPricesResp;
+use crate::{bindings::query_resp::GetAllPricesResp, types::PageRequest};
 
 use super::query::ElysQuery;
 
@@ -18,7 +18,7 @@ impl<'a> ElysQuerier<'a> {
         };
         let request: QueryRequest<ElysQuery> = ElysQuery::into(prices_query);
         let resp: GetAllPricesResp = self.querier.query(&request)?;
-        page_request.key = resp.page_response.key;
+        page_request.update(resp.page_response.key);
         let result: Vec<Coin> = resp
             .prices
             .iter()

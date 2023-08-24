@@ -1,15 +1,11 @@
-use cosmwasm_std::{coin, Coin, PageRequest};
+use cosmwasm_std::{coin, Coin};
 
-use crate::bindings::query::ElysQuery;
+use crate::{bindings::query::ElysQuery, types::PageRequest};
 
 use super::multitest::*;
 
 fn check_prices(app: &mut ElysApp, prices: &Vec<Coin>) {
-    let dummy_req = PageRequest {
-        key: None,
-        limit: 0,
-        reverse: false,
-    };
+    let dummy_req = PageRequest::new(20);
 
     let prices = prices.to_owned();
     let request = ElysQuery::GetAllPrices {

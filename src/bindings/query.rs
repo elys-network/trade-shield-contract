@@ -1,6 +1,8 @@
+use crate::types::PageRequest;
+
 use super::query_resp::GetAllPricesResp;
 use cosmwasm_schema::{cw_serde, QueryResponses};
-use cosmwasm_std::{CustomQuery, PageRequest};
+use cosmwasm_std::CustomQuery;
 
 #[cw_serde]
 #[derive(QueryResponses)]
