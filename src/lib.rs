@@ -122,6 +122,7 @@ mod tests {
 
     mod process_order {
         use super::*;
+        mod automated_order_execution_test;
         mod successful_process_5_of_10_orders;
         mod successful_process_stop_loss_order;
         mod successful_process_take_profit_order;
@@ -129,6 +130,7 @@ mod tests {
     }
 
     mod mock {
+        pub mod execute;
         pub mod instantiate;
         pub mod multitest;
         mod test;
