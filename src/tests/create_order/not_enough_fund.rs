@@ -7,7 +7,10 @@ fn not_enough_fund() {
     let wallets = vec![("user", coins(40, "eth"))];
     let mut app = ElysApp::new_with_wallets(wallets);
 
-    let instantiate_msg = InstantiateMsg { orders: vec![] };
+    let instantiate_msg = InstantiateMockMsg {
+        epoch_cycle_interval: 1,
+        orders: vec![],
+    };
 
     let code = ContractWrapper::new(execute, instantiate, query);
     let code_id = app.store_code(Box::new(code));

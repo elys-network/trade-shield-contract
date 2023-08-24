@@ -6,7 +6,10 @@ fn unauthorize() {
     let mut app = ElysApp::default();
     let code = ContractWrapper::new(execute, instantiate, query);
     let code_id = app.store_code(Box::new(code));
-    let init_msg = InstantiateMsg { orders: vec![] };
+    let init_msg = InstantiateMockMsg {
+        epoch_cycle_interval: 1,
+        orders: vec![],
+    };
     let random_user = Addr::unchecked("random");
     let exec_msg = ExecuteMsg::ProcessOrder {};
 

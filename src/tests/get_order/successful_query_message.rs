@@ -7,7 +7,8 @@ use query_resp::GetOrderResp;
 fn successful_query_message() {
     let mut app = ElysApp::new();
 
-    let instantiate_msg = InstantiateMsg {
+    let instantiate_msg = InstantiateMockMsg {
+        epoch_cycle_interval: 2,
         orders: vec![Order::new_dummy()],
     };
     let id = instantiate_msg.orders[0].order_id.clone().to_owned();

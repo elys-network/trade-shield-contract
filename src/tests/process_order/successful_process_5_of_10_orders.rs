@@ -20,7 +20,10 @@ fn successful_process_5_of_10_orders() {
 
     let orders = create_dummy_orders();
 
-    let instantiate_msg = InstantiateMsg { orders };
+    let instantiate_msg = InstantiateMockMsg {
+        epoch_cycle_interval: 1,
+        orders,
+    };
     let execute_msg = ExecuteMsg::ProcessOrder {};
 
     let addr = app

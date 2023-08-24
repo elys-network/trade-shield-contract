@@ -87,14 +87,14 @@ mod action {
 #[cfg(test)]
 mod tests {
     use crate::{
-        entry_point::*,
+        entry_point::{execute, query},
         msg::*,
         types::{Order, OrderType},
         ContractError,
     };
     use cosmwasm_std::{coin, coins, Addr, Event};
     use cw_multi_test::{ContractWrapper, Executor};
-
+    pub use mock::instantiate::*;
     mod get_order_id_from_events;
 
     mod create_order {
@@ -129,6 +129,7 @@ mod tests {
     }
 
     mod mock {
+        pub mod instantiate;
         pub mod multitest;
         mod test;
     }
