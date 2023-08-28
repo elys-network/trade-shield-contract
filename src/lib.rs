@@ -130,7 +130,6 @@ mod tests {
     }
 
     mod mock {
-        pub mod execute;
         pub mod instantiate;
         pub mod multitest;
         mod test;
