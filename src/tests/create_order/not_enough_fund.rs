@@ -1,3 +1,5 @@
+use cosmwasm_std::{to_binary, OverflowError, StdError, WasmMsg};
+
 use crate::tests::mock::multitest::ElysApp;
 
 use super::*;
@@ -8,6 +10,11 @@ fn not_enough_fund() {
     let mut app = ElysApp::new_with_wallets(wallets);
 
     let instantiate_msg = InstantiateMsg { orders: vec![] };
+    let create_order_msg = ExecuteMsg::CreateOrder {
+        order_type: OrderType::TakeProfit,
+        order_price: coin(255, "btc"),
+        order_amm_routes: vec![],
+    };
 
     let code = ContractWrapper::new(execute, instantiate, query);
     let code_id = app.store_code(Box::new(code));
@@ -27,16 +34,16 @@ fn not_enough_fund() {
         .execute_contract(
             Addr::unchecked("user"),
             addr.clone(),
-            &ExecuteMsg::CreateOrder {
-                order_type: OrderType::TakeProfit,
-                order_price: coin(255, "btc"),
-            },
+            &create_order_msg,
             &coins(45, "eth"),
         )
         .unwrap_err();
-    let error_msg = "error executing WasmMsg:\nsender: user\nExecute { contract_addr: \"contract0\", msg: {\"create_order\":{\"order_type\":\"take_profit\",\"order_price\":{\"denom\":\"btc\",\"amount\":\"255\"}}}, funds: [Coin { 45 \"eth\" }] }";
 
-    assert_eq!(error_msg.to_owned(), err.to_string());
+    let error_msg: StdError = StdError::Overflow {
+        source: OverflowError::new(cosmwasm_std::OverflowOperation::Sub, 40, 45),
+    };
+
+    assert_eq!(error_msg, err.downcast().unwrap());
 
     assert_eq!(
         app.wrap()

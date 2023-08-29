@@ -1,4 +1,4 @@
-use crate::types::{order::order::Order, order_type::OrderType};
+use crate::types::{order::order::Order, order_type::OrderType, SwapAmountInRoute};
 use cosmwasm_std::{Addr, Coin};
 
 impl Order {
@@ -7,6 +7,7 @@ impl Order {
         order_price: Coin,
         order_amount: Coin,
         owner_address: Addr,
+        order_amm_routes: Vec<SwapAmountInRoute>,
         order_vec: &Vec<Order>,
     ) -> Order {
         let order_id: u128 = match order_vec.iter().max_by_key(|s| s.order_id) {
@@ -20,6 +21,7 @@ impl Order {
             order_amount,
             owner_address,
             order_id,
+            order_amm_routes,
         }
     }
 }

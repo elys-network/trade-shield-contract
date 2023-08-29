@@ -29,6 +29,7 @@ fn successful_create_order() {
             &ExecuteMsg::CreateOrder {
                 order_type: OrderType::TakeProfit,
                 order_price: coin(255, "btc"),
+                order_amm_routes: vec![],
             },
             &coins(45, "eth"),
         )

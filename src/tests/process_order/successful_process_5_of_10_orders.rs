@@ -179,6 +179,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_price: coin(1950, "usdc"),
             order_amount: coin(1, "eth"),
             owner_address: Addr::unchecked("user"),
+            order_amm_routes: vec![],
         },
         Order {
             order_type: OrderType::StopLoss,
@@ -186,6 +187,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_price: coin(12000, "usdc"),
             order_amount: coin(2, "btc"),
             owner_address: Addr::unchecked("user"),
+            order_amm_routes: vec![],
         },
         Order {
             order_type: OrderType::StopLoss,
@@ -193,6 +195,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_price: coin(10000, "usdc"),
             order_amount: coin(3, "btc"),
             owner_address: Addr::unchecked("user"),
+            order_amm_routes: vec![],
         },
         Order {
             order_type: OrderType::StopLoss,
@@ -200,6 +203,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_price: coin(1500, "usdc"),
             order_amount: coin(5, "eth"),
             owner_address: Addr::unchecked("user"),
+            order_amm_routes: vec![],
         },
         Order {
             order_type: OrderType::StopLoss,
@@ -207,6 +211,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_price: coin(1800, "usdc"),
             order_amount: coin(1, "eth"),
             owner_address: Addr::unchecked("user"),
+            order_amm_routes: vec![],
         },
         Order {
             order_type: OrderType::TakeProfit,
@@ -214,6 +219,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_price: coin(2500, "usdc"),
             order_amount: coin(1, "eth"),
             owner_address: Addr::unchecked("user"),
+            order_amm_routes: vec![],
         },
         Order {
             order_type: OrderType::TakeProfit,
@@ -221,6 +227,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_price: coin(21000, "usdc"),
             order_amount: coin(3, "btc"),
             owner_address: Addr::unchecked("user"),
+            order_amm_routes: vec![],
         },
         Order {
             order_type: OrderType::TakeProfit,
@@ -228,6 +235,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_price: coin(25000, "usdc"),
             order_amount: coin(2, "btc"),
             owner_address: Addr::unchecked("user"),
+            order_amm_routes: vec![],
         },
         Order {
             order_type: OrderType::TakeProfit,
@@ -235,6 +243,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_price: coin(30000, "usdc"),
             order_amount: coin(1, "btc"),
             owner_address: Addr::unchecked("user"),
+            order_amm_routes: vec![],
         },
         Order {
             order_type: OrderType::TakeProfit,
@@ -242,6 +251,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_price: coin(2100, "usdc"),
             order_amount: coin(1, "eth"),
             owner_address: Addr::unchecked("user"),
+            order_amm_routes: vec![],
         },
     ]
 }

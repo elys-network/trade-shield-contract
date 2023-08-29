@@ -27,6 +27,7 @@ fn coin_number() {
             &ExecuteMsg::CreateOrder {
                 order_type: OrderType::StopLoss,
                 order_price: coin(100, "eth"),
+                order_amm_routes: vec![],
             },
             &[],
         )

@@ -1,4 +1,4 @@
-use crate::types::OrderType;
+use crate::types::{OrderType, SwapAmountInRoute};
 use cosmwasm_schema::cw_serde;
 use cosmwasm_std::Coin;
 
@@ -7,6 +7,7 @@ pub enum ExecuteMsg {
     CreateOrder {
         order_type: OrderType,
         order_price: Coin,
+        order_amm_routes: Vec<SwapAmountInRoute>,
     },
     CancelOrder {
         order_id: u128,
