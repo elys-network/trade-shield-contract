@@ -1,5 +1,5 @@
 #[allow(unused_imports)]
-use super::query_resp::GetOrderResp;
+use super::query_resp::*;
 use cosmwasm_schema::{cw_serde, QueryResponses};
 
 #[cw_serde]
@@ -7,4 +7,6 @@ use cosmwasm_schema::{cw_serde, QueryResponses};
 pub enum QueryMsg {
     #[returns(GetOrderResp)]
     GetOrder { order_id: u128 },
+    #[returns(GetAllPricesResp)]
+    GetAllPrices {},
 }

@@ -40,7 +40,9 @@ mod process_order {
     mod unauthorize;
 }
 
+pub use mock::instantiate::*;
 mod mock {
+    pub mod instantiate;
     pub mod multitest;
     mod test;
 }

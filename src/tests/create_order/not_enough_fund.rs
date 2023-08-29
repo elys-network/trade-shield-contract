@@ -9,7 +9,10 @@ fn not_enough_fund() {
     let wallets = vec![("user", coins(40, "eth"))];
     let mut app = ElysApp::new_with_wallets(wallets);
 
-    let instantiate_msg = InstantiateMsg { orders: vec![] };
+    let instantiate_msg = InstantiateMockMsg {
+        epoch_cycle_interval: 1,
+        orders: vec![],
+    };
     let create_order_msg = ExecuteMsg::CreateOrder {
         order_type: OrderType::TakeProfit,
         order_price: coin(255, "btc"),
