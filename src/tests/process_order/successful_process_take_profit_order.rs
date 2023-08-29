@@ -19,6 +19,7 @@ fn successful_process_take_profit_order() {
         coin(30000, "usdc"),
         coin(2, "btc"),
         Addr::unchecked("user"),
+        vec![],
         &vec![],
     );
 

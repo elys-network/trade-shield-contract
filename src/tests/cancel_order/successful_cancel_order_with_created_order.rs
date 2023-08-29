@@ -33,6 +33,7 @@ fn successful_cancel_order_with_created_order() {
             &ExecuteMsg::CreateOrder {
                 order_type: OrderType::TakeProfit,
                 order_price: coin(255, "eth"),
+                order_amm_routes: vec![],
             },
             &coins(45, "eth"),
         )

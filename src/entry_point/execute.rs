@@ -16,7 +16,8 @@ pub fn execute(
         CreateOrder {
             order_type,
             order_price,
-        } => create_order(env, deps, info, order_type, order_price),
+            order_amm_routes,
+        } => create_order(env, deps, info, order_type, order_price, order_amm_routes),
         CancelOrder { order_id } => cancel_order(info, deps, order_id),
         ProcessOrder {} => process_order(deps, info),
     }

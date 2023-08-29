@@ -19,6 +19,7 @@ fn successful_process_stop_loss_order() {
         coin(20000, "usdc"),
         coin(2, "btc"),
         Addr::unchecked("user"),
+        vec![],
         &vec![],
     );
 
