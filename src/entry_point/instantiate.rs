@@ -6,9 +6,9 @@ pub fn instantiate(
     deps: DepsMut<ElysQuery>,
     _env: Env,
     _info: MessageInfo,
-    msg: InstantiateMsg,
+    _msg: InstantiateMsg,
 ) -> StdResult<Response> {
-    ORDER.save(deps.storage, &msg.orders)?;
+    ORDER.save(deps.storage, &vec![])?;
 
     Ok(Response::new())
 }
