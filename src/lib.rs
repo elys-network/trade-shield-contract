@@ -14,6 +14,7 @@ pub mod entry_point {
 }
 
 mod bindings {
+    pub mod msg;
     pub mod querier;
     pub mod query;
     pub mod query_resp;
@@ -44,12 +45,17 @@ pub mod types {
         }
     }
     mod price;
+    mod pool;
+    mod swap_route;
+
     pub use order::order::Order;
     mod page_request;
     pub use page_request::PageRequest;
     pub mod page_response;
     pub use order_type::OrderType;
     pub use price::Price;
+    pub use pool::*;
+    pub use swap_route::*;
 }
 
 mod error;
@@ -89,56 +95,7 @@ mod action {
 }
 
 #[cfg(test)]
-mod tests {
-    use crate::{
-        entry_point::{execute, query},
-        msg::*,
-        types::{Order, OrderType},
-        ContractError,
-    };
-    use cosmwasm_std::{coin, coins, Addr, Event};
-    use cw_multi_test::{ContractWrapper, Executor};
-    pub use mock::instantiate::*;
-    mod get_order_id_from_events;
-
-    mod create_order {
-        use super::*;
-        mod coin_number;
-        mod not_enough_fund;
-        mod successful_create_order;
-    }
-
-    mod cancel_order {
-        use super::*;
-        mod not_found;
-        mod successful_cancel_order_with_created_order;
-        mod unauthorized;
-
-        mod successful_cancel_order_with_dummy_order;
-    }
-
-    mod get_order {
-        use super::*;
-        use cosmwasm_std::{Binary, StdError};
-        mod not_found;
-        mod successful_query_message;
-    }
-
-    mod process_order {
-        use super::*;
-        mod automated_order_execution_test;
-        mod successful_process_5_of_10_orders;
-        mod successful_process_stop_loss_order;
-        mod successful_process_take_profit_order;
-        mod unauthorize;
-    }
-
-    mod mock {
-        pub mod instantiate;
-        pub mod multitest;
-        mod test;
-    }
-}
+mod tests;
 
 use cosmwasm_std::{entry_point, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult};
 use msg::*;

@@ -8,6 +8,7 @@ pub fn create_order(
     info: MessageInfo,
     order_type: OrderType,
     order_price: Coin,
+    order_amm_routes: Vec<SwapAmountInRoute>,
 ) -> Result<Response, ContractError> {
     if info.funds.len() != 1 {
         return Err(ContractError::CoinNumber);
@@ -20,6 +21,7 @@ pub fn create_order(
         order_price,
         info.funds[0].clone(),
         info.sender.clone(),
+        order_amm_routes,
         &order_vec,
     );
 

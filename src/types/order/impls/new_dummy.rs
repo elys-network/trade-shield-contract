@@ -9,6 +9,7 @@ impl Order {
             order_price: coin(5, "eth"),
             order_amount: coin(1000, "btc"),
             owner_address: Addr::unchecked("user"),
+            order_amm_routes: vec![],
         }
     }
 }
