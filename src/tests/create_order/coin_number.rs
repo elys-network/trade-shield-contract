@@ -6,7 +6,10 @@ use super::*;
 fn coin_number() {
     let mut app = ElysApp::new();
 
-    let instantiate_msg = InstantiateMsg { orders: vec![] };
+    let instantiate_msg = InstantiateMockMsg {
+        epoch_cycle_interval: 1,
+        orders: vec![],
+    };
 
     let code = ContractWrapper::new(execute, instantiate, query);
     let code_id = app.store_code(Box::new(code));
