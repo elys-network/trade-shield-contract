@@ -8,7 +8,8 @@ fn successful_cancel_order_with_dummy_order() {
     let mut app = ElysApp::new_with_wallets(wallets);
     let dummy_order = Order::new_dummy();
 
-    let instantiate_msg = InstantiateMsg {
+    let instantiate_msg = InstantiateMockMsg {
+        epoch_cycle_interval: 2,
         orders: vec![dummy_order.clone()],
     };
 

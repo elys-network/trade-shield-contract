@@ -6,7 +6,10 @@ use super::*;
 fn successful_create_order() {
     let wallet = vec![("user", coins(150, "eth"))];
     let mut app = ElysApp::new_with_wallets(wallet);
-    let instantiate_msg = InstantiateMsg { orders: vec![] };
+    let instantiate_msg = InstantiateMockMsg {
+        epoch_cycle_interval: 1,
+        orders: vec![],
+    };
 
     let code = ContractWrapper::new(execute, instantiate, query);
     let code_id = app.store_code(Box::new(code));

@@ -23,10 +23,10 @@ fn successful_process_take_profit_order() {
         &vec![],
     );
 
-    let instantiate_msg = InstantiateMsg {
+    let instantiate_msg = InstantiateMockMsg {
+        epoch_cycle_interval: 2,
         orders: vec![dummy_order],
     };
-
     let execute_msg = ExecuteMsg::ProcessOrder {};
 
     let addr = app

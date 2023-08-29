@@ -23,7 +23,8 @@ fn successful_process_stop_loss_order() {
         &vec![],
     );
 
-    let instantiate_msg = InstantiateMsg {
+    let instantiate_msg = InstantiateMockMsg {
+        epoch_cycle_interval: 2,
         orders: vec![dummy_order],
     };
 

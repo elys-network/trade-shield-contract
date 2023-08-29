@@ -8,7 +8,10 @@ fn successful_cancel_order_with_created_order() {
     let wallets = vec![("user", coins(150, "eth"))];
     let mut app = ElysApp::new_with_wallets(wallets);
 
-    let instantiate_msg = InstantiateMsg { orders: vec![] };
+    let instantiate_msg = InstantiateMockMsg {
+        epoch_cycle_interval: 1,
+        orders: vec![],
+    };
     let code = ContractWrapper::new(execute, instantiate, query);
     let code_id = app.store_code(Box::new(code));
 
