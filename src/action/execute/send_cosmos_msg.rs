@@ -2,7 +2,6 @@ use cosmwasm_schema::cw_serde;
 use cosmwasm_std::{to_binary, WasmMsg};
 
 use super::*;
-use crate::bindings::query::ElysQuery;
 
 #[cw_serde]
 pub enum ExecuteMsg {

@@ -18,7 +18,7 @@ impl<'a> ElysQuerier<'a> {
         };
         let request: QueryRequest<ElysQuery> = QueryRequest::Custom(prices_query);
         let resp: AllPriceResponse = self.querier.query(&request)?;
-        pagination.update(resp.pagination.key);
+        pagination.update(resp.pagination.next_key);
         let result: Vec<Coin> = resp
             .price
             .iter()

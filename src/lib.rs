@@ -31,7 +31,7 @@ pub mod msg {
     pub mod query_resp {
         mod get_all_prices_resp;
         mod get_order_resp;
-        pub use get_all_prices_resp::AllPriceResponse;
+        pub use get_all_prices_resp::GetAllPricesResponse;
         pub use get_order_resp::GetOrderResp;
     }
 }

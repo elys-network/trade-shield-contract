@@ -1,4 +1,4 @@
-use cosmwasm_std::{to_binary, OverflowError, StdError, WasmMsg};
+use cosmwasm_std::{OverflowError, StdError};
 
 use crate::tests::mock::multitest::ElysApp;
 

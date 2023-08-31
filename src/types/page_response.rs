@@ -3,6 +3,6 @@ use cosmwasm_std::Binary;
 
 #[cw_serde]
 pub struct PageResponse {
-    pub key: Option<Binary>,
-    pub total: u32,
+    pub next_key: Option<Binary>,
+    // pub total: Option<u64>,
 }

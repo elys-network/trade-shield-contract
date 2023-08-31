@@ -9,6 +9,6 @@ pub fn query(deps: Deps<ElysQuery>, _env: Env, msg: QueryMsg) -> Result<Binary, 
 
     match msg {
         GetOrder { order_id } => Ok(to_binary(&query::get_order(deps, order_id)?)?),
-        PriceAll {} => Ok(to_binary(&query::get_all_prices(deps)?)?),
+        GetAllPrices {} => Ok(to_binary(&query::get_all_prices(deps)?)?),
     }
 }
