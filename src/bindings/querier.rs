@@ -1,6 +1,6 @@
 use cosmwasm_std::{coin, Coin, QuerierWrapper, QueryRequest, StdResult};
 
-use crate::{bindings::query_resp::GetAllPricesResp, types::PageRequest};
+use crate::{bindings::query_resp::AllPriceResponse, types::PageRequest};
 
 use super::query::ElysQuery;
 
@@ -12,15 +12,15 @@ impl<'a> ElysQuerier<'a> {
     pub fn new(querier: &'a QuerierWrapper<'a, ElysQuery>) -> Self {
         ElysQuerier { querier }
     }
-    pub fn get_all_prices(&self, page_request: &mut PageRequest) -> StdResult<Vec<Coin>> {
-        let prices_query = ElysQuery::GetAllPrices {
-            page_request: page_request.to_owned(),
+    pub fn get_all_prices(&self, pagination: &mut PageRequest) -> StdResult<Vec<Coin>> {
+        let prices_query = ElysQuery::PriceAll {
+            pagination: pagination.to_owned(),
         };
-        let request: QueryRequest<ElysQuery> = ElysQuery::into(prices_query);
-        let resp: GetAllPricesResp = self.querier.query(&request)?;
-        page_request.update(resp.page_response.key);
+        let request: QueryRequest<ElysQuery> = QueryRequest::Custom(prices_query);
+        let resp: AllPriceResponse = self.querier.query(&request)?;
+        pagination.update(resp.pagination.key);
         let result: Vec<Coin> = resp
-            .prices
+            .price
             .iter()
             .map(|price| coin(price.price.atomics().u128(), &price.asset))
             .collect();

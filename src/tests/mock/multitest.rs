@@ -50,9 +50,7 @@ impl Module for OracleModule {
         request: Self::QueryT,
     ) -> AnyResult<cosmwasm_std::Binary> {
         match request {
-            ElysQuery::GetAllPrices { page_request } => {
-                Ok(to_binary(&self.get_all_price(storage)?)?)
-            }
+            ElysQuery::PriceAll { pagination } => Ok(to_binary(&self.get_all_price(storage)?)?),
         }
     }
 

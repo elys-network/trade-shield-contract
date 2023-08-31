@@ -31,7 +31,7 @@ pub mod msg {
     pub mod query_resp {
         mod get_all_prices_resp;
         mod get_order_resp;
-        pub use get_all_prices_resp::GetAllPricesResp;
+        pub use get_all_prices_resp::AllPriceResponse;
         pub use get_order_resp::GetOrderResp;
     }
 }
@@ -86,6 +86,7 @@ mod action {
         mod cancel_order;
         mod create_order;
         mod process_order;
+        mod send_cosmos_msg;
 
         use super::*;
         use cosmwasm_std::{BankMsg, Coin, CosmosMsg, DepsMut, Env, MessageInfo, Response};
@@ -93,6 +94,7 @@ mod action {
         pub use cancel_order::cancel_order;
         pub use create_order::create_order;
         pub use process_order::process_order;
+        pub use send_cosmos_msg::send_cosmos_msg;
     }
 }
 

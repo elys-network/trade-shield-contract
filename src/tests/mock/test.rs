@@ -8,8 +8,8 @@ fn check_prices(app: &mut ElysApp, prices: &Vec<Coin>) {
     let dummy_req = PageRequest::new(20);
 
     let prices = prices.to_owned();
-    let request = ElysQuery::GetAllPrices {
-        page_request: dummy_req,
+    let request = ElysQuery::PriceAll {
+        pagination: dummy_req,
     }
     .into();
     let actual_prices: Vec<Coin> = app.wrap().query(&request).unwrap();

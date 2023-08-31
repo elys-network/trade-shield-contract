@@ -1,15 +1,15 @@
 use super::*;
 use crate::{
     bindings::{querier::ElysQuerier, query::ElysQuery},
-    msg::query_resp::GetAllPricesResp,
+    msg::query_resp::AllPriceResponse,
 };
 
-pub fn get_all_prices(deps: Deps<ElysQuery>) -> Result<GetAllPricesResp, ContractError> {
+pub fn get_all_prices(deps: Deps<ElysQuery>) -> Result<AllPriceResponse, ContractError> {
     let querier = ElysQuerier::new(&deps.querier);
 
-    let mut page_request = PageRequest::new(20);
-    let prices = querier.get_all_prices(&mut page_request)?;
-    let resp = GetAllPricesResp { prices };
+    let mut pagination = PageRequest::new(20);
+    let prices = querier.get_all_prices(&mut pagination)?;
+    let resp = AllPriceResponse { prices };
 
     Ok(resp)
 }
