@@ -13,8 +13,4 @@ pub enum ExecuteMsg {
         order_id: u128,
     },
     ProcessOrder {},
-    SendMsg {
-        contract_addr: String,
-        message: String,
-    },
 }

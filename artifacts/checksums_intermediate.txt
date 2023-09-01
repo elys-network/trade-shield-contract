@@ -1,1 +1,0 @@
-d9b73b64cf8aa1756810fd58b0554f366b9e130191f44a065cb10a62e60b3b0b  /target/wasm32-unknown-unknown/release/trade_shield_contract.wasm

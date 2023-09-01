@@ -86,7 +86,6 @@ mod action {
         mod cancel_order;
         mod create_order;
         mod process_order;
-        mod send_cosmos_msg;
 
         use super::*;
         use cosmwasm_std::{BankMsg, Coin, CosmosMsg, DepsMut, Env, MessageInfo, Response};
@@ -94,7 +93,6 @@ mod action {
         pub use cancel_order::cancel_order;
         pub use create_order::create_order;
         pub use process_order::process_order;
-        pub use send_cosmos_msg::send_cosmos_msg;
     }
 }
 

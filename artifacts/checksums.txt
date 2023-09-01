@@ -1,1 +1,0 @@
-aeedcfb1a8740ba8d79529a3afbd24ebe968e99e8d632b35ae8c912a1694b9c6  trade_shield_contract.wasm
