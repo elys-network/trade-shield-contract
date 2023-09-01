@@ -1,5 +1,5 @@
 use crate::{
-    entry_point::*,
+    entry_point::{execute, query},
     msg::*,
     types::{Order, OrderType},
     ContractError,
@@ -40,7 +40,10 @@ mod process_order {
     mod unauthorize;
 }
 
+pub use mock::instantiate::*;
 mod mock {
+    pub mod instantiate;
+    #[allow(dead_code, unused)]
     pub mod multitest;
     mod test;
 }

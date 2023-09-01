@@ -1,4 +1,4 @@
-use crate::bindings::{query::ElysQuery, query_resp::GetAllPricesResp};
+use crate::bindings::query::ElysQuery;
 use anyhow::{bail, Result as AnyResult};
 use cosmwasm_std::{
     testing::{MockApi, MockStorage},
@@ -15,10 +15,8 @@ pub const BLOCK_TIME: u64 = 5;
 pub struct OracleModule {}
 
 impl OracleModule {
-    fn get_all_price(&self, store: &dyn Storage) -> StdResult<GetAllPricesResp> {
-        Ok(GetAllPricesResp {
-            prices: PRICES.load(store)?,
-        })
+    fn get_all_price(&self, store: &dyn Storage) -> StdResult<Vec<Coin>> {
+        Ok(PRICES.load(store)?)
     }
 
     pub fn set_prices(&self, store: &mut dyn Storage, prices: &Vec<Coin>) -> StdResult<()> {
@@ -52,7 +50,7 @@ impl Module for OracleModule {
         request: Self::QueryT,
     ) -> AnyResult<cosmwasm_std::Binary> {
         match request {
-            ElysQuery::GetAllPrices {} => Ok(to_binary(&self.get_all_price(storage)?)?),
+            ElysQuery::PriceAll { pagination } => Ok(to_binary(&self.get_all_price(storage)?)?),
         }
     }
 

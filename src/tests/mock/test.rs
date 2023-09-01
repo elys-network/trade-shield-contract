@@ -1,20 +1,26 @@
 use cosmwasm_std::{coin, Coin};
 
-use crate::bindings::{query::ElysQuery, query_resp::GetAllPricesResp};
+use crate::{bindings::query::ElysQuery, types::PageRequest};
 
 use super::multitest::*;
 
 fn check_prices(app: &mut ElysApp, prices: &Vec<Coin>) {
+    let dummy_req = PageRequest::new(20);
+
     let prices = prices.to_owned();
-    let request = ElysQuery::GetAllPrices {}.into();
-    let actual_prices: GetAllPricesResp = app.wrap().query(&request).unwrap();
-    assert_eq!(prices, actual_prices.prices);
+    let request = ElysQuery::PriceAll {
+        pagination: dummy_req,
+    }
+    .into();
+    let actual_prices: Vec<Coin> = app.wrap().query(&request).unwrap();
+    assert_eq!(prices, actual_prices);
 }
 
 #[test]
 fn query_price() {
     let mut prices: Vec<Coin> = vec![coin(20000, "btc"), coin(1, "usdc")];
     let mut app = ElysApp::new();
+
     app.init_modules(|router, _, storage| router.custom.set_prices(storage, &prices))
         .unwrap();
 

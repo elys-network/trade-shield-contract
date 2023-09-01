@@ -29,7 +29,9 @@ pub mod msg {
     pub use instantiate_msg::InstantiateMsg;
     pub use query_msg::QueryMsg;
     pub mod query_resp {
+        mod get_all_prices_resp;
         mod get_order_resp;
+        pub use get_all_prices_resp::GetAllPricesResponse;
         pub use get_order_resp::GetOrderResp;
     }
 }
@@ -39,17 +41,22 @@ pub mod types {
     mod order {
         pub mod order;
         mod impls {
-            pub mod new;
+            mod new;
             #[cfg(test)]
-            pub mod new_dummy;
+            mod new_dummy;
         }
     }
     mod pool;
+    mod price;
     mod swap_route;
 
     pub use order::order::Order;
+    mod page_request;
+    pub use page_request::PageRequest;
+    pub mod page_response;
     pub use order_type::OrderType;
     pub use pool::*;
+    pub use price::Price;
     pub use swap_route::*;
 }
 
@@ -67,11 +74,11 @@ mod action {
     use crate::{states::ORDER, types::*, ContractError};
 
     pub mod query {
+        mod get_all_price;
         mod get_order;
-
         use super::*;
         use cosmwasm_std::Deps;
-
+        pub use get_all_price::get_all_prices;
         pub use get_order::get_order;
     }
 

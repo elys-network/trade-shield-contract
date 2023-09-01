@@ -13,6 +13,7 @@ pub enum ElysMsg {
     },
 }
 
+#[allow(dead_code)]
 impl ElysMsg {
     pub fn swap_exact_amount_in(
         contract_addr: &str,
