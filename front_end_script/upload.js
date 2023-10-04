@@ -19,6 +19,8 @@ const sender = {
   address: "elys12tzylat4udvjj56uuhu3vj2n4vgp7cf9fwna9w",
 };
 
+const GASPRICE = "0.05uelys";
+
 const trade_shield_contract_addr =
   "elys14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9s3fsthx";
 
@@ -40,8 +42,14 @@ async function getOrder(order_id) {
   console.log(`Result: `, result);
 }
 
-async function createOrder() {
-  const gasPrice = GasPrice.fromString("0.05uelys");
+async function createOrder(
+  order_amm_routes,
+  order_price,
+  order_type,
+  amount_send,
+  denom_send
+) {
+  const gasPrice = GasPrice.fromString(GASPRICE);
   const sender_wallet = await DirectSecp256k1HdWallet.fromMnemonic(
     sender.mnemonic,
     { prefix: "elys" }
@@ -53,9 +61,9 @@ async function createOrder() {
   const executeFee = calculateFee(300_000, gasPrice);
   const msg = {
     create_order: {
-      order_amm_routes: [],
-      order_price: { denom: "ueden", amount: "15" },
-      order_type: "stop_loss",
+      order_amm_routes: order_amm_routes,
+      order_price: order_price,
+      order_type: order_type,
     },
   };
 
@@ -65,13 +73,13 @@ async function createOrder() {
     msg,
     executeFee,
     "",
-    coins("512", "uelys")
+    coins(amount_send, denom_send)
   );
   console.log("create_order_res:", create_order_res);
 }
 
 async function cancelOrder(order_id) {
-  const gasPrice = GasPrice.fromString("0.05uelys");
+  const gasPrice = GasPrice.fromString(GASPRICE);
   const sender_wallet = await DirectSecp256k1HdWallet.fromMnemonic(
     sender.mnemonic,
     { prefix: "elys" }
