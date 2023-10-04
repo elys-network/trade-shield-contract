@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@cosmjs/cosmwasm-stargate": "^0.31.1",
+    "@cosmjs/proto-signing": "^0.31.1",
+    "@cosmjs/stargate": "^0.31.1",
+    "fs": "^0.0.1-security"
+  }
+}
