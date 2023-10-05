@@ -217,7 +217,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_amm_routes: vec![],
         },
         Order {
-            order_type: OrderType::TakeProfit,
+            order_type: OrderType::LimitSell,
             order_id: 5,
             order_price: coin(2500, "usdc"),
             order_amount: coin(1, "eth"),
@@ -225,7 +225,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_amm_routes: vec![],
         },
         Order {
-            order_type: OrderType::TakeProfit,
+            order_type: OrderType::LimitSell,
             order_id: 6,
             order_price: coin(21000, "usdc"),
             order_amount: coin(3, "btc"),
@@ -233,7 +233,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_amm_routes: vec![],
         },
         Order {
-            order_type: OrderType::TakeProfit,
+            order_type: OrderType::LimitSell,
             order_id: 7,
             order_price: coin(25000, "usdc"),
             order_amount: coin(2, "btc"),
@@ -241,7 +241,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_amm_routes: vec![],
         },
         Order {
-            order_type: OrderType::TakeProfit,
+            order_type: OrderType::LimitSell,
             order_id: 8,
             order_price: coin(30000, "usdc"),
             order_amount: coin(1, "btc"),
@@ -249,7 +249,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_amm_routes: vec![],
         },
         Order {
-            order_type: OrderType::TakeProfit,
+            order_type: OrderType::LimitSell,
             order_id: 9,
             order_price: coin(2100, "usdc"),
             order_amount: coin(1, "eth"),

@@ -31,7 +31,7 @@ fn successful_cancel_order_with_created_order() {
             Addr::unchecked("user"),
             addr.clone(),
             &ExecuteMsg::CreateOrder {
-                order_type: OrderType::TakeProfit,
+                order_type: OrderType::LimitSell,
                 order_price: coin(255, "eth"),
                 order_amm_routes: vec![],
             },

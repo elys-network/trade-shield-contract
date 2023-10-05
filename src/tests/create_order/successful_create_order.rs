@@ -30,7 +30,7 @@ fn successful_create_order() {
             Addr::unchecked("user"),
             addr.clone(),
             &ExecuteMsg::CreateOrder {
-                order_type: OrderType::TakeProfit,
+                order_type: OrderType::LimitSell,
                 order_price: coin(255, "btc"),
                 order_amm_routes: vec![],
             },

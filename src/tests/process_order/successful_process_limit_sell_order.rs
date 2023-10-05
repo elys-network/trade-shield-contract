@@ -4,7 +4,7 @@ use super::*;
 use cosmwasm_std::{coins, Coin};
 
 #[test]
-fn successful_process_take_profit_order() {
+fn successful_process_limit_sell_order() {
     let wallets: Vec<(&str, Vec<Coin>)> = vec![("owner", coins(2, "btc")), ("user", vec![])];
     let mut app = ElysApp::new_with_wallets(wallets);
 
@@ -15,7 +15,7 @@ fn successful_process_take_profit_order() {
     let code_id = app.store_code(Box::new(code));
 
     let dummy_order = Order::new(
-        OrderType::TakeProfit,
+        OrderType::LimitSell,
         coin(30000, "usdc"),
         coin(2, "btc"),
         Addr::unchecked("user"),
