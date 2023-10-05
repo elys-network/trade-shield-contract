@@ -1,0 +1,22 @@
+title Sequence Diagram for Canceling a Limit Sell Order
+
+User [icon: user] > Elys RPC : Send a Request to cancel a Limit Sell order\n(order's ID, user's address)
+Elys RPC [icon: tool] > WASM Module: Send a Request to cancel a Limit Sell order\n(order's ID, user's address)
+WASM Module [icon: webassembly] > Limit Sell Contract [icon : Rust]: Send a Request to cancel a Limit Sell order\n(order's ID, user's address)
+
+Limit Sell Contract > Limit Sell Contract Store [icon : database]: Query information of the order
+Limit Sell Contract < Limit Sell Contract Store : Sending back information necessary to cancel the order\n(amount and asset of user's tokens)
+
+Limit Sell Contract > Bank Module [icon : api]: Send user's tokens back to his wallet from the Limit Sell contract wallet\nby calling the Bank module's Send Msg
+User < Bank Module: Send token to the User
+Limit Sell Contract < Bank Module : Token Successfully sended
+
+Limit Sell Contract > Limit Sell Contract Store  : Delete the order\n(order's ID)
+
+Limit Sell Contract < Limit Sell Contract Store: Order Successfully Deleted
+
+Limit Sell Contract > WASM Module: Return succes status
+
+WASM Module > Elys RPC: Return succes status
+
+Elys RPC > User: Tell the User that the Order as successfully be canceled

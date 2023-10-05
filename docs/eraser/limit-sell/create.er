@@ -1,0 +1,21 @@
+title Sequence Diagram for Creating a Limit Sell Order
+User [icon: user] > Elys RPC : Send a request to create a limit sell order to the Elys RPC\n
+Elys RPC [icon: tool] > WASM Module: Send a request to create a limit sell order to the WASM Module\n
+WASM Module [icon: webassembly] > Limit Sell Smart Contract [icon : Rust]: Send a request to create a limit sell order to the Limit Sell Smart Contract\n
+
+Limit Sell Smart Contract > Bank Module [icon : api]: Send user's tokens to the Limit Sell Smart contract wallet\n by calling the Bank module's Msg Send
+Limit Sell Smart Contract <-- Bank Module : Return a failure  response,\nwich will cancel the creation of the contract and return the error to the Limit Sell Smart Contract
+Limit Sell Smart Contract  --> WASM Module: Return the error to the WASM Module
+WASM Module  --> Elys RPC: Return the error to the Elys RPC
+Elys RPC  --> User: Return the error to the User
+
+Limit Sell Smart Contract < Bank Module : Tokens successfully send
+
+Limit Sell Smart Contract > Limit Sell Smart Contract Store [icon : database] : Store the order\n
+Limit Sell Smart Contract < Limit Sell Smart Contract Store: Return the ID of the order
+
+Limit Sell Smart Contract > WASM Module: Return the ID of the order to the WASM Module
+
+WASM Module > Elys RPC: Return the ID of the order to the Elys RPC
+
+Elys RPC > User: Order Succsesfully created
