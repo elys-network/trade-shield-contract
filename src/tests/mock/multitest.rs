@@ -1,4 +1,4 @@
-use crate::bindings::query::ElysQuery;
+use crate::bindings::{msg::ElysMsg, query::ElysQuery};
 use anyhow::{bail, Result as AnyResult};
 use cosmwasm_std::{
     testing::{MockApi, MockStorage},
@@ -37,7 +37,7 @@ impl OracleModule {
 }
 
 impl Module for OracleModule {
-    type ExecT = Empty;
+    type ExecT = ElysMsg;
     type QueryT = ElysQuery;
     type SudoT = Empty;
 
@@ -97,7 +97,7 @@ impl Module for OracleModule {
 }
 
 pub type ElysAppWrapped =
-    App<BankKeeper, MockApi, MockStorage, OracleModule, WasmKeeper<Empty, ElysQuery>>;
+    App<BankKeeper, MockApi, MockStorage, OracleModule, WasmKeeper<ElysMsg, ElysQuery>>;
 
 pub struct ElysApp(ElysAppWrapped);
 
@@ -129,7 +129,7 @@ impl Default for ElysApp {
 impl ElysApp {
     pub fn new_with_wallets(wallets: Vec<(&str, Vec<Coin>)>) -> Self {
         Self(
-            BasicAppBuilder::<Empty, ElysQuery>::new_custom()
+            BasicAppBuilder::<ElysMsg, ElysQuery>::new_custom()
                 .with_custom(OracleModule {})
                 .build(|roouter, _, storage| {
                     for (wallet_owner, wallet_contenent) in wallets {
@@ -144,7 +144,7 @@ impl ElysApp {
 
     pub fn new() -> Self {
         Self(
-            BasicAppBuilder::<Empty, ElysQuery>::new_custom()
+            BasicAppBuilder::<ElysMsg, ElysQuery>::new_custom()
                 .with_custom(OracleModule {})
                 .build(|_roouter, _, _storage| {}),
         )

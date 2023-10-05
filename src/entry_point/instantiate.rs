@@ -7,7 +7,7 @@ pub fn instantiate(
     _env: Env,
     _info: MessageInfo,
     _msg: InstantiateMsg,
-) -> StdResult<Response> {
+) -> StdResult<Response<ElysMsg>> {
     ORDER.save(deps.storage, &vec![])?;
 
     Ok(Response::new())

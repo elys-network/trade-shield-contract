@@ -1,7 +1,11 @@
 use cosmwasm_schema::cw_serde;
 use cosmwasm_std::{DepsMut, Env, MessageInfo, Response, StdResult};
 
-use crate::{bindings::query::ElysQuery, states::*, types::Order};
+use crate::{
+    bindings::{msg::ElysMsg, query::ElysQuery},
+    states::*,
+    types::Order,
+};
 
 #[cw_serde]
 pub struct InstantiateMockMsg {
@@ -14,7 +18,7 @@ pub fn instantiate(
     _env: Env,
     _info: MessageInfo,
     msg: InstantiateMockMsg,
-) -> StdResult<Response> {
+) -> StdResult<Response<ElysMsg>> {
     ORDER.save(deps.storage, &msg.orders)?;
     Ok(Response::new())
 }

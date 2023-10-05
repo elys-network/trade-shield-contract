@@ -9,7 +9,7 @@ pub fn create_order(
     order_type: OrderType,
     order_price: Coin,
     order_amm_routes: Vec<SwapAmountInRoute>,
-) -> Result<Response, ContractError> {
+) -> Result<Response<ElysMsg>, ContractError> {
     if info.funds.len() != 1 {
         return Err(ContractError::CoinNumber);
     };
