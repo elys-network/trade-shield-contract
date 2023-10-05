@@ -14,6 +14,7 @@ mod create_order {
     mod coin_number;
     mod not_enough_fund;
     mod successful_create_order;
+    mod successfuly_create_a_limit_buy_order;
 }
 
 mod cancel_order {
