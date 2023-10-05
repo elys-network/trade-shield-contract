@@ -1,0 +1,40 @@
+title Sequence Diagram for Executing a Limit Sell Order
+Limit Sell Contract [icon: rust] > Limit Sell Contract Store [icon: database]: Query all orders (token asset, token amount, stop value, user's address, order ID)
+
+Limit Sell Contract < Limit Sell Contract Store: Send back the list of orders
+
+Limit Sell Contract > Oracle Module [icon: eye]: Query the price of all assets by calling the oracle module's PriceAll Query
+
+Limit Sell Contract < Oracle Module: Response (all asset prices)
+
+Limit Sell Contract > AMM Module [icon: aperture]: Query all pools by calling the AMM module's PoolAll Query
+
+Limit Sell Contract < AMM Module: Response (all pools)
+
+Limit Sell Contract > Limit Sell Contract: Iterate over the list of orders
+
+Limit Sell Contract > Limit Sell Contract: If the price of the selling asset is under the stop-loss price, move to the next order
+
+Limit Sell Contract > Limit Sell Contract: Match the order with the corresponding pool based on the assets
+
+Limit Sell Contract > AMM Module: Swap the selling token from the smart contract wallet to the Pool using the AMM module's SwapExactAmountIn Msg
+
+Limit Sell Contract < AMM Module: Response with the amount of buying token they're valued for
+
+Limit Sell Contract > Bank Module [icon: api]: Send the converted token to the user using the Bank module's Send Msg
+
+Bank Module > User : send converted Token to the user
+
+Limit Sell Contract < Bank Module: Token successfully sent.
+
+Limit Sell Contract > Limit Sell Contract Store: Delete the order (order ID)
+
+Limit Sell Contract < Limit Sell Contract Store: Order successfully deleted
+
+Limit Sell Contract > WASM Module [icon: webassembly]: Emit a successful Limit Sell orders execution flow
+
+WASM Module > Cosmos Event Manager [icon: mail]:Emit a successful Limit Sell orders execution flow
+
+Cosmos Event Manager > User [icon: user]: Inform the User that the Order has been successfully executed
+
+order  Limit Sell Contract, Limit Sell Contract Store, Oracle Module, AMM Module, Bank Module, WASM Module,Cosmos Event Manager, User

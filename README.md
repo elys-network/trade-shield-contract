@@ -1,10 +1,10 @@
 # TradeShield Contract
 
-TradeShield is a repository hosting a smart contract for implementing stop loss and take profit functionalities on the Elys Network blockchain. This repository provides a robust and customizable solution for integrating advanced risk management mechanisms into decentralized applications.
+TradeShield is a repository hosting a smart contract for implementing stop loss and limit sell functionalities on the Elys Network blockchain. This repository provides a robust and customizable solution for integrating advanced risk management mechanisms into decentralized applications.
 
 ## Specifications
 
-The `docs` folder in this repository contains detailed specifications for implementing stop loss and take profit functionalities using the TradeShield smart contract. It includes comprehensive documentation and guidelines to assist developers in understanding and utilizing these features effectively.
+The `docs` folder in this repository contains detailed specifications for implementing stop loss and limit sell functionalities using the TradeShield smart contract. It includes comprehensive documentation and guidelines to assist developers in understanding and utilizing these features effectively.
 
 ## Smart Contract Framework
 
@@ -13,14 +13,14 @@ TradeShield smart contracts are built using the CosmWasm framework, which provid
 ## Features
 
 - **Stop Loss Functionality**: Enable users to set automated orders that trigger when the asset's price reaches a specified lower limit, minimizing potential losses.
-- **Take Profit Functionality**: Allow users to set automated orders that execute when the asset's price reaches a specified upper limit, securing profits.
+- **Limit Sell Functionality**: Allow users to set automated orders that execute when the asset's price reaches a specified upper limit, securing profits.
 
 ## Getting Started
 
 To start using TradeShield, follow these steps:
 
 1. Clone this repository to your local development environment.
-2. Navigate to the `docs` folder to access the detailed specifications and guidelines for implementing stop loss and take profit functionalities.
+2. Navigate to the `docs` folder to access the detailed specifications and guidelines for implementing stop loss and limit sell functionalities.
 3. Ensure you have the required dependencies, including the CosmWasm framework, Cosmos SDK 0.47, and the Elys Cosmos Modules.
 4. Review the example implementations provided in the repository to understand the integration process.
 5. Customize and deploy the TradeShield smart contracts according to your specific project requirements.
