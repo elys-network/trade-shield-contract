@@ -14,7 +14,7 @@ fn not_enough_fund() {
         orders: vec![],
     };
     let create_order_msg = ExecuteMsg::CreateOrder {
-        order_type: OrderType::TakeProfit,
+        order_type: OrderType::LimitSell,
         order_price: coin(255, "btc"),
         order_amm_routes: vec![],
     };
