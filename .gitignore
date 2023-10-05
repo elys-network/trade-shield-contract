@@ -3,3 +3,5 @@ target
 schema
 Cargo.lock
 artifacts
+front_end_script/node_modules
+front_end_script/package-lock.json
