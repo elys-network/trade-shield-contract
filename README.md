@@ -14,6 +14,7 @@ TradeShield smart contracts are built using the CosmWasm framework, which provid
 
 - **Stop Loss Functionality**: Enable users to set automated orders that trigger when the asset's price reaches a specified lower limit, minimizing potential losses.
 - **Limit Sell Functionality**: Allow users to set automated orders that execute when the asset's price reaches a specified upper limit, securing profits.
+- **Limit Buy Fuctionality**: Allow user to set automated orders that execute when the limit price is reaches, securing profits.
 
 ## Getting Started
 
