@@ -1,6 +1,6 @@
-use cosmwasm_std::SubMsg;
+use cosmwasm_std::{coin, coins, to_binary, SubMsg, WasmMsg};
 
-use crate::bindings::query::ElysQuery;
+use crate::{bindings::query::ElysQuery, msg::ExecuteMsg};
 
 use super::*;
 
@@ -18,7 +18,7 @@ pub fn process_order(
         order.order_amm_routes,
     );
 
-    let sub_msg = SubMsg::new(CosmosMsg::Custom(swap_msg));
+    let sub_msg = SubMsg::reply_always(swap_msg, 1);
 
     Ok(Response::new().add_submessage(sub_msg))
 }

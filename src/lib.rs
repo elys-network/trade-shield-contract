@@ -133,5 +133,5 @@ pub fn query(deps: Deps<ElysQuery>, env: Env, msg: QueryMsg) -> Result<Binary, C
 
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn reply(_deps: DepsMut<ElysQuery>, _env: Env, msg: Reply) -> Result<Response, ContractError> {
-    Ok(Response::default().add_attribute("action", format!("{:?}", msg)))
+    Ok(Response::default().add_attribute("the reply", format!("{:?}", msg)))
 }
