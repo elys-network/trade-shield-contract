@@ -41,7 +41,7 @@ fn successful_create_limit_sell_order() {
             addr.clone(),
             &ExecuteMsg::CreateOrder {
                 order_type: OrderType::LimitSell,
-                order_price_pair: OrderPricePair {
+                order_price: OrderPrice {
                     base_denom: "btc".to_string(),
                     quote_denom: "usdc".to_string(),
                     rate: Uint128::new(40000), // The desired selling price of 40000 USDC per BTC.

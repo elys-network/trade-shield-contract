@@ -41,7 +41,7 @@ fn successful_cancel_order_with_created_order() {
             addr.clone(),
             &ExecuteMsg::CreateOrder {
                 order_type: OrderType::StopLoss,
-                order_price_pair: OrderPricePair {
+                order_price: OrderPrice {
                     rate: Uint128::new(18),
                     base_denom: "btc".to_string(),
                     quote_denom: "eth".to_string(),

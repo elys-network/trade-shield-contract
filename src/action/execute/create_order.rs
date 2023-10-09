@@ -9,7 +9,7 @@ pub fn create_order(
     order_type: OrderType,
     order_source_denom: String,
     order_target_denom: String,
-    order_price_pair: OrderPricePair,
+    order_price: OrderPrice,
     order_amm_routes: Vec<SwapAmountInRoute>,
 ) -> Result<Response, ContractError> {
     if info.funds.len() != 1 {
@@ -19,7 +19,7 @@ pub fn create_order(
     check_denom_error(
         &order_source_denom,
         &order_target_denom,
-        &order_price_pair,
+        &order_price,
         &info.funds[0].denom,
     )?;
 
@@ -27,7 +27,7 @@ pub fn create_order(
 
     let new_order: Order = Order::new(
         order_type,
-        order_price_pair,
+        order_price,
         info.funds[0].clone(),
         info.sender.clone(),
         order_target_denom,
@@ -55,7 +55,7 @@ pub fn create_order(
 fn check_denom_error(
     order_source_denom: &str,
     order_target_denom: &str,
-    order_price_pair: &OrderPricePair,
+    order_price: &OrderPrice,
     funds_send_denom: &str,
 ) -> Result<(), ContractError> {
     if order_source_denom != funds_send_denom {
@@ -66,12 +66,12 @@ fn check_denom_error(
         return Err(ContractError::OrderSameDenom);
     }
 
-    if (order_price_pair.base_denom != order_source_denom
-        && order_price_pair.base_denom != order_target_denom)
-        || (order_price_pair.quote_denom != order_source_denom
-            && order_price_pair.quote_denom != order_target_denom)
+    if (order_price.base_denom != order_source_denom
+        && order_price.base_denom != order_target_denom)
+        || (order_price.quote_denom != order_source_denom
+            && order_price.quote_denom != order_target_denom)
     {
-        return Err(ContractError::OrderPricePair);
+        return Err(ContractError::OrderPriceDenom);
     }
 
     Ok(())

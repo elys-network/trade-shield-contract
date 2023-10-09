@@ -44,7 +44,7 @@ async function getOrder(order_id) {
 
 async function createOrder(
   order_amm_routes,
-  order_price_pair,
+  order_price,
   order_type,
   amount_send,
   denom_send,
@@ -63,7 +63,7 @@ async function createOrder(
   const msg = {
     create_order: {
       order_amm_routes: order_amm_routes,
-      order_price_pair: order_price_pair,
+      order_price: order_price,
       order_type: order_type,
       order_source_denom: denom_send,
       order_target_denom: order_target_denom,

@@ -18,8 +18,8 @@ pub enum ContractError {
     OrderPriceReached,
     #[error("order_base_denom and order_target_denom cannot be the same")]
     OrderSameDenom,
-    #[error("denom in order_price_pair not used")]
-    OrderPricePair,
+    #[error("denom in order_price not used")]
+    OrderPriceDenom,
     #[error("fund not used by the order")]
     OrderWrongFund,
 }

@@ -1,7 +1,7 @@
 use crate::{
     entry_point::{execute, query},
     msg::*,
-    types::{Order, OrderPricePair, OrderType},
+    types::{Order, OrderPrice, OrderType},
     ContractError,
 };
 
@@ -14,7 +14,7 @@ mod create_order {
     use super::*;
     mod coin_number;
     mod not_enough_fund;
-    mod order_price_pair;
+    mod order_price_denom;
     mod order_same_denom;
     mod order_wrong_fund;
     mod successful_create_limit_buy_order;

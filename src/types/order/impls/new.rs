@@ -1,10 +1,10 @@
-use crate::types::{order::order::Order, order_type::OrderType, OrderPricePair, SwapAmountInRoute};
+use crate::types::{order::order::Order, order_type::OrderType, OrderPrice, SwapAmountInRoute};
 use cosmwasm_std::{Addr, Coin};
 
 impl Order {
     pub fn new(
         order_type: OrderType,
-        order_price_pair: OrderPricePair,
+        order_price: OrderPrice,
         order_amount: Coin,
         owner_address: Addr,
         order_target_denom: String,
@@ -18,7 +18,7 @@ impl Order {
 
         Order {
             order_type,
-            order_price_pair,
+            order_price,
             order_amount,
             owner_address,
             order_id,

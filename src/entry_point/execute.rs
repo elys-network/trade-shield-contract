@@ -17,7 +17,7 @@ pub fn execute(
             order_type,
             order_source_denom,
             order_target_denom,
-            order_price_pair,
+            order_price,
             order_amm_routes,
         } => create_order(
             env,
@@ -26,7 +26,7 @@ pub fn execute(
             order_type,
             order_source_denom,
             order_target_denom,
-            order_price_pair,
+            order_price,
             order_amm_routes,
         ),
         CancelOrder { order_id } => cancel_order(info, deps, order_id),

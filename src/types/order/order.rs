@@ -1,4 +1,4 @@
-use crate::types::{order_type::OrderType, swap_route::SwapAmountInRoute, OrderPricePair};
+use crate::types::{order_type::OrderType, swap_route::SwapAmountInRoute, OrderPrice};
 use cosmwasm_schema::cw_serde;
 use cosmwasm_std::{Addr, Coin};
 
@@ -6,7 +6,7 @@ use cosmwasm_std::{Addr, Coin};
 pub struct Order {
     pub order_type: OrderType,
     pub order_id: u128,
-    pub order_price_pair: OrderPricePair,
+    pub order_price: OrderPrice,
     pub order_amount: Coin,
     pub owner_address: Addr,
     pub order_target_denom: String,

@@ -46,14 +46,14 @@ pub mod types {
             mod new_dummy;
         }
     }
-    mod order_price_pair;
+    mod order_price;
     mod page_request;
     mod pool;
     mod price;
     mod swap_route;
 
     pub use order::order::Order;
-    pub use order_price_pair::OrderPricePair;
+    pub use order_price::OrderPrice;
     pub use page_request::PageRequest;
     pub mod page_response;
     pub use order_type::OrderType;

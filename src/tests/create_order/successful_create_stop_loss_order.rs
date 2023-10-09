@@ -42,7 +42,7 @@ fn successful_create_stop_loss_order() {
             addr.clone(),
             &ExecuteMsg::CreateOrder {
                 order_type: OrderType::StopLoss,
-                order_price_pair: OrderPricePair {
+                order_price: OrderPrice {
                     base_denom: "btc".to_string(),
                     quote_denom: "usdc".to_string(),
                     rate: Uint128::new(30000), // The trigger price of 30000 USDC per BTC.

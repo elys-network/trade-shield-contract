@@ -1,4 +1,4 @@
-use crate::types::{order::order::Order, order_type::OrderType, OrderPricePair};
+use crate::types::{order::order::Order, order_type::OrderType, OrderPrice};
 use cosmwasm_std::{coin, Addr, Uint128};
 
 impl Order {
@@ -9,7 +9,7 @@ impl Order {
             order_amount: coin(1000, "btc"),
             owner_address: Addr::unchecked("user"),
             order_amm_routes: vec![],
-            order_price_pair: OrderPricePair {
+            order_price: OrderPrice {
                 quote_denom: "eth".to_string(),
                 base_denom: "btc".to_string(),
                 rate: Uint128::new(5),

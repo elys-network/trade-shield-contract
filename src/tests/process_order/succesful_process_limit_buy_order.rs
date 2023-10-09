@@ -16,7 +16,7 @@ fn successful_process_limit_buy_order() {
 
     let dummy_order = Order::new(
         OrderType::StopLoss,
-        OrderPricePair {
+        OrderPrice {
             base_denom: "usdc".to_string(),
             quote_denom: "ubtc".to_string(),
             rate: Uint128::new(38),

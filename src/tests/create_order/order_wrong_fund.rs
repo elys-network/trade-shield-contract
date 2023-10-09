@@ -16,7 +16,7 @@ fn order_wrong_fund() {
 
     let create_order_msg = ExecuteMsg::CreateOrder {
         order_type: OrderType::LimitSell,
-        order_price_pair: OrderPricePair {
+        order_price: OrderPrice {
             base_denom: "btc".to_string(),
             quote_denom: "eth".to_string(),
             rate: Uint128::new(19),

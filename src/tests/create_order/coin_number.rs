@@ -1,6 +1,6 @@
 use cosmwasm_std::Uint128;
 
-use crate::{tests::mock::multitest::ElysApp, types::OrderPricePair};
+use crate::{tests::mock::multitest::ElysApp, types::OrderPrice};
 
 use super::*;
 // This test case verifies that attempting to create an order without specifying the amount results in a "CoinNumber" error.
@@ -38,7 +38,7 @@ fn coin_number() {
             addr,
             &ExecuteMsg::CreateOrder {
                 order_type: OrderType::StopLoss,
-                order_price_pair: OrderPricePair {
+                order_price: OrderPrice {
                     rate: Uint128::new(17),
                     base_denom: "btc".to_string(),
                     quote_denom: "eth".to_string(),

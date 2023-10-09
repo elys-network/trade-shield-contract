@@ -1,11 +1,11 @@
 use super::*;
 
-// Tests the behavior when creating a "limit sell" order with an invalid order price pair.
+// Tests the behavior when creating a "limit sell" order with an invalid order price.
 // - Initializes the contract with a user having 45 ETH.
-// - Attempts to create an order with an invalid pair (ETH/USDC for BTC/ETH) resulting in an expected error.
+// - Attempts to create an order with an invalid order price (ETH/USDC for BTC/ETH) resulting in an expected error.
 // - Verifies that the user's ETH balance remains 45, and the contract's ETH balance stays at 0.
 #[test]
-fn order_price_pair() {
+fn order_price_denom() {
     let wallets = vec![("user", coins(45, "eth"))];
 
     let mut app = ElysApp::new_with_wallets(wallets);
@@ -17,7 +17,7 @@ fn order_price_pair() {
 
     let create_order_msg = ExecuteMsg::CreateOrder {
         order_type: OrderType::LimitSell,
-        order_price_pair: OrderPricePair {
+        order_price: OrderPrice {
             base_denom: "eth".to_string(),
             quote_denom: "usdc".to_string(), // Invalid pair.
             rate: Uint128::new(1700),
@@ -50,7 +50,7 @@ fn order_price_pair() {
         )
         .unwrap_err();
 
-    let error_msg = ContractError::OrderPricePair;
+    let error_msg = ContractError::OrderPriceDenom;
 
     assert_eq!(error_msg, err.downcast().unwrap());
 
