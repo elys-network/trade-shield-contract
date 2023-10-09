@@ -11,7 +11,7 @@ This function allows you to create a new order by sending a transaction to the C
 #### Parameters
 
 - `order_amm_routes` (Vec): The route for the AMM module to swap the token.
-- `order_price_paire` ({`base_denom`:String, `quote_denom`:String, `rate` :String}): Price pair relates two assets exchange rate that the user should define
+- `order_price_pair` ({`base_denom`:String, `quote_denom`:String, `rate` :String}): Price pair relates two assets exchange rate that the user should define
 - `order_type` (String): The type of the order (e.g., "stop_loss", "limit_sell", "limit_buy").
 - `amount_send` (String): The amount of cryptocurrency to send in the order.
 - `denom_send` (String): The denomination of the cryptocurrency to send.
