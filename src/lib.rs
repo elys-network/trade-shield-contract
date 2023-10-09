@@ -135,6 +135,13 @@ pub fn query(deps: Deps<ElysQuery>, env: Env, msg: QueryMsg) -> Result<Binary, C
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]
-pub fn reply(_deps: DepsMut<ElysQuery>, _env: Env, _msg: Reply) -> Result<Response, ContractError> {
-    Ok(Response::default())
+pub fn reply(_deps: DepsMut<ElysQuery>, _env: Env, msg: Reply) -> Result<Response, ContractError> {
+    match msg.result.into_result() {
+        Ok(res) => Ok(Response::new().add_attribute("sub_msg_resp", format!("{:?}", res))),
+        Err(e) => Err(ContractError::StdError(
+            cosmwasm_std::StdError::GenericErr {
+                msg: format!("<<<{}>>>", e),
+            },
+        )),
+    }
 }
