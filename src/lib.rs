@@ -46,12 +46,14 @@ pub mod types {
             mod new_dummy;
         }
     }
+    mod order_price;
+    mod page_request;
     mod pool;
     mod price;
     mod swap_route;
 
     pub use order::order::Order;
-    mod page_request;
+    pub use order_price::OrderPrice;
     pub use page_request::PageRequest;
     pub mod page_response;
     pub use order_type::OrderType;
@@ -88,7 +90,7 @@ mod action {
         mod process_order;
 
         use super::*;
-        use cosmwasm_std::{BankMsg, Coin, CosmosMsg, DepsMut, Env, MessageInfo, Response};
+        use cosmwasm_std::{BankMsg, CosmosMsg, DepsMut, Env, MessageInfo, Response};
 
         pub use cancel_order::cancel_order;
         pub use create_order::create_order;

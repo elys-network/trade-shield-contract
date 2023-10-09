@@ -1,19 +1,26 @@
 use crate::tests::mock::multitest::ElysApp;
 
 use super::*;
-
+// This test case verifies that an unauthorized user is unable to cancel an order in the contract.
 #[test]
 fn unauthorized() {
+    // Initialize the ElysApp instance.
     let mut app = ElysApp::new();
 
+    // Create a mock message to instantiate the contract with an order owned by the "user"
     let instantiate_msg = InstantiateMockMsg {
         epoch_cycle_interval: 2,
         orders: vec![Order::new_dummy()],
     };
+
+    // Retrieve the order ID from the instantiated message for later use.
     let id = instantiate_msg.orders[0].order_id.clone().to_owned();
 
+    // Create a contract wrapper and store its code.
     let code = ContractWrapper::new(execute, instantiate, query);
     let code_id = app.store_code(Box::new(code));
+
+    // Instantiate the contract and obtain its address.
     let addr = app
         .instantiate_contract(
             code_id,
@@ -25,6 +32,7 @@ fn unauthorized() {
         )
         .unwrap();
 
+    // An unauthorized user (not_user) attempts to cancel the order.
     let err = app
         .execute_contract(
             Addr::unchecked("not_user"),
@@ -36,6 +44,7 @@ fn unauthorized() {
         )
         .unwrap_err();
 
+    // Verify that the user receives an error indicating unauthorized access.
     assert_eq!(
         ContractError::Unauthorized {
             sender: Addr::unchecked("not_user")
