@@ -16,7 +16,7 @@ pub enum ContractError {
     CoinNumber,
     #[error("order price already been reached")]
     OrderPriceReached,
-    #[error("order_base_denom and order_target_denom cannot be the same")]
+    #[error("order_source_denom and order_target_denom cannot be the same")]
     OrderSameDenom,
     #[error("denom in order_price not used")]
     OrderPriceDenom,
