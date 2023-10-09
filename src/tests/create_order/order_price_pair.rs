@@ -1,5 +1,9 @@
 use super::*;
 
+// Tests the behavior when creating a "limit sell" order with an invalid order price pair.
+// - Initializes the contract with a user having 45 ETH.
+// - Attempts to create an order with an invalid pair (ETH/USDC for BTC/ETH) resulting in an expected error.
+// - Verifies that the user's ETH balance remains 45, and the contract's ETH balance stays at 0.
 #[test]
 fn order_price_pair() {
     let wallets = vec![("user", coins(45, "eth"))];
@@ -15,7 +19,7 @@ fn order_price_pair() {
         order_type: OrderType::LimitSell,
         order_price_pair: OrderPricePair {
             base_denom: "eth".to_string(),
-            quote_denom: "usdc".to_string(),
+            quote_denom: "usdc".to_string(), // Invalid pair.
             rate: Uint128::new(1700),
         },
         order_amm_routes: vec![],

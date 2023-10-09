@@ -1,9 +1,12 @@
 use super::*;
 
+// Tests the behavior when creating a "limit sell" order with the wrong source fund denomination.
+// - Initializes the contract with a user having 45 ETH.
+// - Attempts to create an order with the source denomination as "usdc", which doesn't match the user's balance, resulting in an expected error.
+// - Verifies that the user's ETH balance remains 45, and the contract's ETH balance stays at 0.
 #[test]
 fn order_wrong_fund() {
     let wallets = vec![("user", coins(45, "eth"))];
-
     let mut app = ElysApp::new_with_wallets(wallets);
 
     let instantiate_msg = InstantiateMockMsg {
@@ -19,7 +22,7 @@ fn order_wrong_fund() {
             rate: Uint128::new(19),
         },
         order_amm_routes: vec![],
-        order_source_denom: "usdc".to_string(),
+        order_source_denom: "usdc".to_string(), // Incorrect source denomination.
         order_target_denom: "btc".to_string(),
     };
 

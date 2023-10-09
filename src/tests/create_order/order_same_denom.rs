@@ -1,9 +1,11 @@
 use super::*;
-
+// Tests the behavior when creating a "limit sell" order with the same denomination for base and quote tokens.
+// - Initializes the contract with a user having 45 ETH.
+// - Attempts to create an order with the same denomination for both base and quote tokens (ETH/ETH), resulting in an expected error.
+// - Verifies that the user's ETH balance remains 45, and the contract's ETH balance stays at 0.
 #[test]
 fn order_same_denom() {
     let wallets = vec![("user", coins(45, "eth"))];
-
     let mut app = ElysApp::new_with_wallets(wallets);
 
     let instantiate_msg = InstantiateMockMsg {
@@ -20,7 +22,7 @@ fn order_same_denom() {
         },
         order_amm_routes: vec![],
         order_source_denom: "eth".to_string(),
-        order_target_denom: "eth".to_string(),
+        order_target_denom: "eth".to_string(), // Same denomination for base and quote tokens.
     };
 
     let code = ContractWrapper::new(execute, instantiate, query);
