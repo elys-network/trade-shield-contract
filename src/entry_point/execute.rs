@@ -15,9 +15,20 @@ pub fn execute(
     match msg {
         CreateOrder {
             order_type,
+            order_source_denom,
+            order_target_denom,
             order_price,
             order_amm_routes,
-        } => create_order(env, deps, info, order_type, order_price, order_amm_routes),
+        } => create_order(
+            env,
+            deps,
+            info,
+            order_type,
+            order_source_denom,
+            order_target_denom,
+            order_price,
+            order_amm_routes,
+        ),
         CancelOrder { order_id } => cancel_order(info, deps, order_id),
         ProcessOrder {} => process_order(deps, info, env),
     }

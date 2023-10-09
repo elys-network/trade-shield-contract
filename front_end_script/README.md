@@ -4,27 +4,29 @@ This README provides documentation for the three main functions in the provided 
 
 ## Functions
 
-### 1. createOrder(order_amm_routes, order_price, order_type, amount_send, denom_send)
+### 1. createOrder(order_amm_routes, order_price, order_type, amount_send, denom_send, order_target_denom)
 
 This function allows you to create a new order by sending a transaction to the CosmWasm contract.
 
 #### Parameters
 
 - `order_amm_routes` (Vec): The route for the AMM module to swap the token.
-- `order_price` (Obj: {denom: String, amount: String}): The price at which you want to create the order.
-- `order_type` (String): The type of the order (e.g., "stop_loss" or "take_profit").
+- `order_price` ({`base_denom`:String, `quote_denom`:String, `rate` :String}): Price relates two assets exchange rate that the user should define
+- `order_type` (String): The type of the order (e.g., "stop_loss", "limit_sell", "limit_buy").
 - `amount_send` (String): The amount of cryptocurrency to send in the order.
 - `denom_send` (String): The denomination of the cryptocurrency to send.
+- `order_target_denom` (String) : the asset that the user want to convert their asset into
 
 #### Usage
 
 ```javascript
 createOrder(
   "your_amm_routes_here",
-  "your_order_price_here",
+  {"base_denom", "quote_denom", "rate"},
   "order_type",
   "amount_to_send_here",
   "denom_to_send_here"
+  "your_target_denom"
 );
 ```
 
