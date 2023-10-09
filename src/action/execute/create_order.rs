@@ -7,20 +7,30 @@ pub fn create_order(
     deps: DepsMut<ElysQuery>,
     info: MessageInfo,
     order_type: OrderType,
-    order_price: Coin,
+    order_source_denom: String,
+    order_target_denom: String,
+    order_price_pair: OrderPricePair,
     order_amm_routes: Vec<SwapAmountInRoute>,
 ) -> Result<Response, ContractError> {
     if info.funds.len() != 1 {
         return Err(ContractError::CoinNumber);
     };
 
+    check_denom_error(
+        &order_source_denom,
+        &order_target_denom,
+        &order_price_pair,
+        &info.funds[0].denom,
+    )?;
+
     let mut order_vec = ORDER.load(deps.storage)?;
 
     let new_order: Order = Order::new(
         order_type,
-        order_price,
+        order_price_pair,
         info.funds[0].clone(),
         info.sender.clone(),
+        order_target_denom,
         order_amm_routes,
         &order_vec,
     );
@@ -40,4 +50,29 @@ pub fn create_order(
 
     ORDER.save(deps.storage, &order_vec)?;
     Ok(resp)
+}
+
+fn check_denom_error(
+    order_source_denom: &str,
+    order_target_denom: &str,
+    order_price_pair: &OrderPricePair,
+    funds_send_denom: &str,
+) -> Result<(), ContractError> {
+    if order_source_denom != funds_send_denom {
+        return Err(ContractError::OrderWrongFund);
+    }
+
+    if order_source_denom == order_target_denom {
+        return Err(ContractError::OrderSameDenom);
+    }
+
+    if (order_price_pair.base_denom != order_source_denom
+        && order_price_pair.base_denom != order_target_denom)
+        || (order_price_pair.quote_denom != order_source_denom
+            && order_price_pair.quote_denom != order_target_denom)
+    {
+        return Err(ContractError::OrderPricePair);
+    }
+
+    Ok(())
 }

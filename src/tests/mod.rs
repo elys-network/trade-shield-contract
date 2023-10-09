@@ -1,19 +1,25 @@
 use crate::{
     entry_point::{execute, query},
     msg::*,
-    types::{Order, OrderType},
+    types::{Order, OrderPricePair, OrderType},
     ContractError,
 };
-use cosmwasm_std::{coin, coins, Addr, Event};
+
+use cosmwasm_std::{coin, coins, Addr, Event, Uint128};
 use cw_multi_test::{ContractWrapper, Executor};
+use mock::multitest::ElysApp;
 
 mod get_order_id_from_events;
-
 mod create_order {
     use super::*;
     mod coin_number;
     mod not_enough_fund;
-    mod successful_create_order;
+    mod order_price_pair;
+    mod order_same_denom;
+    mod order_wrong_fund;
+    mod successful_create_limit_buy_order;
+    mod successful_create_limit_sell_order;
+    mod successful_create_stop_loss_order;
 }
 
 mod cancel_order {

@@ -1,14 +1,26 @@
-use crate::tests::{get_order_id_from_events::get_order_id_from_events, mock::multitest::ElysApp};
-
 use super::*;
 
 #[test]
-fn successful_create_order() {
-    let wallet = vec![("user", coins(150, "eth"))];
-    let mut app = ElysApp::new_with_wallets(wallet);
+fn order_wrong_fund() {
+    let wallets = vec![("user", coins(45, "eth"))];
+
+    let mut app = ElysApp::new_with_wallets(wallets);
+
     let instantiate_msg = InstantiateMockMsg {
         epoch_cycle_interval: 1,
         orders: vec![],
+    };
+
+    let create_order_msg = ExecuteMsg::CreateOrder {
+        order_type: OrderType::LimitSell,
+        order_price_pair: OrderPricePair {
+            base_denom: "btc".to_string(),
+            quote_denom: "eth".to_string(),
+            rate: Uint128::new(19),
+        },
+        order_amm_routes: vec![],
+        order_source_denom: "usdc".to_string(),
+        order_target_denom: "btc".to_string(),
     };
 
     let code = ContractWrapper::new(execute, instantiate, query);
@@ -25,18 +37,18 @@ fn successful_create_order() {
         )
         .unwrap();
 
-    let resp = app
+    let err = app
         .execute_contract(
             Addr::unchecked("user"),
             addr.clone(),
-            &ExecuteMsg::CreateOrder {
-                order_type: OrderType::LimitSell,
-                order_price: coin(255, "btc"),
-                order_amm_routes: vec![],
-            },
+            &create_order_msg,
             &coins(45, "eth"),
         )
-        .unwrap();
+        .unwrap_err();
+
+    let error_msg = ContractError::OrderWrongFund;
+
+    assert_eq!(error_msg, err.downcast().unwrap());
 
     assert_eq!(
         app.wrap()
@@ -44,7 +56,7 @@ fn successful_create_order() {
             .unwrap()
             .amount
             .u128(),
-        105
+        45
     );
 
     assert_eq!(
@@ -53,8 +65,6 @@ fn successful_create_order() {
             .unwrap()
             .amount
             .u128(),
-        45
+        0
     );
-
-    assert!(get_order_id_from_events(&resp.events).is_some());
 }

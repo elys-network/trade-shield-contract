@@ -44,10 +44,11 @@ async function getOrder(order_id) {
 
 async function createOrder(
   order_amm_routes,
-  order_price,
+  order_price_pair,
   order_type,
   amount_send,
-  denom_send
+  denom_send,
+  order_target_denom
 ) {
   const gasPrice = GasPrice.fromString(GASPRICE);
   const sender_wallet = await DirectSecp256k1HdWallet.fromMnemonic(
@@ -62,8 +63,10 @@ async function createOrder(
   const msg = {
     create_order: {
       order_amm_routes: order_amm_routes,
-      order_price: order_price,
+      order_price_pair: order_price_pair,
       order_type: order_type,
+      order_source_denom: denom_send,
+      order_target_denom: order_target_denom,
     },
   };
 

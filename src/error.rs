@@ -16,6 +16,10 @@ pub enum ContractError {
     CoinNumber,
     #[error("order price already been reached")]
     OrderPriceReached,
-    #[error("no such order type: {order_type}")]
-    OrderType { order_type: String },
+    #[error("order_base_denom and order_target_denom cannot be the same")]
+    OrderSameDenom,
+    #[error("denom in order_price_pair not used")]
+    OrderPricePair,
+    #[error("fund not used by the order")]
+    OrderWrongFund,
 }
