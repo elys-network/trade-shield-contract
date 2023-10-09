@@ -1,7 +1,6 @@
 pub mod entry_point {
     use crate::action;
     use crate::bindings::msg::ElysMsg;
-    use crate::bindings::msg::ElysMsg;
     use crate::error::ContractError;
     use crate::msg;
     use cosmwasm_std::{to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult};
@@ -76,7 +75,6 @@ mod states {
 
 mod action {
     use crate::bindings::msg::ElysMsg;
-    use crate::bindings::msg::ElysMsg;
     use crate::{states::ORDER, types::*, ContractError};
     pub mod query {
         mod get_all_price;
@@ -104,14 +102,11 @@ mod action {
 #[cfg(test)]
 mod tests;
 use bindings::msg::ElysMsg;
-use bindings::msg::ElysMsg;
 
 use cosmwasm_std::{
     entry_point, Binary, Deps, DepsMut, Env, MessageInfo, Reply, Response, StdResult,
 };
-use cosmwasm_std::{
-    entry_point, Binary, Deps, DepsMut, Env, MessageInfo, Reply, Response, StdResult,
-};
+
 use msg::*;
 
 #[cfg_attr(not(feature = "library"), entry_point)]
@@ -120,7 +115,6 @@ pub fn instantiate(
     env: Env,
     info: MessageInfo,
     msg: InstantiateMsg,
-) -> StdResult<Response<ElysMsg>> {
 ) -> StdResult<Response<ElysMsg>> {
     entry_point::instantiate(deps, env, info, msg)
 }
@@ -131,7 +125,6 @@ pub fn execute(
     env: Env,
     info: MessageInfo,
     msg: ExecuteMsg,
-) -> Result<Response<ElysMsg>, ContractError> {
 ) -> Result<Response<ElysMsg>, ContractError> {
     entry_point::execute(deps, env, info, msg)
 }
