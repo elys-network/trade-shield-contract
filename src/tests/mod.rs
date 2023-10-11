@@ -40,6 +40,7 @@ mod get_order {
 
 mod process_order {
     use super::*;
+    mod succesful_process_limit_buy_order;
     mod successful_process_5_of_10_orders;
     mod successful_process_limit_sell_order;
     mod successful_process_stop_loss_order;

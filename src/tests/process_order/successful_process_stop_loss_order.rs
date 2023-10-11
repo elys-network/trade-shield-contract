@@ -1,4 +1,4 @@
-use crate::tests::mock::multitest::ElysApp;
+use crate::{tests::mock::multitest::ElysApp, types::SwapAmountInRoute};
 
 use super::*;
 use cosmwasm_std::{coins, Coin};
@@ -33,13 +33,13 @@ fn successful_process_stop_loss_order() {
         coin(2, "btc"), // 2 BTC to be sold.
         Addr::unchecked("user"),
         "usdc".to_string(),
-        vec![],
+        vec![SwapAmountInRoute::new(1, "usdc")],
         &vec![],
     );
 
     // Create a mock message to instantiate the contract with the dummy order.
     let instantiate_msg = InstantiateMockMsg {
-        epoch_cycle_interval: 2,
+        process_order_executor: "owner".to_string(),
         orders: vec![dummy_order],
     };
 

@@ -9,7 +9,7 @@ use crate::{
 
 #[cw_serde]
 pub struct InstantiateMockMsg {
-    pub epoch_cycle_interval: u128,
+    pub process_order_executor: String,
     pub orders: Vec<Order>,
 }
 

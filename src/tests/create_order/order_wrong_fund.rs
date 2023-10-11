@@ -10,7 +10,7 @@ fn order_wrong_fund() {
     let mut app = ElysApp::new_with_wallets(wallets);
 
     let instantiate_msg = InstantiateMockMsg {
-        epoch_cycle_interval: 1,
+        process_order_executor: "owner".to_string(),
         orders: vec![],
     };
 

@@ -15,7 +15,7 @@ fn successful_create_stop_loss_order() {
 
     // Create a mock message to instantiate the contract with no initial orders.
     let instantiate_msg = InstantiateMockMsg {
-        epoch_cycle_interval: 1,
+        process_order_executor: "owner".to_string(),
         orders: vec![],
     };
 

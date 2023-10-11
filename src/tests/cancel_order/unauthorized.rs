@@ -9,7 +9,7 @@ fn unauthorized() {
 
     // Create a mock message to instantiate the contract with an order owned by the "user"
     let instantiate_msg = InstantiateMockMsg {
-        epoch_cycle_interval: 2,
+        process_order_executor: "owner".to_string(),
         orders: vec![Order::new_dummy()],
     };
 
