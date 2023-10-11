@@ -3,6 +3,7 @@ use crate::bindings::query::ElysQuery;
 use super::*;
 use msg::QueryMsg;
 
+#[cfg_attr(not(feature = "library"), entry_point)]
 pub fn query(deps: Deps<ElysQuery>, _env: Env, msg: QueryMsg) -> Result<Binary, ContractError> {
     use action::query;
     use QueryMsg::*;
