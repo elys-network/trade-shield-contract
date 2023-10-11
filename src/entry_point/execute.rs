@@ -3,6 +3,7 @@ use crate::bindings::query::ElysQuery;
 use super::*;
 use msg::ExecuteMsg;
 
+#[cfg_attr(not(feature = "library"), entry_point)]
 pub fn execute(
     deps: DepsMut<ElysQuery>,
     env: Env,
