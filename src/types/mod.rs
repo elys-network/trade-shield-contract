@@ -9,15 +9,16 @@ mod order {
 }
 mod order_price;
 mod page_request;
+mod page_response;
 mod pool;
 mod price;
 mod swap_route;
 
 pub use order::order::Order;
 pub use order_price::OrderPrice;
-pub use page_request::PageRequest;
-pub mod page_response;
 pub use order_type::OrderType;
+pub use page_request::PageRequest;
+pub use page_response::PageResponse;
 pub use pool::*;
 pub use price::Price;
 pub use swap_route::*;
