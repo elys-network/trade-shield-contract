@@ -16,7 +16,7 @@ fn successful_cancel_order_with_dummy_order() {
 
     // Create a mock message to instantiate the contract with the dummy order.
     let instantiate_msg = InstantiateMockMsg {
-        epoch_cycle_interval: 2,
+        process_order_executor: "owner".to_string(),
         orders: vec![dummy_order.clone()],
     };
 

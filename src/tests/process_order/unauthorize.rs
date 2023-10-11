@@ -7,7 +7,7 @@ fn unauthorize() {
     let code = ContractWrapper::new(execute, instantiate, query);
     let code_id = app.store_code(Box::new(code));
     let init_msg = InstantiateMockMsg {
-        epoch_cycle_interval: 1,
+        process_order_executor: "owner".to_string(),
         orders: vec![],
     };
     let random_user = Addr::unchecked("random");

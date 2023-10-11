@@ -1,4 +1,4 @@
-use crate::tests::mock::multitest::ElysApp;
+use crate::{tests::mock::multitest::ElysApp, types::SwapAmountInRoute};
 
 use super::*;
 use cosmwasm_std::Coin;
@@ -21,7 +21,7 @@ fn successful_process_5_of_10_orders() {
     let orders = create_dummy_orders();
 
     let instantiate_msg = InstantiateMockMsg {
-        epoch_cycle_interval: 1,
+        process_order_executor: "owner".to_string(),
         orders,
     };
     let execute_msg = ExecuteMsg::ProcessOrder {};
@@ -182,7 +182,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_target_denom: "usdc".to_string(),
             order_amount: coin(1, "eth"),
             owner_address: Addr::unchecked("user"),
-            order_amm_routes: vec![],
+            order_amm_routes: vec![SwapAmountInRoute::new(1, "usdc")],
             order_price: OrderPrice {
                 base_denom: "eth".to_string(),
                 quote_denom: "usdc".to_string(),
@@ -194,7 +194,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_id: 1,
             order_amount: coin(2, "btc"),
             owner_address: Addr::unchecked("user"),
-            order_amm_routes: vec![],
+            order_amm_routes: vec![SwapAmountInRoute::new(1, "usdc")],
             order_price: OrderPrice {
                 base_denom: "btc".to_string(),
                 quote_denom: "usdc".to_string(),
@@ -207,10 +207,10 @@ fn create_dummy_orders() -> Vec<Order> {
             order_id: 2,
             order_amount: coin(3, "btc"),
             owner_address: Addr::unchecked("user"),
-            order_amm_routes: vec![],
+            order_amm_routes: vec![SwapAmountInRoute::new(1, "usdc")],
             order_price: OrderPrice {
                 base_denom: "btc".to_string(),
-                quote_denom: "eth".to_string(),
+                quote_denom: "usdc".to_string(),
                 rate: Uint128::new(10000),
             },
             order_target_denom: "usdc".to_string(),
@@ -220,7 +220,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_id: 3,
             order_amount: coin(5, "eth"),
             owner_address: Addr::unchecked("user"),
-            order_amm_routes: vec![],
+            order_amm_routes: vec![SwapAmountInRoute::new(1, "usdc")],
             order_price: OrderPrice {
                 base_denom: "eth".to_string(),
                 quote_denom: "usdc".to_string(),
@@ -233,7 +233,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_id: 4,
             order_amount: coin(1, "eth"),
             owner_address: Addr::unchecked("user"),
-            order_amm_routes: vec![],
+            order_amm_routes: vec![SwapAmountInRoute::new(1, "usdc")],
             order_price: OrderPrice {
                 base_denom: "eth".to_string(),
                 quote_denom: "usdc".to_string(),
@@ -246,7 +246,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_id: 5,
             order_amount: coin(1, "eth"),
             owner_address: Addr::unchecked("user"),
-            order_amm_routes: vec![],
+            order_amm_routes: vec![SwapAmountInRoute::new(1, "usdc")],
             order_price: OrderPrice {
                 base_denom: "eth".to_string(),
                 quote_denom: "usdc".to_string(),
@@ -259,7 +259,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_id: 6,
             order_amount: coin(3, "btc"),
             owner_address: Addr::unchecked("user"),
-            order_amm_routes: vec![],
+            order_amm_routes: vec![SwapAmountInRoute::new(1, "usdc")],
             order_price: OrderPrice {
                 base_denom: "btc".to_string(),
                 quote_denom: "usdc".to_string(),
@@ -272,7 +272,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_id: 7,
             order_amount: coin(2, "btc"),
             owner_address: Addr::unchecked("user"),
-            order_amm_routes: vec![],
+            order_amm_routes: vec![SwapAmountInRoute::new(1, "usdc")],
             order_price: OrderPrice {
                 base_denom: "btc".to_string(),
                 quote_denom: "usdc".to_string(),
@@ -285,7 +285,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_id: 8,
             order_amount: coin(1, "btc"),
             owner_address: Addr::unchecked("user"),
-            order_amm_routes: vec![],
+            order_amm_routes: vec![SwapAmountInRoute::new(1, "usdc")],
             order_price: OrderPrice {
                 base_denom: "btc".to_string(),
                 quote_denom: "usdc".to_string(),
@@ -298,13 +298,13 @@ fn create_dummy_orders() -> Vec<Order> {
             order_id: 9,
             order_amount: coin(1, "eth"),
             owner_address: Addr::unchecked("user"),
-            order_amm_routes: vec![],
-            order_target_denom: "usdc".to_string(),
+            order_amm_routes: vec![SwapAmountInRoute::new(1, "usdc")],
             order_price: OrderPrice {
                 base_denom: "eth".to_string(),
                 quote_denom: "usdc".to_string(),
                 rate: Uint128::new(2100),
             },
+            order_target_denom: "usdc".to_string(),
         },
     ]
 }
