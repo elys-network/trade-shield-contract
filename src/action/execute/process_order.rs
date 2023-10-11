@@ -1,5 +1,3 @@
-use cosmwasm_std::SubMsg;
-
 use crate::bindings::query::ElysQuery;
 
 use super::*;

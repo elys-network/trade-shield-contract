@@ -1,3 +1,4 @@
+use crate::bindings::msg::ElysMsg;
 use crate::{states::ORDER, types::*, ContractError};
 
 pub mod query {

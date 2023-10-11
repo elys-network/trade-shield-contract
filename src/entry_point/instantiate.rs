@@ -1,5 +1,5 @@
 use super::*;
-use crate::{bindings::query::ElysQuery, states::*};
+use crate::states::*;
 use msg::InstantiateMsg;
 
 #[cfg_attr(not(feature = "library"), entry_point)]
