@@ -1,6 +1,6 @@
 use cosmwasm_schema::cw_serde;
 
-use crate::types::{page_response::PageResponse, Price};
+use crate::types::{PageResponse, Price};
 
 #[cw_serde]
 pub struct AllPriceResponse {

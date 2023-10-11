@@ -1,11 +1,12 @@
-use crate::bindings::query::ElysQuery;
+use cosmwasm_std::Reply;
 
 use super::*;
 
-pub fn process_order(
+#[cfg_attr(not(feature = "library"), entry_point)]
+pub fn reply(
     _deps: DepsMut<ElysQuery>,
-    _info: MessageInfo,
     _env: Env,
+    _msg: Reply,
 ) -> Result<Response<ElysMsg>, ContractError> {
     Ok(Response::default())
 }

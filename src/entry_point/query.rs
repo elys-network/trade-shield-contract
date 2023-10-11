@@ -1,5 +1,3 @@
-use crate::bindings::query::ElysQuery;
-
 use super::*;
 use msg::QueryMsg;
 

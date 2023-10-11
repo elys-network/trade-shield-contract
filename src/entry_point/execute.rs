@@ -1,5 +1,3 @@
-use crate::bindings::query::ElysQuery;
-
 use super::*;
 use msg::ExecuteMsg;
 
@@ -9,7 +7,7 @@ pub fn execute(
     env: Env,
     info: MessageInfo,
     msg: ExecuteMsg,
-) -> Result<Response, ContractError> {
+) -> Result<Response<ElysMsg>, ContractError> {
     use action::execute::*;
     use ExecuteMsg::*;
 
@@ -31,6 +29,6 @@ pub fn execute(
             order_amm_routes,
         ),
         CancelOrder { order_id } => cancel_order(info, deps, order_id),
-        ProcessOrder {} => process_order(deps, info),
+        ProcessOrder {} => process_order(deps, info, env),
     }
 }

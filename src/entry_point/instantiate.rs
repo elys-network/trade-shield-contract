@@ -1,5 +1,5 @@
 use super::*;
-use crate::{bindings::query::ElysQuery, states::*};
+use crate::states::*;
 use msg::InstantiateMsg;
 
 #[cfg_attr(not(feature = "library"), entry_point)]
@@ -8,7 +8,7 @@ pub fn instantiate(
     _env: Env,
     _info: MessageInfo,
     _msg: InstantiateMsg,
-) -> StdResult<Response> {
+) -> StdResult<Response<ElysMsg>> {
     ORDER.save(deps.storage, &vec![])?;
 
     Ok(Response::new())

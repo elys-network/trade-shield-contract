@@ -79,7 +79,7 @@ pub fn mock_execute(
     _env: Env,
     _info: MessageInfo,
     msg: ExecuteMsg,
-) -> Result<Response, ContractError> {
+) -> Result<Response<ElysMsg>, ContractError> {
     match msg {
         // For any message, send a token to the owner
         _ => send_a_token_to_the_owner(),
@@ -87,7 +87,7 @@ pub fn mock_execute(
 }
 
 // Function to send a token to the owner
-fn send_a_token_to_the_owner() -> Result<Response, ContractError> {
+fn send_a_token_to_the_owner() -> Result<Response<ElysMsg>, ContractError> {
     let owner_address = "owner".to_owned();
     let bank_msg = BankMsg::Send {
         to_address: owner_address,

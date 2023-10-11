@@ -11,7 +11,7 @@ pub fn create_order(
     order_target_denom: String,
     order_price: OrderPrice,
     order_amm_routes: Vec<SwapAmountInRoute>,
-) -> Result<Response, ContractError> {
+) -> Result<Response<ElysMsg>, ContractError> {
     if info.funds.len() != 1 {
         return Err(ContractError::CoinNumber);
     };

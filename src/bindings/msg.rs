@@ -1,5 +1,5 @@
 use cosmwasm_schema::cw_serde;
-use cosmwasm_std::{Coin, Int128};
+use cosmwasm_std::{Coin, CosmosMsg, CustomMsg, Int128};
 
 use crate::types::SwapAmountInRoute;
 
@@ -28,3 +28,11 @@ impl ElysMsg {
         }
     }
 }
+
+impl From<ElysMsg> for CosmosMsg<ElysMsg> {
+    fn from(msg: ElysMsg) -> CosmosMsg<ElysMsg> {
+        CosmosMsg::Custom(msg)
+    }
+}
+
+impl CustomMsg for ElysMsg {}
