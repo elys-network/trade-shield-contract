@@ -1,10 +1,12 @@
 use crate::bindings::{msg::ElysMsg, query::ElysQuery};
 use anyhow::{bail, Result as AnyResult};
+use cosmwasm_schema::cw_serde;
 use cosmwasm_std::{
+    coin, coins,
     testing::{MockApi, MockStorage},
-    to_binary, Addr, BlockInfo, Coin, Empty, Querier, StdResult, Storage,
+    to_binary, Addr, BankMsg, BlockInfo, Coin, Empty, Querier, StdResult, Storage,
 };
-use cw_multi_test::{App, BankKeeper, BasicAppBuilder, Module, WasmKeeper};
+use cw_multi_test::{App, AppResponse, BankKeeper, BankSudo, BasicAppBuilder, Module, WasmKeeper};
 use cw_storage_plus::Item;
 use std::cmp::max;
 use std::ops::{Deref, DerefMut};
@@ -12,9 +14,9 @@ use std::ops::{Deref, DerefMut};
 pub const PRICES: Item<Vec<Coin>> = Item::new("prices");
 pub const BLOCK_TIME: u64 = 5;
 
-pub struct OracleModule {}
+pub struct ElysModule {}
 
-impl OracleModule {
+impl ElysModule {
     fn get_all_price(&self, store: &dyn Storage) -> StdResult<Vec<Coin>> {
         Ok(PRICES.load(store)?)
     }
@@ -36,7 +38,7 @@ impl OracleModule {
     }
 }
 
-impl Module for OracleModule {
+impl Module for ElysModule {
     type ExecT = ElysMsg;
     type QueryT = ElysQuery;
     type SudoT = Empty;
@@ -56,12 +58,12 @@ impl Module for OracleModule {
 
     fn execute<ExecC, QueryC>(
         &self,
-        _api: &dyn cosmwasm_std::Api,
-        _storage: &mut dyn cosmwasm_std::Storage,
-        _router: &dyn cw_multi_test::CosmosRouter<ExecC = ExecC, QueryC = QueryC>,
-        _block: &cosmwasm_std::BlockInfo,
-        _sender: cosmwasm_std::Addr,
-        _msg: Self::ExecT,
+        api: &dyn cosmwasm_std::Api,
+        storage: &mut dyn cosmwasm_std::Storage,
+        router: &dyn cw_multi_test::CosmosRouter<ExecC = ExecC, QueryC = QueryC>,
+        block: &cosmwasm_std::BlockInfo,
+        sender: cosmwasm_std::Addr,
+        msg: Self::ExecT,
     ) -> AnyResult<cw_multi_test::AppResponse>
     where
         ExecC: std::fmt::Debug
@@ -72,7 +74,46 @@ impl Module for OracleModule {
             + 'static,
         QueryC: cosmwasm_std::CustomQuery + serde::de::DeserializeOwned + 'static,
     {
-        bail!("execute is not implemented for OracleModule")
+        match msg {
+            ElysMsg::MsgSwapExactAmountIn {
+                sender,
+                routes,
+                token_in,
+                token_out_min_amount,
+            } => {
+                let route = routes[0].clone();
+                let prices = self.get_all_price(storage)?;
+                let price_in = prices.iter().find(|p| p.denom == token_in.denom).unwrap();
+                let price_out = prices
+                    .iter()
+                    .find(|p| p.denom == route.token_out_denom())
+                    .unwrap();
+
+                let mint_amount = coins(
+                    (token_in.amount * price_in.amount / price_out.amount).u128(),
+                    route.token_out_denom(),
+                );
+                let mint = BankSudo::Mint {
+                    to_address: sender.clone(),
+                    amount: mint_amount,
+                };
+
+                let burn = BankMsg::Burn {
+                    amount: vec![token_in],
+                };
+                router
+                    .execute(
+                        api,
+                        storage,
+                        block,
+                        Addr::unchecked(sender.clone()),
+                        burn.into(),
+                    )
+                    .unwrap();
+                router.sudo(api, storage, block, mint.into()).unwrap();
+                Ok(AppResponse::default())
+            }
+        }
     }
 
     fn sudo<ExecC, QueryC>(
@@ -92,12 +133,12 @@ impl Module for OracleModule {
             + 'static,
         QueryC: cosmwasm_std::CustomQuery + serde::de::DeserializeOwned + 'static,
     {
-        bail!("execute is not implemented for OracleModule")
+        bail!("execute is not implemented for ElysMsg")
     }
 }
 
 pub type ElysAppWrapped =
-    App<BankKeeper, MockApi, MockStorage, OracleModule, WasmKeeper<ElysMsg, ElysQuery>>;
+    App<BankKeeper, MockApi, MockStorage, ElysModule, WasmKeeper<ElysMsg, ElysQuery>>;
 
 pub struct ElysApp(ElysAppWrapped);
 
@@ -130,7 +171,7 @@ impl ElysApp {
     pub fn new_with_wallets(wallets: Vec<(&str, Vec<Coin>)>) -> Self {
         Self(
             BasicAppBuilder::<ElysMsg, ElysQuery>::new_custom()
-                .with_custom(OracleModule {})
+                .with_custom(ElysModule {})
                 .build(|roouter, _, storage| {
                     for (wallet_owner, wallet_contenent) in wallets {
                         roouter
@@ -145,7 +186,7 @@ impl ElysApp {
     pub fn new() -> Self {
         Self(
             BasicAppBuilder::<ElysMsg, ElysQuery>::new_custom()
-                .with_custom(OracleModule {})
+                .with_custom(ElysModule {})
                 .build(|_roouter, _, _storage| {}),
         )
     }

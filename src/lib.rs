@@ -16,6 +16,7 @@ pub mod entry_point {
 
 mod bindings {
     pub mod msg;
+    pub mod msg_resp;
     pub mod querier;
     pub mod query;
     pub mod query_resp;
@@ -104,9 +105,10 @@ mod tests;
 use bindings::msg::ElysMsg;
 
 use cosmwasm_std::{
-    entry_point, Binary, Deps, DepsMut, Env, MessageInfo, Reply, Response, StdResult,
+    entry_point, from_binary, Binary, Deps, DepsMut, Env, MessageInfo, Reply, Response, StdResult,
 };
 
+use bindings::msg_resp::MsgSwapExactAmountInResp;
 use msg::*;
 
 #[cfg_attr(not(feature = "library"), entry_point)]
@@ -137,7 +139,10 @@ pub fn query(deps: Deps<ElysQuery>, env: Env, msg: QueryMsg) -> Result<Binary, C
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn reply(_deps: DepsMut<ElysQuery>, _env: Env, msg: Reply) -> Result<Response, ContractError> {
     match msg.result.into_result() {
-        Ok(res) => Ok(Response::new().add_attribute("sub_msg_resp", format!("{:?}", res))),
+        Ok(res) => {
+            let info: MsgSwapExactAmountInResp = from_binary(&res.data.unwrap())?;
+            Ok(Response::new().add_attribute("sub_msg_data", format!("{:?}", info)))
+        }
         Err(e) => Err(ContractError::StdError(
             cosmwasm_std::StdError::GenericErr {
                 msg: format!("<<<{}>>>", e),
