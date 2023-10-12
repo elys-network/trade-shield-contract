@@ -30,7 +30,7 @@ pub fn process_orders(
 }
 
 fn check_order(order: &Order) -> bool {
-    let amm_price_rate: Uint128 = Uint128::zero(); // implement get price here
+    let amm_price_rate: Uint128 = unimplemented!(); // implement get price here
 
     match order.order_type {
         OrderType::LimitBuy => {
