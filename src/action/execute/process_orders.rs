@@ -30,7 +30,7 @@ pub fn process_orders(
 }
 
 fn check_order(order: &Order) -> bool {
-    let amm_price_rate: Uint128 = unimplemented!(); // implement get price here
+    let amm_price_rate: Uint128 = todo!("implent amm query module"); // implement get price here
 
     match order.order_type {
         OrderType::LimitBuy => {
@@ -69,7 +69,7 @@ fn process_order(order: &Order, submsgs: &mut Vec<SubMsg<ElysMsg>>, sender: Stri
         token_out_min_amount,
     };
 
-    submsgs.push(SubMsg::new(msg))
+    submsgs.push(SubMsg::reply_on_success(msg, order.order_id))
 }
 
 fn calculate_token_out_min_amount(order: &Order) -> Int128 {

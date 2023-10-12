@@ -11,7 +11,7 @@ pub enum ExecuteMsg {
         order_amm_routes: Vec<SwapAmountInRoute>,
     },
     CancelOrder {
-        order_id: u128,
+        order_id: u64,
     },
     ProcessOrders {},
 }

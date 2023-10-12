@@ -11,7 +11,7 @@ impl Order {
         order_amm_routes: Vec<SwapAmountInRoute>,
         order_vec: &Vec<Order>,
     ) -> Order {
-        let order_id: u128 = match order_vec.iter().max_by_key(|s| s.order_id) {
+        let order_id: u64 = match order_vec.iter().max_by_key(|s| s.order_id) {
             Some(x) => x.order_id + 1,
             None => 0,
         };

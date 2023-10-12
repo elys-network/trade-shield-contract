@@ -5,7 +5,7 @@ use super::*;
 pub fn cancel_order(
     info: MessageInfo,
     deps: DepsMut<ElysQuery>,
-    order_id: u128,
+    order_id: u64,
 ) -> Result<Response<ElysMsg>, ContractError> {
     let orders_list: Vec<Order> = ORDER.load(deps.storage)?;
     let order: Order = match orders_list.iter().find(|order| order.order_id == order_id) {

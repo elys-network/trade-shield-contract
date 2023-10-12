@@ -13,7 +13,7 @@ fn not_found() {
     };
 
     // Specify the order ID that the user wants to cancel.
-    let id: u128 = 0;
+    let id: u64 = 0;
 
     // Create a contract wrapper and store its code.
     let code = ContractWrapper::new(execute, instantiate, query);
