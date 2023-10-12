@@ -24,7 +24,7 @@ fn successful_process_5_of_10_orders() {
         process_order_executor: "owner".to_string(),
         orders,
     };
-    let execute_msg = ExecuteMsg::ProcessOrder {};
+    let execute_msg = ExecuteMsg::ProcessOrders {};
 
     let addr = app
         .instantiate_contract(

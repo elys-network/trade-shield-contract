@@ -13,12 +13,12 @@ pub mod query {
 pub mod execute {
     mod cancel_order;
     mod create_order;
-    mod process_order;
+    mod process_orders;
 
     use super::*;
     use cosmwasm_std::{BankMsg, CosmosMsg, DepsMut, Env, MessageInfo, Response};
 
     pub use cancel_order::cancel_order;
     pub use create_order::create_order;
-    pub use process_order::process_order;
+    pub use process_orders::process_orders;
 }

@@ -32,7 +32,7 @@ fn successful_process_limit_buy_order() {
         process_order_executor: "owner".to_string(),
         orders: vec![dummy_order],
     };
-    let execute_msg = ExecuteMsg::ProcessOrder {};
+    let execute_msg = ExecuteMsg::ProcessOrders {};
 
     let addr = app
         .instantiate_contract(

@@ -44,7 +44,7 @@ fn successful_process_stop_loss_order() {
     };
 
     // Create an execution message to process orders.
-    let execute_msg = ExecuteMsg::ProcessOrder {};
+    let execute_msg = ExecuteMsg::ProcessOrders {};
 
     // Instantiate the contract with "owner" as the deployer and deposit 2 BTC.
     let addr = app

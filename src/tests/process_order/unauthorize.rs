@@ -11,7 +11,7 @@ fn unauthorize() {
         orders: vec![],
     };
     let random_user = Addr::unchecked("random");
-    let exec_msg = ExecuteMsg::ProcessOrder {};
+    let exec_msg = ExecuteMsg::ProcessOrders {};
 
     let addr = app
         .instantiate_contract(
