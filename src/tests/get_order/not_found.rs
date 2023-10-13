@@ -15,7 +15,7 @@ fn not_found() {
     };
 
     // Define an order ID that does not exist in the contract (e.g., 0).
-    let id: u128 = 0;
+    let id: u64 = 0;
 
     // Create a contract wrapper and store its code.
     let code = ContractWrapper::new(execute, instantiate, query);

@@ -24,7 +24,7 @@ fn successful_process_5_of_10_orders() {
         process_order_executor: "owner".to_string(),
         orders,
     };
-    let execute_msg = ExecuteMsg::ProcessOrder {};
+    let execute_msg = ExecuteMsg::ProcessOrders {};
 
     let addr = app
         .instantiate_contract(
@@ -94,7 +94,7 @@ fn successful_process_5_of_10_orders() {
         0
     );
 
-    let order_ids: Vec<u128> = read_processed_order_id(resp);
+    let order_ids: Vec<u64> = read_processed_order_id(resp);
 
     assert!(order_ids.is_empty());
 
@@ -155,7 +155,7 @@ fn successful_process_5_of_10_orders() {
         190200
     );
 
-    let order_ids: Vec<u128> = read_processed_order_id(resp);
+    let order_ids: Vec<u64> = read_processed_order_id(resp);
 
     assert!(order_ids.contains(&instantiate_msg.orders[0].order_id));
     assert!(order_ids.contains(&instantiate_msg.orders[3].order_id));
@@ -164,11 +164,11 @@ fn successful_process_5_of_10_orders() {
     assert!(order_ids.contains(&instantiate_msg.orders[8].order_id));
 }
 
-fn read_processed_order_id(resp: AppResponse) -> Vec<u128> {
-    let mut order_ids: Vec<u128> = vec![];
+fn read_processed_order_id(resp: AppResponse) -> Vec<u64> {
+    let mut order_ids: Vec<u64> = vec![];
     for event in resp.events {
         if let Some(attr) = event.attributes.iter().find(|attr| attr.key == "order_id") {
-            order_ids.push(attr.value.parse::<u128>().unwrap());
+            order_ids.push(attr.value.parse::<u64>().unwrap());
         }
     }
     order_ids

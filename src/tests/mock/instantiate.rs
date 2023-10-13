@@ -1,5 +1,5 @@
 use cosmwasm_schema::cw_serde;
-use cosmwasm_std::{DepsMut, Env, MessageInfo, Response, StdResult};
+use cosmwasm_std::{Addr, DepsMut, Env, MessageInfo, Response, StdResult};
 
 use crate::{
     bindings::{msg::ElysMsg, query::ElysQuery},
@@ -20,5 +20,8 @@ pub fn instantiate(
     msg: InstantiateMockMsg,
 ) -> StdResult<Response<ElysMsg>> {
     ORDER.save(deps.storage, &msg.orders)?;
+    deps.querier
+        .query_balance(msg.process_order_executor.clone(), "usdc")?;
+    PROCESS_ORDER_EXECUTOR.save(deps.storage, &Addr::unchecked(msg.process_order_executor))?;
     Ok(Response::new())
 }
