@@ -9,9 +9,8 @@ pub fn process_orders(
     info: MessageInfo,
     env: Env,
 ) -> Result<Response<ElysMsg>, ContractError> {
-    println!("AAAAAA");
     let process_order_executor = PROCESS_ORDER_EXECUTOR.load(deps.storage)?;
-    println!("OK");
+
     if process_order_executor != info.sender {
         return Err(ContractError::Unauthorized {
             sender: info.sender,
