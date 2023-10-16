@@ -1,8 +1,11 @@
 use cosmwasm_std::{coin, Coin, QuerierWrapper, QueryRequest, StdResult};
 
-use crate::{bindings::query_resp::AllPriceResponse, types::PageRequest};
+use crate::{
+    bindings::query_resp::AllPriceResponse,
+    types::{PageRequest, SwapAmountInRoute},
+};
 
-use super::query::ElysQuery;
+use super::{query::ElysQuery, query_resp::QuerySwapEstimationResponse};
 
 pub struct ElysQuerier<'a> {
     querier: &'a QuerierWrapper<'a, ElysQuery>,
@@ -25,5 +28,14 @@ impl<'a> ElysQuerier<'a> {
             .map(|price| coin(price.price.atomics().u128(), &price.asset))
             .collect();
         Ok(result)
+    }
+    pub fn swap_estimation(
+        &self,
+        routes: &Vec<SwapAmountInRoute>,
+        token_in: &Coin,
+    ) -> StdResult<QuerySwapEstimationResponse> {
+        let request = QueryRequest::Custom(ElysQuery::swap_estimation(routes, token_in));
+        let resp: QuerySwapEstimationResponse = self.querier.query(&request)?;
+        Ok(resp)
     }
 }

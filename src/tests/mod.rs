@@ -1,11 +1,11 @@
 use crate::{
-    entry_point::{execute, query},
+    entry_point::{execute, query, reply},
     msg::*,
     types::{Order, OrderPrice, OrderType},
     ContractError,
 };
 
-use cosmwasm_std::{coin, coins, Addr, Event, Uint128};
+use cosmwasm_std::{coin, coins, Addr, Decimal, Event, Uint128};
 use cw_multi_test::{ContractWrapper, Executor};
 use mock::multitest::ElysApp;
 

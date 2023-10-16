@@ -15,7 +15,7 @@ fn successful_process_5_of_10_orders() {
     let prices_at_t0 = vec![coin(20000, "btc"), coin(1, "usdc"), coin(2000, "eth")];
     let prices_at_t1 = vec![coin(30000, "btc"), coin(1, "usdc"), coin(1700, "eth")];
 
-    let code = ContractWrapper::new(execute, instantiate, query);
+    let code = ContractWrapper::new(execute, instantiate, query).with_reply(reply);
     let code_id = app.store_code(Box::new(code));
 
     let orders = create_dummy_orders();
@@ -41,7 +41,7 @@ fn successful_process_5_of_10_orders() {
         .unwrap();
 
     let resp = app
-        .execute_contract(addr.clone(), addr.clone(), &execute_msg, &[])
+        .execute_contract(Addr::unchecked("owner"), addr.clone(), &execute_msg, &[])
         .unwrap();
 
     assert_eq!(
@@ -102,8 +102,16 @@ fn successful_process_5_of_10_orders() {
         .unwrap();
 
     let resp = app
-        .execute_contract(addr.clone(), addr.clone(), &execute_msg, &[])
+        .execute_contract(Addr::unchecked("owner"), addr.clone(), &execute_msg, &[])
         .unwrap();
+
+    let order_ids: Vec<u64> = read_processed_order_id(resp);
+
+    assert!(order_ids.contains(&instantiate_msg.orders[0].order_id));
+    assert!(order_ids.contains(&instantiate_msg.orders[3].order_id));
+    assert!(order_ids.contains(&instantiate_msg.orders[6].order_id));
+    assert!(order_ids.contains(&instantiate_msg.orders[7].order_id));
+    assert!(order_ids.contains(&instantiate_msg.orders[8].order_id));
 
     assert_eq!(
         app.wrap()
@@ -154,20 +162,16 @@ fn successful_process_5_of_10_orders() {
             .u128(),
         190200
     );
-
-    let order_ids: Vec<u64> = read_processed_order_id(resp);
-
-    assert!(order_ids.contains(&instantiate_msg.orders[0].order_id));
-    assert!(order_ids.contains(&instantiate_msg.orders[3].order_id));
-    assert!(order_ids.contains(&instantiate_msg.orders[6].order_id));
-    assert!(order_ids.contains(&instantiate_msg.orders[7].order_id));
-    assert!(order_ids.contains(&instantiate_msg.orders[8].order_id));
 }
 
 fn read_processed_order_id(resp: AppResponse) -> Vec<u64> {
     let mut order_ids: Vec<u64> = vec![];
     for event in resp.events {
-        if let Some(attr) = event.attributes.iter().find(|attr| attr.key == "order_id") {
+        if let Some(attr) = event
+            .attributes
+            .iter()
+            .find(|attr| attr.key == "order_processed")
+        {
             order_ids.push(attr.value.parse::<u64>().unwrap());
         }
     }
@@ -186,7 +190,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_price: OrderPrice {
                 base_denom: "eth".to_string(),
                 quote_denom: "usdc".to_string(),
-                rate: Uint128::new(1700),
+                rate: Decimal::from_atomics(Uint128::new(1700), 0).unwrap(),
             },
         },
         Order {
@@ -198,7 +202,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_price: OrderPrice {
                 base_denom: "btc".to_string(),
                 quote_denom: "usdc".to_string(),
-                rate: Uint128::new(12000),
+                rate: Decimal::from_atomics(Uint128::new(12000), 0).unwrap(),
             },
             order_target_denom: "usdc".to_string(),
         },
@@ -211,7 +215,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_price: OrderPrice {
                 base_denom: "btc".to_string(),
                 quote_denom: "usdc".to_string(),
-                rate: Uint128::new(10000),
+                rate: Decimal::from_atomics(Uint128::new(10000), 0).unwrap(),
             },
             order_target_denom: "usdc".to_string(),
         },
@@ -224,7 +228,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_price: OrderPrice {
                 base_denom: "eth".to_string(),
                 quote_denom: "usdc".to_string(),
-                rate: Uint128::new(1500),
+                rate: Decimal::from_atomics(Uint128::new(1800), 0).unwrap(),
             },
             order_target_denom: "usdc".to_string(),
         },
@@ -237,7 +241,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_price: OrderPrice {
                 base_denom: "eth".to_string(),
                 quote_denom: "usdc".to_string(),
-                rate: Uint128::new(1800),
+                rate: Decimal::from_atomics(Uint128::new(1200), 0).unwrap(),
             },
             order_target_denom: "usdc".to_string(),
         },
@@ -250,7 +254,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_price: OrderPrice {
                 base_denom: "eth".to_string(),
                 quote_denom: "usdc".to_string(),
-                rate: Uint128::new(2500),
+                rate: Decimal::from_atomics(Uint128::new(2500), 0).unwrap(),
             },
             order_target_denom: "usdc".to_string(),
         },
@@ -263,7 +267,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_price: OrderPrice {
                 base_denom: "btc".to_string(),
                 quote_denom: "usdc".to_string(),
-                rate: Uint128::new(21000),
+                rate: Decimal::from_atomics(Uint128::new(21000), 0).unwrap(),
             },
             order_target_denom: "usdc".to_string(),
         },
@@ -276,7 +280,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_price: OrderPrice {
                 base_denom: "btc".to_string(),
                 quote_denom: "usdc".to_string(),
-                rate: Uint128::new(25000),
+                rate: Decimal::from_atomics(Uint128::new(25000), 0).unwrap(),
             },
             order_target_denom: "usdc".to_string(),
         },
@@ -289,7 +293,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_price: OrderPrice {
                 base_denom: "btc".to_string(),
                 quote_denom: "usdc".to_string(),
-                rate: Uint128::new(30000),
+                rate: Decimal::from_atomics(Uint128::new(30000), 0).unwrap(),
             },
             order_target_denom: "usdc".to_string(),
         },
@@ -302,7 +306,7 @@ fn create_dummy_orders() -> Vec<Order> {
             order_price: OrderPrice {
                 base_denom: "eth".to_string(),
                 quote_denom: "usdc".to_string(),
-                rate: Uint128::new(2100),
+                rate: Decimal::from_atomics(Uint128::new(2100), 0).unwrap(),
             },
             order_target_denom: "usdc".to_string(),
         },

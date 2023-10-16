@@ -1,10 +1,14 @@
-use crate::bindings::{msg::ElysMsg, query::ElysQuery};
+use crate::bindings::{
+    msg::ElysMsg, msg_resp::MsgSwapExactAmountInResp, query::ElysQuery,
+    query_resp::QuerySwapEstimationResponse,
+};
 use anyhow::{bail, Result as AnyResult};
 use cosmwasm_schema::cw_serde;
 use cosmwasm_std::{
-    coin, coins,
+    coin, coins, from_binary,
     testing::{MockApi, MockStorage},
-    to_binary, Addr, BankMsg, BlockInfo, Coin, Empty, Querier, StdResult, Storage,
+    to_binary, Addr, BankMsg, BlockInfo, Coin, Decimal, Empty, Querier, StdResult, Storage,
+    Uint128,
 };
 use cw_multi_test::{App, AppResponse, BankKeeper, BankSudo, BasicAppBuilder, Module, WasmKeeper};
 use cw_storage_plus::Item;
@@ -53,6 +57,28 @@ impl Module for ElysModule {
     ) -> AnyResult<cosmwasm_std::Binary> {
         match request {
             ElysQuery::PriceAll { pagination } => Ok(to_binary(&self.get_all_price(storage)?)?),
+            ElysQuery::QuerySwapEstimation { routes, token_in } => {
+                let prices = &self.get_all_price(storage)?;
+                let price_in = prices
+                    .iter()
+                    .find(|price| price.denom == token_in.denom)
+                    .unwrap();
+                let price_out = prices
+                    .iter()
+                    .find(|price| price.denom == routes[0].token_out_denom())
+                    .unwrap();
+                let spot_price = Decimal::from_ratio(price_in.amount, price_out.amount);
+                let token_out_amount =
+                    (Decimal::from_atomics(token_in.amount, spot_price.decimal_places())?
+                        * spot_price)
+                        .atomics()
+                        .u128();
+
+                Ok(to_binary(&QuerySwapEstimationResponse {
+                    spot_price,
+                    token_out: coin(token_out_amount, routes[0].token_out_denom()),
+                })?)
+            }
         }
     }
 
@@ -93,9 +119,13 @@ impl Module for ElysModule {
                     (token_in.amount * price_in.amount / price_out.amount).u128(),
                     route.token_out_denom(),
                 );
+                let data = to_binary(&MsgSwapExactAmountInResp::new(
+                    mint_amount[0].amount.u128() as i64
+                ))?;
+
                 let mint = BankSudo::Mint {
                     to_address: sender.clone(),
-                    amount: mint_amount,
+                    amount: mint_amount.clone(),
                 };
 
                 let burn = BankMsg::Burn {
@@ -111,7 +141,11 @@ impl Module for ElysModule {
                     )
                     .unwrap();
                 router.sudo(api, storage, block, mint.into()).unwrap();
-                Ok(AppResponse::default())
+
+                Ok(AppResponse {
+                    events: vec![],
+                    data: Some(data),
+                })
             }
         }
     }

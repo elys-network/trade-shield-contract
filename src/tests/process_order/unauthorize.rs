@@ -29,7 +29,7 @@ fn unauthorize() {
         .unwrap_err();
 
     assert_eq!(
-        ContractError::Unauthorized {
+        ContractError::ProcessOrderAuth {
             sender: random_user
         },
         err.downcast().unwrap()

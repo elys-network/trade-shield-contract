@@ -42,7 +42,7 @@ fn successful_cancel_order_with_created_order() {
             &ExecuteMsg::CreateOrder {
                 order_type: OrderType::StopLoss,
                 order_price: OrderPrice {
-                    rate: Uint128::new(18),
+                    rate: Decimal::from_atomics(Uint128::new(18), 0).unwrap(),
                     base_denom: "btc".to_string(),
                     quote_denom: "eth".to_string(),
                 },
