@@ -1,5 +1,5 @@
 use crate::types::{order::order::Order, order_type::OrderType, OrderPrice};
-use cosmwasm_std::{coin, Addr, Uint128};
+use cosmwasm_std::{coin, Addr, Decimal, Uint128};
 
 impl Order {
     pub fn new_dummy() -> Order {
@@ -12,7 +12,7 @@ impl Order {
             order_price: OrderPrice {
                 quote_denom: "eth".to_string(),
                 base_denom: "btc".to_string(),
-                rate: Uint128::new(5),
+                rate: Decimal::from_atomics(Uint128::new(5), 0).unwrap(),
             },
             order_target_denom: "eth".to_string(),
         }

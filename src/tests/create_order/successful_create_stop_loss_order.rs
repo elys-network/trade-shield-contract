@@ -45,7 +45,7 @@ fn successful_create_stop_loss_order() {
                 order_price: OrderPrice {
                     base_denom: "btc".to_string(),
                     quote_denom: "usdc".to_string(),
-                    rate: Uint128::new(30000), // The trigger price of 30000 USDC per BTC.
+                    rate: Decimal::from_atomics(Uint128::new(30000), 0).unwrap(), // The trigger price of 30000 USDC per BTC.
                 },
                 order_amm_routes: vec![],
                 order_source_denom: "btc".to_string(),

@@ -5,8 +5,15 @@ use cosmwasm_std::Int64;
 pub struct MsgSwapExactAmountInResp {
     token_out_amount: Int64,
 }
+
 impl MsgSwapExactAmountInResp {
     pub fn to_uint128(&self) -> u128 {
         self.token_out_amount.i64() as u128
+    }
+    #[cfg(test)]
+    pub fn new(token_out_amount: i64) -> Self {
+        Self {
+            token_out_amount: Int64::new(token_out_amount),
+        }
     }
 }

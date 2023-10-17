@@ -39,7 +39,7 @@ fn coin_number() {
             &ExecuteMsg::CreateOrder {
                 order_type: OrderType::StopLoss,
                 order_price: OrderPrice {
-                    rate: Uint128::new(17),
+                    rate: Decimal::from_atomics(Uint128::new(17), 0).unwrap(),
                     base_denom: "btc".to_string(),
                     quote_denom: "eth".to_string(),
                 },

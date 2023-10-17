@@ -22,4 +22,6 @@ pub enum ContractError {
     OrderPriceDenom,
     #[error("fund not used by the order")]
     OrderWrongFund,
+    #[error("{sender} is no autorized to use the process_orders endpoint")]
+    ProcessOrderAuth { sender: Addr },
 }

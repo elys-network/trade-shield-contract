@@ -20,7 +20,7 @@ fn order_price_denom() {
         order_price: OrderPrice {
             base_denom: "eth".to_string(),
             quote_denom: "usdc".to_string(), // Invalid pair.
-            rate: Uint128::new(1700),
+            rate: Decimal::from_atomics(Uint128::new(1700), 0).unwrap(),
         },
         order_amm_routes: vec![],
         order_source_denom: "eth".to_string(),

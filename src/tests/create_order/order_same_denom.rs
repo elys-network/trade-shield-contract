@@ -18,7 +18,7 @@ fn order_same_denom() {
         order_price: OrderPrice {
             base_denom: "btc".to_string(),
             quote_denom: "eth".to_string(),
-            rate: Uint128::new(19),
+            rate: Decimal::from_atomics(Uint128::new(19), 0).unwrap(),
         },
         order_amm_routes: vec![],
         order_source_denom: "eth".to_string(),

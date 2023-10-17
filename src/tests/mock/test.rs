@@ -1,8 +1,8 @@
-use cosmwasm_std::{coin, coins, Addr, Coin, Int128};
+use cosmwasm_std::{coin, coins, Addr, Coin, Decimal, Int128, Uint128};
 use cw_multi_test::Executor;
 
 use crate::{
-    bindings::{msg::ElysMsg, query::ElysQuery},
+    bindings::{msg::ElysMsg, query::ElysQuery, query_resp::QuerySwapEstimationResponse},
     types::{PageRequest, SwapAmountInRoute},
 };
 
@@ -94,4 +94,30 @@ fn swap() {
             .u128(),
         5 * 20000
     );
+}
+
+#[test]
+pub fn swap_estimation() {
+    let prices: Vec<Coin> = vec![coin(20000, "btc"), coin(1, "usdc")];
+    let mut app = ElysApp::new();
+
+    app.init_modules(|router, _, storage| router.custom.set_prices(storage, &prices))
+        .unwrap();
+
+    let swap: QuerySwapEstimationResponse = app
+        .wrap()
+        .query(&cosmwasm_std::QueryRequest::Custom(
+            ElysQuery::QuerySwapEstimation {
+                routes: vec![SwapAmountInRoute::new(1, "usdc")],
+                token_in: coin(5, "btc"),
+            },
+        ))
+        .unwrap();
+
+    assert_eq!(
+        swap.spot_price,
+        Decimal::from_atomics(Uint128::new(20000), 0).unwrap()
+    );
+
+    assert_eq!(swap.token_out, coin(100000, "usdc"));
 }

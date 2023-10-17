@@ -19,7 +19,7 @@ fn successful_process_limit_sell_order() {
     let prices_at_t1 = vec![coin(30000, "btc"), coin(1, "usdc")];
 
     // Create a contract wrapper and store its code.
-    let code = ContractWrapper::new(execute, instantiate, query);
+    let code = ContractWrapper::new(execute, instantiate, query).with_reply(reply);
     let code_id = app.store_code(Box::new(code));
 
     // Create a "limit sell" order (dummy order) with a specific rate and balance.
@@ -28,7 +28,7 @@ fn successful_process_limit_sell_order() {
         OrderPrice {
             base_denom: "btc".to_string(),
             quote_denom: "usdc".to_string(),
-            rate: Uint128::new(30000), // Rate at which BTC will be sold (30,000 USDC per BTC).
+            rate: Decimal::from_atomics(Uint128::new(30000), 0).unwrap(), // Rate at which BTC will be sold (30,000 USDC per BTC).
         },
         coin(2, "btc"), // 2 BTC to be sold.
         Addr::unchecked("user"),
@@ -64,7 +64,7 @@ fn successful_process_limit_sell_order() {
 
     // Execute the order processing.
     let resp = app
-        .execute_contract(addr.clone(), addr.clone(), &execute_msg, &[])
+        .execute_contract(Addr::unchecked("owner"), addr.clone(), &execute_msg, &[])
         .unwrap();
 
     // Verify the resulting balances after order processing.
@@ -106,7 +106,7 @@ fn successful_process_limit_sell_order() {
         e.attributes
             .iter()
             .find(|attr| {
-                attr.key == "order_id"
+                attr.key == "order_processed"
                     && attr.value == instantiate_msg.orders[0].order_id.to_string()
             })
             .and_then(|attr| attr.value.parse::<u128>().ok())
@@ -120,7 +120,7 @@ fn successful_process_limit_sell_order() {
 
     // Execute the order processing again.
     let resp = app
-        .execute_contract(addr.clone(), addr.clone(), &execute_msg, &[])
+        .execute_contract(Addr::unchecked("owner"), addr.clone(), &execute_msg, &[])
         .unwrap();
 
     // Verify the resulting balances after order processing.
@@ -162,7 +162,7 @@ fn successful_process_limit_sell_order() {
         e.attributes
             .iter()
             .find(|attr| {
-                attr.key == "order_id"
+                attr.key == "order_processed"
                     && attr.value == instantiate_msg.orders[0].order_id.to_string()
             })
             .and_then(|attr| attr.value.parse::<u128>().ok())
