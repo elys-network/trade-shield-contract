@@ -36,7 +36,7 @@ async function getSpotOrder(order_id) {
   const result = await sender_client.queryContractSmart(
     trade_shield_contract_addr,
     {
-      get_order: { order_id: order_id },
+      get_spot_order: { order_id: order_id },
     }
   );
   console.log(`Result: `, result);
@@ -61,7 +61,7 @@ async function createSpotOrder(
   );
   const executeFee = calculateFee(300_000, gasPrice);
   const msg = {
-    create_order: {
+    create_spot_order: {
       order_amm_routes: order_amm_routes,
       order_price: order_price,
       order_type: order_type,
@@ -70,7 +70,7 @@ async function createSpotOrder(
     },
   };
 
-  const create_order_res = await sender_client.execute(
+  const create_spot_order_res = await sender_client.execute(
     sender.address,
     trade_shield_contract_addr,
     msg,
@@ -78,7 +78,7 @@ async function createSpotOrder(
     "",
     coins(amount_send, denom_send)
   );
-  console.log("create_order_res:", create_order_res);
+  console.log("create_spot_order_res:", create_spot_order_res);
 }
 
 async function cancelSpotOrder(order_id) {
@@ -93,17 +93,17 @@ async function cancelSpotOrder(order_id) {
   );
   const executeFee = calculateFee(300_000, gasPrice);
   const msg = {
-    cancel_order: {
+    cancel_spot_order: {
       order_id: order_id,
     },
   };
 
-  const create_order_res = await sender_client.execute(
+  const create_spot_order_res = await sender_client.execute(
     sender.address,
     trade_shield_contract_addr,
     msg,
     executeFee,
     ""
   );
-  console.log("create_order_res:", create_order_res);
+  console.log("create_spot_order_res:", create_spot_order_res);
 }
