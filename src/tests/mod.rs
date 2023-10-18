@@ -1,7 +1,7 @@
 use crate::{
     entry_point::{execute, query, reply},
     msg::*,
-    types::{SpotOrder, SpotOrderPrice, SpotOrderType},
+    types::*,
     ContractError,
 };
 
@@ -10,7 +10,7 @@ use cw_multi_test::{ContractWrapper, Executor};
 use mock::multitest::ElysApp;
 
 mod get_order_id_from_events;
-mod create_order {
+mod create_spot_order {
     use super::*;
     mod coin_number;
     mod not_enough_fund;
@@ -22,7 +22,7 @@ mod create_order {
     mod successful_create_stop_loss_order;
 }
 
-mod cancel_order {
+mod cancel_spot_order {
     use super::*;
     mod not_found;
     mod successful_cancel_order_with_created_order;
@@ -31,14 +31,14 @@ mod cancel_order {
     mod successful_cancel_order_with_dummy_order;
 }
 
-mod get_order {
+mod get_spot_order {
     use super::*;
     use cosmwasm_std::{Binary, StdError};
     mod not_found;
     mod successful_query_message;
 }
 
-mod process_order {
+mod process_spot_order {
     use super::*;
     mod succesful_process_limit_buy_order;
     mod successful_process_5_of_10_orders;
