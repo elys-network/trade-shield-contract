@@ -1,24 +1,33 @@
-use crate::bindings::msg::ElysMsg;
-use crate::{states::ORDER, types::*, ContractError};
+use crate::bindings::{msg::ElysMsg, query::ElysQuery};
+use crate::{states::SPOT_ORDER, types::*, ContractError};
+use cosmwasm_std::{BankMsg, CosmosMsg, DepsMut, Env, MessageInfo, Response};
 
 pub mod query {
     mod get_all_price;
-    mod get_order;
+    mod get_spot_order;
     use super::*;
+    use crate::msg::query_resp::*;
     use cosmwasm_std::Deps;
     pub use get_all_price::get_all_prices;
-    pub use get_order::get_order;
+    pub use get_spot_order::get_spot_order;
 }
 
 pub mod execute {
     mod cancel_order;
     mod create_order;
-    mod process_orders;
+    mod process_spot_orders;
 
     use super::*;
-    use cosmwasm_std::{BankMsg, CosmosMsg, DepsMut, Env, MessageInfo, Response};
 
     pub use cancel_order::cancel_order;
     pub use create_order::create_order;
-    pub use process_orders::process_orders;
+    pub use process_spot_orders::process_spot_orders;
+}
+
+pub mod reply {
+    use super::*;
+
+    mod spot_order;
+
+    pub use spot_order::reply_to_spot_order;
 }

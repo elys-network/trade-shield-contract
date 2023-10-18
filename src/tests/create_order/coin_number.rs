@@ -1,6 +1,6 @@
 use cosmwasm_std::Uint128;
 
-use crate::{tests::mock::multitest::ElysApp, types::OrderPrice};
+use crate::{tests::mock::multitest::ElysApp, types::SpotOrderPrice};
 
 use super::*;
 // This test case verifies that attempting to create an order without specifying the amount results in a "CoinNumber" error.
@@ -36,9 +36,9 @@ fn coin_number() {
         .execute_contract(
             Addr::unchecked("user"),
             addr,
-            &ExecuteMsg::CreateOrder {
-                order_type: OrderType::StopLoss,
-                order_price: OrderPrice {
+            &ExecuteMsg::CreateSpotOrder {
+                order_type: SpotOrderType::StopLoss,
+                order_price: SpotOrderPrice {
                     rate: Decimal::from_atomics(Uint128::new(17), 0).unwrap(),
                     base_denom: "btc".to_string(),
                     quote_denom: "eth".to_string(),

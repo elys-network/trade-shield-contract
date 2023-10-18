@@ -11,7 +11,7 @@ fn unauthorize() {
         orders: vec![],
     };
     let random_user = Addr::unchecked("random");
-    let exec_msg = ExecuteMsg::ProcessOrders {};
+    let exec_msg = ExecuteMsg::ProcessSpotOrders {};
 
     let addr = app
         .instantiate_contract(
@@ -29,7 +29,7 @@ fn unauthorize() {
         .unwrap_err();
 
     assert_eq!(
-        ContractError::ProcessOrderAuth {
+        ContractError::ProcessSpotOrderAuth {
             sender: random_user
         },
         err.downcast().unwrap()

@@ -1,7 +1,7 @@
 use crate::{
     entry_point::{execute, query, reply},
     msg::*,
-    types::{Order, OrderPrice, OrderType},
+    types::{SpotOrder, SpotOrderPrice, SpotOrderType},
     ContractError,
 };
 

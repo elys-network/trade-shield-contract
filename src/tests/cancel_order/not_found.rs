@@ -36,14 +36,14 @@ fn not_found() {
         .execute_contract(
             Addr::unchecked("user"),
             addr,
-            &ExecuteMsg::CancelOrder { order_id: id },
+            &ExecuteMsg::CancelSpotOrder { order_id: id },
             &[],
         )
         .unwrap_err();
 
     // Verify that the user receives an error indicating that the order was not found.
     assert_eq!(
-        ContractError::OrderNotFound { order_id: id },
+        ContractError::SpotOrderNotFound { order_id: id },
         err.downcast().unwrap()
     );
 }

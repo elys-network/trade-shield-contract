@@ -10,7 +10,7 @@ fn unauthorized() {
     // Create a mock message to instantiate the contract with an order owned by the "user"
     let instantiate_msg = InstantiateMockMsg {
         process_order_executor: "owner".to_string(),
-        orders: vec![Order::new_dummy()],
+        orders: vec![SpotOrder::new_dummy()],
     };
 
     // Retrieve the order ID from the instantiated message for later use.
@@ -37,7 +37,7 @@ fn unauthorized() {
         .execute_contract(
             Addr::unchecked("not_user"),
             addr,
-            &ExecuteMsg::CancelOrder {
+            &ExecuteMsg::CancelSpotOrder {
                 order_id: id.clone(),
             },
             &[],

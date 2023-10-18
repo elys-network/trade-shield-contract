@@ -25,9 +25,9 @@ fn successful_process_limit_buy_order() {
     let code_id = app.store_code(Box::new(code));
 
     // Create a "limit buy" order (dummy order) with a specific rate and balance.
-    let dummy_order = Order::new(
-        OrderType::LimitBuy,
-        OrderPrice {
+    let dummy_order = SpotOrder::new(
+        SpotOrderType::LimitBuy,
+        SpotOrderPrice {
             base_denom: "ubtc".to_string(),
             quote_denom: "usdc".to_string(),
             rate: Decimal::from_atomics(Uint128::new(38), 0).unwrap(), // Rate at which ubtc will be bought (38 USDC per ubtc).
@@ -46,7 +46,7 @@ fn successful_process_limit_buy_order() {
     };
 
     // Create an execution message to process orders.
-    let execute_msg = ExecuteMsg::ProcessOrders {};
+    let execute_msg = ExecuteMsg::ProcessSpotOrders {};
 
     // Instantiate the contract with "owner" as the deployer and deposit 120 USDC.
     let addr = app
