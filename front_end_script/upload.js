@@ -24,7 +24,7 @@ const GASPRICE = "0.05uelys";
 const trade_shield_contract_addr =
   "elys14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9s3fsthx";
 
-async function getOrder(order_id) {
+async function getSpotOrder(order_id) {
   const sender_wallet = await DirectSecp256k1HdWallet.fromMnemonic(
     sender.mnemonic,
     { prefix: "elys" }
@@ -42,7 +42,7 @@ async function getOrder(order_id) {
   console.log(`Result: `, result);
 }
 
-async function createOrder(
+async function createSpotOrder(
   order_amm_routes,
   order_price,
   order_type,
@@ -81,7 +81,7 @@ async function createOrder(
   console.log("create_order_res:", create_order_res);
 }
 
-async function cancelOrder(order_id) {
+async function cancelSpotOrder(order_id) {
   const gasPrice = GasPrice.fromString(GASPRICE);
   const sender_wallet = await DirectSecp256k1HdWallet.fromMnemonic(
     sender.mnemonic,
