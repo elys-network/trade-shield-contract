@@ -15,9 +15,9 @@ fn order_price_denom() {
         orders: vec![],
     };
 
-    let create_order_msg = ExecuteMsg::CreateOrder {
-        order_type: OrderType::LimitSell,
-        order_price: OrderPrice {
+    let create_order_msg = ExecuteMsg::CreateSpotOrder {
+        order_type: SpotOrderType::LimitSell,
+        order_price: SpotOrderPrice {
             base_denom: "eth".to_string(),
             quote_denom: "usdc".to_string(), // Invalid pair.
             rate: Decimal::from_atomics(Uint128::new(1700), 0).unwrap(),
@@ -50,7 +50,7 @@ fn order_price_denom() {
         )
         .unwrap_err();
 
-    let error_msg = ContractError::OrderPriceDenom;
+    let error_msg = ContractError::SpotOrderPriceDenom;
 
     assert_eq!(error_msg, err.downcast().unwrap());
 

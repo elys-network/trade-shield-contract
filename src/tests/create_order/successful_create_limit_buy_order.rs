@@ -39,9 +39,9 @@ fn successful_create_limit_buy_order() {
         .execute_contract(
             Addr::unchecked("user"),
             addr.clone(),
-            &ExecuteMsg::CreateOrder {
-                order_type: OrderType::LimitBuy,
-                order_price: OrderPrice {
+            &ExecuteMsg::CreateSpotOrder {
+                order_type: SpotOrderType::LimitBuy,
+                order_price: SpotOrderPrice {
                     base_denom: "btc".to_string(),
                     quote_denom: "usdc".to_string(),
                     rate: Decimal::from_atomics(Uint128::new(30000), 0).unwrap(), // The maximum price of 30000 USDC per BTC.

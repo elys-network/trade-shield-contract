@@ -23,9 +23,9 @@ fn successful_process_stop_loss_order() {
     let code_id = app.store_code(Box::new(code));
 
     // Create a "stop-loss" order (dummy order) with trigger price and balance.
-    let dummy_order = Order::new(
-        OrderType::StopLoss,
-        OrderPrice {
+    let dummy_order = SpotOrder::new(
+        SpotOrderType::StopLoss,
+        SpotOrderPrice {
             base_denom: "btc".to_string(),
             quote_denom: "usdc".to_string(),
             rate: Decimal::from_atomics(Uint128::new(20000), 0).unwrap(), // Trigger price of 20,000 USDC per BTC.
@@ -44,7 +44,7 @@ fn successful_process_stop_loss_order() {
     };
 
     // Create an execution message to process orders.
-    let execute_msg = ExecuteMsg::ProcessOrders {};
+    let execute_msg = ExecuteMsg::ProcessSpotOrders {};
 
     // Instantiate the contract with "owner" as the deployer and deposit 2 BTC.
     let addr = app

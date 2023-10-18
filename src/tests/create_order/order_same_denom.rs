@@ -13,9 +13,9 @@ fn order_same_denom() {
         orders: vec![],
     };
 
-    let create_order_msg = ExecuteMsg::CreateOrder {
-        order_type: OrderType::LimitSell,
-        order_price: OrderPrice {
+    let create_order_msg = ExecuteMsg::CreateSpotOrder {
+        order_type: SpotOrderType::LimitSell,
+        order_price: SpotOrderPrice {
             base_denom: "btc".to_string(),
             quote_denom: "eth".to_string(),
             rate: Decimal::from_atomics(Uint128::new(19), 0).unwrap(),
@@ -48,7 +48,7 @@ fn order_same_denom() {
         )
         .unwrap_err();
 
-    let error_msg = ContractError::OrderSameDenom;
+    let error_msg = ContractError::SpotOrderSameDenom;
 
     assert_eq!(error_msg, err.downcast().unwrap());
 

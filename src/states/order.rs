@@ -1,4 +1,4 @@
-use crate::types::Order;
+use crate::types::SpotOrder;
 use cw_storage_plus::Item;
 
-pub const ORDER: Item<Vec<Order>> = Item::new("order");
+pub const SPOT_ORDER: Item<Vec<SpotOrder>> = Item::new("spot order");

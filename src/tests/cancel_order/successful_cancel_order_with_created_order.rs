@@ -39,9 +39,9 @@ fn successful_cancel_order_with_created_order() {
         .execute_contract(
             Addr::unchecked("user"),
             addr.clone(),
-            &ExecuteMsg::CreateOrder {
-                order_type: OrderType::StopLoss,
-                order_price: OrderPrice {
+            &ExecuteMsg::CreateSpotOrder {
+                order_type: SpotOrderType::StopLoss,
+                order_price: SpotOrderPrice {
                     rate: Decimal::from_atomics(Uint128::new(18), 0).unwrap(),
                     base_denom: "btc".to_string(),
                     quote_denom: "eth".to_string(),
@@ -61,7 +61,7 @@ fn successful_cancel_order_with_created_order() {
     app.execute_contract(
         Addr::unchecked("user"),
         addr.clone(),
-        &ExecuteMsg::CancelOrder { order_id: id },
+        &ExecuteMsg::CancelSpotOrder { order_id: id },
         &[],
     )
     .unwrap();

@@ -1,15 +1,15 @@
-use crate::types::{order::order::Order, order_type::OrderType, OrderPrice};
+use crate::types::*;
 use cosmwasm_std::{coin, Addr, Decimal, Uint128};
 
-impl Order {
-    pub fn new_dummy() -> Order {
-        Order {
+impl SpotOrder {
+    pub fn new_dummy() -> SpotOrder {
+        SpotOrder {
             order_id: 777,
-            order_type: OrderType::StopLoss,
+            order_type: SpotOrderType::StopLoss,
             order_amount: coin(1000, "btc"),
             owner_address: Addr::unchecked("user"),
             order_amm_routes: vec![],
-            order_price: OrderPrice {
+            order_price: SpotOrderPrice {
                 quote_denom: "eth".to_string(),
                 base_denom: "btc".to_string(),
                 rate: Decimal::from_atomics(Uint128::new(5), 0).unwrap(),

@@ -1,17 +1,17 @@
-use crate::types::{OrderPrice, OrderType, SwapAmountInRoute};
+use crate::types::{SpotOrderPrice, SpotOrderType, SwapAmountInRoute};
 use cosmwasm_schema::cw_serde;
 
 #[cw_serde]
 pub enum ExecuteMsg {
-    CreateOrder {
-        order_type: OrderType,
+    CreateSpotOrder {
+        order_type: SpotOrderType,
         order_source_denom: String,
         order_target_denom: String,
-        order_price: OrderPrice,
+        order_price: SpotOrderPrice,
         order_amm_routes: Vec<SwapAmountInRoute>,
     },
-    CancelOrder {
+    CancelSpotOrder {
         order_id: u64,
     },
-    ProcessOrders {},
+    ProcessSpotOrders {},
 }

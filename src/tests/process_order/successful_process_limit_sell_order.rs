@@ -23,9 +23,9 @@ fn successful_process_limit_sell_order() {
     let code_id = app.store_code(Box::new(code));
 
     // Create a "limit sell" order (dummy order) with a specific rate and balance.
-    let dummy_order = Order::new(
-        OrderType::LimitSell,
-        OrderPrice {
+    let dummy_order = SpotOrder::new(
+        SpotOrderType::LimitSell,
+        SpotOrderPrice {
             base_denom: "btc".to_string(),
             quote_denom: "usdc".to_string(),
             rate: Decimal::from_atomics(Uint128::new(30000), 0).unwrap(), // Rate at which BTC will be sold (30,000 USDC per BTC).
@@ -44,7 +44,7 @@ fn successful_process_limit_sell_order() {
     };
 
     // Create an execution message to process orders.
-    let execute_msg = ExecuteMsg::ProcessOrders {};
+    let execute_msg = ExecuteMsg::ProcessSpotOrders {};
 
     // Instantiate the contract with "owner" as the deployer and deposit 2 BTC.
     let addr = app

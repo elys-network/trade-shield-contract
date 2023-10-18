@@ -12,7 +12,7 @@ pub fn execute(
     use ExecuteMsg::*;
 
     match msg {
-        CreateOrder {
+        CreateSpotOrder {
             order_type,
             order_source_denom,
             order_target_denom,
@@ -28,7 +28,7 @@ pub fn execute(
             order_price,
             order_amm_routes,
         ),
-        CancelOrder { order_id } => cancel_order(info, deps, order_id),
-        ProcessOrders {} => process_orders(deps, info, env),
+        CancelSpotOrder { order_id } => cancel_order(info, deps, order_id),
+        ProcessSpotOrders {} => process_spot_orders(deps, info, env),
     }
 }

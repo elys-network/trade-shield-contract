@@ -2,7 +2,7 @@ use crate::tests::mock::multitest::ElysApp;
 
 use super::*;
 
-// This test case verifies that querying a non-existent order in the contract results in an "OrderNotFound" error.
+// This test case verifies that querying a non-existent order in the contract results in an "SpotOrderNotFound" error.
 #[test]
 fn not_found() {
     // Initialize the ElysApp instance.
@@ -33,17 +33,17 @@ fn not_found() {
         )
         .unwrap();
 
-    // Query the contract for the non-existent order and expect an "OrderNotFound" error.
+    // Query the contract for the non-existent order and expect an "SpotOrderNotFound" error.
     let err: Result<Binary, StdError> = app
         .wrap()
-        .query_wasm_smart(&addr, &QueryMsg::GetOrder { order_id: id });
+        .query_wasm_smart(&addr, &QueryMsg::GetSpotOrder { order_id: id });
     let err = err.unwrap_err();
 
     // Define the expected error message.
     let error_reference = StdError::GenericErr {
         msg: format!(
             "Querier contract error: {}",
-            ContractError::OrderNotFound { order_id: id }.to_string()
+            ContractError::SpotOrderNotFound { order_id: id }.to_string()
         ),
     };
 

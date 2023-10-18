@@ -12,7 +12,7 @@ fn successful_cancel_order_with_dummy_order() {
     let mut app = ElysApp::new_with_wallets(wallets);
 
     // Create a dummy order to be used for instantiation. (with an amount of 1000btc)
-    let dummy_order = Order::new_dummy();
+    let dummy_order = SpotOrder::new_dummy();
 
     // Create a mock message to instantiate the contract with the dummy order.
     let instantiate_msg = InstantiateMockMsg {
@@ -40,7 +40,7 @@ fn successful_cancel_order_with_dummy_order() {
     app.execute_contract(
         Addr::unchecked("user"),
         addr.clone(),
-        &ExecuteMsg::CancelOrder {
+        &ExecuteMsg::CancelSpotOrder {
             order_id: dummy_order.order_id,
         },
         &[],

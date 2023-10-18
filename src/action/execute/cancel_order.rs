@@ -7,10 +7,10 @@ pub fn cancel_order(
     deps: DepsMut<ElysQuery>,
     order_id: u64,
 ) -> Result<Response<ElysMsg>, ContractError> {
-    let orders_list: Vec<Order> = ORDER.load(deps.storage)?;
-    let order: Order = match orders_list.iter().find(|order| order.order_id == order_id) {
+    let orders_list: Vec<SpotOrder> = SPOT_ORDER.load(deps.storage)?;
+    let order: SpotOrder = match orders_list.iter().find(|order| order.order_id == order_id) {
         Some(order) => order.to_owned(),
-        None => return Err(ContractError::OrderNotFound { order_id }),
+        None => return Err(ContractError::SpotOrderNotFound { order_id }),
     };
 
     if order.owner_address != info.sender {
@@ -26,12 +26,12 @@ pub fn cancel_order(
 
     let resp = Response::new().add_message(CosmosMsg::Bank(refund_msg));
 
-    let new_orders_list: Vec<Order> = orders_list
+    let new_orders_list: Vec<SpotOrder> = orders_list
         .into_iter()
         .filter(|order| order.order_id != order_id)
         .collect();
 
-    ORDER.save(deps.storage, &new_orders_list)?;
+    SPOT_ORDER.save(deps.storage, &new_orders_list)?;
 
     Ok(resp)
 }
