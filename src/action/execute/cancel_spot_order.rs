@@ -2,7 +2,7 @@ use crate::bindings::query::ElysQuery;
 
 use super::*;
 
-pub fn cancel_order(
+pub fn cancel_spot_order(
     info: MessageInfo,
     deps: DepsMut<ElysQuery>,
     order_id: u64,

@@ -2,7 +2,7 @@ use crate::bindings::query::ElysQuery;
 
 use super::*;
 
-pub fn create_order(
+pub fn create_spot_order(
     env: Env,
     deps: DepsMut<ElysQuery>,
     info: MessageInfo,
