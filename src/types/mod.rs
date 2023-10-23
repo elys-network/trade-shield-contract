@@ -7,6 +7,7 @@ mod order {
         mod new_dummy;
     }
 }
+mod asset_info;
 mod order_price;
 mod page_request;
 mod page_response;
@@ -14,6 +15,7 @@ mod pool;
 mod price;
 mod swap_route;
 
+pub use asset_info::AssetInfo;
 pub use order::order::Order;
 pub use order_price::OrderPrice;
 pub use order_type::OrderType;

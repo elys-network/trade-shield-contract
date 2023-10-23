@@ -1,14 +1,17 @@
-use crate::bindings::{
-    msg::ElysMsg, msg_resp::MsgSwapExactAmountInResp, query::ElysQuery,
-    query_resp::QuerySwapEstimationResponse,
+use crate::{
+    bindings::{
+        msg::ElysMsg, msg_resp::MsgSwapExactAmountInResp, query::ElysQuery,
+        query_resp::QuerySwapEstimationResponse,
+    },
+    types::AssetInfo,
 };
-use anyhow::{bail, Result as AnyResult};
+use anyhow::{bail, Error, Result as AnyResult};
 use cosmwasm_schema::cw_serde;
 use cosmwasm_std::{
     coin, coins, from_binary,
     testing::{MockApi, MockStorage},
-    to_binary, Addr, BankMsg, BlockInfo, Coin, Decimal, Empty, Querier, StdResult, Storage,
-    Uint128,
+    to_binary, Addr, BankMsg, BlockInfo, Coin, Decimal, Empty, Querier, StdError, StdResult,
+    Storage, Uint128,
 };
 use cw_multi_test::{App, AppResponse, BankKeeper, BankSudo, BasicAppBuilder, Module, WasmKeeper};
 use cw_storage_plus::Item;
@@ -16,6 +19,7 @@ use std::cmp::max;
 use std::ops::{Deref, DerefMut};
 
 pub const PRICES: Item<Vec<Coin>> = Item::new("prices");
+pub const ASSET_INFO: Item<Vec<AssetInfo>> = Item::new("asset_info");
 pub const BLOCK_TIME: u64 = 5;
 
 pub struct ElysModule {}
@@ -39,6 +43,13 @@ impl ElysModule {
         }
         prices.push(new_price.to_owned());
         PRICES.save(store, &prices)
+    }
+    pub fn set_asset_infos(
+        &self,
+        store: &mut dyn Storage,
+        infos: &Vec<AssetInfo>,
+    ) -> StdResult<()> {
+        ASSET_INFO.save(store, infos)
     }
 }
 
@@ -78,6 +89,18 @@ impl Module for ElysModule {
                     spot_price,
                     token_out: coin(token_out_amount, routes[0].token_out_denom()),
                 })?)
+            }
+
+            ElysQuery::AssetInfo { denom } => {
+                let infos = ASSET_INFO.load(storage)?;
+                let may_have_info = infos.iter().find(|asset| asset.denom == denom);
+
+                match may_have_info {
+                    Some(info) => Ok(to_binary(info)?),
+                    None => Err(Error::new(StdError::NotFound {
+                        kind: "asset denom".to_string(),
+                    })),
+                }
             }
         }
     }
