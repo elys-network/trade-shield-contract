@@ -2,10 +2,14 @@ use crate::bindings::msg::ElysMsg;
 use crate::{states::ORDER, types::*, ContractError};
 
 pub mod query {
+    mod asset_info;
     mod get_all_price;
     mod get_order;
+
     use super::*;
     use cosmwasm_std::Deps;
+
+    pub use asset_info::asset_info;
     pub use get_all_price::get_all_prices;
     pub use get_order::get_order;
 }
