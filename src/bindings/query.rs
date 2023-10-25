@@ -16,6 +16,8 @@ pub enum ElysQuery {
         routes: Vec<SwapAmountInRoute>,
         token_in: Coin,
     },
+    #[returns(AssetInfoResponse)]
+    AssetInfo { denom: String },
 }
 
 impl CustomQuery for ElysQuery {}
@@ -29,5 +31,8 @@ impl ElysQuery {
             routes: routes.to_owned(),
             token_in: token_in.to_owned(),
         }
+    }
+    pub fn asset_info(denom: String) -> Self {
+        Self::AssetInfo { denom }
     }
 }

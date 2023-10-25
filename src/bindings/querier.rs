@@ -5,7 +5,10 @@ use crate::{
     types::{PageRequest, SwapAmountInRoute},
 };
 
-use super::{query::ElysQuery, query_resp::QuerySwapEstimationResponse};
+use super::{
+    query::ElysQuery,
+    query_resp::{AssetInfoResponse, QuerySwapEstimationResponse},
+};
 
 pub struct ElysQuerier<'a> {
     querier: &'a QuerierWrapper<'a, ElysQuery>,
@@ -36,6 +39,11 @@ impl<'a> ElysQuerier<'a> {
     ) -> StdResult<QuerySwapEstimationResponse> {
         let request = QueryRequest::Custom(ElysQuery::swap_estimation(routes, token_in));
         let resp: QuerySwapEstimationResponse = self.querier.query(&request)?;
+        Ok(resp)
+    }
+    pub fn asset_info(&self, denom: String) -> StdResult<AssetInfoResponse> {
+        let request = QueryRequest::Custom(ElysQuery::asset_info(denom));
+        let resp: AssetInfoResponse = self.querier.query(&request)?;
         Ok(resp)
     }
 }
