@@ -1,6 +1,5 @@
+use crate::{bindings::msg_resp::MsgSwapExactAmountInResp, states::PROCESSED_SPOT_ORDER};
 use cosmwasm_std::{coins, from_binary, Binary, DepsMut, StdError};
-
-use crate::bindings::msg_resp::MsgSwapExactAmountInResp;
 
 use super::*;
 
@@ -25,21 +24,19 @@ pub fn reply_to_spot_order(
         None => return Err(ContractError::SpotOrderNotFound { order_id }),
     };
 
-    let new_orders_list: Vec<SpotOrder> = orders
-        .into_iter()
-        .filter(|order| order.order_id != order_id)
-        .collect();
-
     let bank_msg = BankMsg::Send {
         to_address: order.owner_address.to_string(),
-        amount: coins(amm_response.token_out_amount(), order.order_target_denom),
+        amount: coins(
+            amm_response.token_out_amount(),
+            order.order_target_denom.to_string(),
+        ),
     };
 
-    SPOT_ORDER.save(deps.storage, &new_orders_list)?;
+    let mut processd_spot_orders = PROCESSED_SPOT_ORDER.load(deps.storage)?;
+    processd_spot_orders.push((order_id, bank_msg));
+    PROCESSED_SPOT_ORDER.save(deps.storage, &processd_spot_orders)?;
 
-    let resp: Response<ElysMsg> = Response::new()
-        .add_attribute("order_processed", order.order_id.to_string())
-        .add_message(CosmosMsg::Bank(bank_msg));
+    let resp: Response<ElysMsg> = Response::new();
 
     Ok(resp)
 }
