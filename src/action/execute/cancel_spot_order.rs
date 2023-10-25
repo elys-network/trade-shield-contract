@@ -1,4 +1,4 @@
-use crate::bindings::query::ElysQuery;
+use crate::{bindings::query::ElysQuery, states::PROCESSED_SPOT_ORDER};
 
 use super::*;
 
@@ -17,6 +17,13 @@ pub fn cancel_spot_order(
         return Err(ContractError::Unauthorized {
             sender: info.sender,
         });
+    }
+
+    let processed_spot_order = PROCESSED_SPOT_ORDER.load(deps.storage)?;
+    for (id, _) in processed_spot_order {
+        if id == order_id {
+            return Err(ContractError::ProcessSpotOrderProcessing { order_id });
+        }
     }
 
     let refund_msg = BankMsg::Send {

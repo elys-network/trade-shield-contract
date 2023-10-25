@@ -25,10 +25,10 @@ mod create_spot_order {
 mod cancel_spot_order {
     use super::*;
     mod not_found;
+    mod process_spot_order_processing;
     mod successful_cancel_order_with_created_order;
-    mod unauthorized;
-
     mod successful_cancel_order_with_dummy_order;
+    mod unauthorized;
 }
 
 mod get_spot_order {

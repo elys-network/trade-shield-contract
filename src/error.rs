@@ -24,4 +24,6 @@ pub enum ContractError {
     SpotOrderWrongFund,
     #[error("{sender} is no autorized to use the process_orders endpoint")]
     ProcessSpotOrderAuth { sender: Addr },
+    #[error("{order_id} is prossessing")]
+    ProcessSpotOrderProcessing { order_id: u64 },
 }
