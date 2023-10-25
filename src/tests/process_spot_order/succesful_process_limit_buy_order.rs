@@ -1,4 +1,7 @@
-use crate::{tests::mock::multitest::ElysApp, types::SwapAmountInRoute};
+use crate::{
+    tests::{mock::multitest::ElysApp, read_processed_order_id::read_processed_order_id},
+    types::SwapAmountInRoute,
+};
 
 use super::*;
 use cosmwasm_std::{coins, Coin};
@@ -104,21 +107,58 @@ fn successful_process_limit_buy_order() {
     );
 
     // Find the order ID in the emitted events and ensure it's not present.
-    let order_id: Option<u128> = resp.events.iter().find_map(|e| {
-        e.attributes
-            .iter()
-            .find(|attr| {
-                attr.key == "order_processed"
-                    && attr.value == instantiate_msg.orders[0].order_id.to_string()
-            })
-            .and_then(|attr| attr.value.parse::<u128>().ok())
-    });
+    let order_ids = read_processed_order_id(resp);
 
-    assert!(order_id.is_none());
+    assert!(order_ids.is_empty());
 
     // Update the ubtc and USDC prices to match the order rate.
     app.init_modules(|router, _, store| router.custom.set_prices(store, &prices_at_t1))
         .unwrap();
+
+    // Execute the order processing.
+    let resp = app
+        .execute_contract(Addr::unchecked("owner"), addr.clone(), &execute_msg, &[])
+        .unwrap();
+
+    // Verify the swap occurred.
+
+    assert_eq!(
+        app.wrap()
+            .query_balance(&addr, "usdc")
+            .unwrap()
+            .amount
+            .u128(),
+        0
+    );
+    assert_eq!(
+        app.wrap()
+            .query_balance(&addr, "ubtc")
+            .unwrap()
+            .amount
+            .u128(),
+        3
+    );
+    assert_eq!(
+        app.wrap()
+            .query_balance("user", "ubtc")
+            .unwrap()
+            .amount
+            .u128(),
+        0
+    );
+    assert_eq!(
+        app.wrap()
+            .query_balance("user", "usdc")
+            .unwrap()
+            .amount
+            .u128(),
+        0
+    );
+
+    // Find the order ID in the emitted events and ensure it's not present.
+    let order_ids = read_processed_order_id(resp);
+
+    assert!(order_ids.is_empty());
 
     // Execute the order processing again.
     let resp = app
@@ -160,15 +200,7 @@ fn successful_process_limit_buy_order() {
     );
 
     // Find the order ID in the emitted events and ensure it's present.
-    let order_id: Option<u128> = resp.events.iter().find_map(|e| {
-        e.attributes
-            .iter()
-            .find(|attr| {
-                attr.key == "order_processed"
-                    && attr.value == instantiate_msg.orders[0].order_id.to_string()
-            })
-            .and_then(|attr| attr.value.parse::<u128>().ok())
-    });
+    let order_ids = read_processed_order_id(resp);
 
-    assert!(order_id.is_some());
+    assert_eq!(order_ids[0], 0);
 }

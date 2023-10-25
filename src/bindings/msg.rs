@@ -1,5 +1,5 @@
 use cosmwasm_schema::cw_serde;
-use cosmwasm_std::{Addr, Binary, Coin, CosmosMsg, CustomMsg, Int128};
+use cosmwasm_std::{Binary, Coin, CosmosMsg, CustomMsg, Int128};
 
 use crate::types::SwapAmountInRoute;
 

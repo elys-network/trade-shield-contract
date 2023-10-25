@@ -1,5 +1,5 @@
-use crate::msg::ReplyType;
-use cosmwasm_std::{to_binary, Decimal, Int128, SubMsg};
+use crate::{msg::ReplyType, states::PROCESSED_SPOT_ORDER};
+use cosmwasm_std::{to_binary, Decimal, Int128, StdResult, Storage, SubMsg};
 use std::ops::Div;
 
 use crate::{
@@ -21,7 +21,10 @@ pub fn process_spot_orders(
             sender: info.sender,
         });
     }
-    let orders = SPOT_ORDER.load(deps.storage)?;
+    let mut orders = SPOT_ORDER.load(deps.storage)?;
+
+    let (send_msg, processed_order_ids) = send_token(&mut orders, deps.storage)?;
+
     let querier = ElysQuerier::new(&deps.querier);
     let mut submsgs: Vec<SubMsg<ElysMsg>> = vec![];
 
@@ -31,7 +34,35 @@ pub fn process_spot_orders(
         }
     }
 
-    Ok(Response::new().add_submessages(submsgs))
+    let mut resp = Response::new().add_submessages(submsgs);
+
+    if !send_msg.is_empty() {
+        resp = resp
+            .add_messages(send_msg)
+            .add_attribute("spot_order_processed", format!("{:?}", processed_order_ids));
+    }
+
+    Ok(resp)
+}
+
+fn send_token(
+    unprocessed_orders: &mut Vec<SpotOrder>,
+    store: &mut dyn Storage,
+) -> StdResult<(Vec<BankMsg>, Vec<u64>)> {
+    let process_spot_orders = PROCESSED_SPOT_ORDER.load(store)?;
+    let processed_order_ids: Vec<u64> = process_spot_orders
+        .iter()
+        .map(|&(processed_order_id, _)| processed_order_id)
+        .collect();
+    let bank_msgs: Vec<BankMsg> = process_spot_orders
+        .iter()
+        .map(|(_, bank_msg)| bank_msg.to_owned())
+        .collect();
+
+    unprocessed_orders.retain(|order| !processed_order_ids.contains(&order.order_id));
+
+    PROCESSED_SPOT_ORDER.save(store, &vec![])?;
+    Ok((bank_msgs, processed_order_ids))
 }
 
 fn check_order(order: &SpotOrder, querier: &ElysQuerier) -> bool {

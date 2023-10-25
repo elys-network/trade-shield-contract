@@ -1,8 +1,10 @@
-use crate::{tests::mock::multitest::ElysApp, types::SwapAmountInRoute};
+use crate::{
+    tests::{mock::multitest::ElysApp, read_processed_order_id::read_processed_order_id},
+    types::SwapAmountInRoute,
+};
 
 use super::*;
 use cosmwasm_std::Coin;
-use cw_multi_test::AppResponse;
 
 #[test]
 fn successful_process_5_of_10_orders() {
@@ -105,12 +107,70 @@ fn successful_process_5_of_10_orders() {
         .execute_contract(Addr::unchecked("owner"), addr.clone(), &execute_msg, &[])
         .unwrap();
 
+    assert_eq!(
+        app.wrap()
+            .query_balance(&addr, "btc")
+            .unwrap()
+            .amount
+            .u128(),
+        5
+    );
+    assert_eq!(
+        app.wrap()
+            .query_balance(&addr, "eth")
+            .unwrap()
+            .amount
+            .u128(),
+        3
+    );
+    assert_eq!(
+        app.wrap()
+            .query_balance(&addr, "usdc")
+            .unwrap()
+            .amount
+            .u128(),
+        190200
+    );
+
+    assert_eq!(
+        app.wrap()
+            .query_balance("user", "btc")
+            .unwrap()
+            .amount
+            .u128(),
+        0
+    );
+    assert_eq!(
+        app.wrap()
+            .query_balance("user", "eth")
+            .unwrap()
+            .amount
+            .u128(),
+        0
+    );
+    assert_eq!(
+        app.wrap()
+            .query_balance("user", "usdc")
+            .unwrap()
+            .amount
+            .u128(),
+        0
+    );
+
     let order_ids: Vec<u64> = read_processed_order_id(resp);
 
-    assert!(order_ids.contains(&instantiate_msg.orders[0].order_id));
-    assert!(order_ids.contains(&instantiate_msg.orders[3].order_id));
-    assert!(order_ids.contains(&instantiate_msg.orders[6].order_id));
+    assert!(order_ids.is_empty());
+
+    let resp = app
+        .execute_contract(Addr::unchecked("owner"), addr.clone(), &execute_msg, &[])
+        .unwrap();
+
+    let order_ids: Vec<u64> = read_processed_order_id(resp);
+
     assert!(order_ids.contains(&instantiate_msg.orders[7].order_id));
+    assert!(order_ids.contains(&instantiate_msg.orders[3].order_id));
+    assert!(order_ids.contains(&instantiate_msg.orders[0].order_id));
+    assert!(order_ids.contains(&instantiate_msg.orders[6].order_id));
     assert!(order_ids.contains(&instantiate_msg.orders[8].order_id));
 
     assert_eq!(
@@ -162,20 +222,6 @@ fn successful_process_5_of_10_orders() {
             .u128(),
         190200
     );
-}
-
-fn read_processed_order_id(resp: AppResponse) -> Vec<u64> {
-    let mut order_ids: Vec<u64> = vec![];
-    for event in resp.events {
-        if let Some(attr) = event
-            .attributes
-            .iter()
-            .find(|attr| attr.key == "order_processed")
-        {
-            order_ids.push(attr.value.parse::<u64>().unwrap());
-        }
-    }
-    order_ids
 }
 
 fn create_dummy_orders() -> Vec<SpotOrder> {

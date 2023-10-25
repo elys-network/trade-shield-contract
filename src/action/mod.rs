@@ -21,7 +21,6 @@ pub mod execute {
     mod cancel_spot_order;
     mod create_spot_order;
     mod process_spot_orders;
-
     use super::*;
 
     pub use cancel_spot_order::cancel_spot_order;
