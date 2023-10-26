@@ -57,6 +57,7 @@ fn swap() {
         routes: vec![SwapAmountInRoute::new(1, "usdc")],
         token_in: coin(5, "btc"),
         token_out_min_amount: Int128::zero(),
+        meta_data: None,
     };
 
     assert_eq!(

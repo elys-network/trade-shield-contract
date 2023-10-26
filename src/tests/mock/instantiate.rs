@@ -4,13 +4,13 @@ use cosmwasm_std::{Addr, DepsMut, Env, MessageInfo, Response, StdResult};
 use crate::{
     bindings::{msg::ElysMsg, query::ElysQuery},
     states::*,
-    types::Order,
+    types::SpotOrder,
 };
 
 #[cw_serde]
 pub struct InstantiateMockMsg {
     pub process_order_executor: String,
-    pub orders: Vec<Order>,
+    pub orders: Vec<SpotOrder>,
 }
 
 pub fn instantiate(
@@ -19,9 +19,11 @@ pub fn instantiate(
     _info: MessageInfo,
     msg: InstantiateMockMsg,
 ) -> StdResult<Response<ElysMsg>> {
-    ORDER.save(deps.storage, &msg.orders)?;
+    SPOT_ORDER.save(deps.storage, &msg.orders)?;
     deps.querier
         .query_balance(msg.process_order_executor.clone(), "usdc")?;
-    PROCESS_ORDER_EXECUTOR.save(deps.storage, &Addr::unchecked(msg.process_order_executor))?;
+    PROCESS_SPOT_ORDER_EXECUTOR.save(deps.storage, &Addr::unchecked(msg.process_order_executor))?;
+    PROCESSED_SPOT_ORDER.save(deps.storage, &vec![])?;
+
     Ok(Response::new())
 }

@@ -9,19 +9,21 @@ pub enum ContractError {
     #[error("Payment error: {0}")]
     Payment(#[from] PaymentError),
     #[error("{order_id} : Not Found")]
-    OrderNotFound { order_id: u64 },
+    SpotOrderNotFound { order_id: u64 },
     #[error("{sender} is not the owner of the order")]
     Unauthorized { sender: Addr },
     #[error("Incorrect number of funds. Only one fund is allowed.")]
     CoinNumber,
     #[error("order price already been reached")]
-    OrderPriceReached,
+    SpotOrderPriceReached,
     #[error("order_source_denom and order_target_denom cannot be the same")]
-    OrderSameDenom,
+    SpotOrderSameDenom,
     #[error("denom in order_price not used")]
-    OrderPriceDenom,
+    SpotOrderPriceDenom,
     #[error("fund not used by the order")]
-    OrderWrongFund,
+    SpotOrderWrongFund,
     #[error("{sender} is no autorized to use the process_orders endpoint")]
-    ProcessOrderAuth { sender: Addr },
+    ProcessSpotOrderAuth { sender: Addr },
+    #[error("{order_id} is prossessing")]
+    ProcessSpotOrderProcessing { order_id: u64 },
 }

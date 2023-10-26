@@ -4,9 +4,9 @@ This README provides documentation for the three main functions in the provided 
 
 ## Functions
 
-### 1. createOrder(order_amm_routes, order_price, order_type, amount_send, denom_send, order_target_denom)
+### 1. createSpotOrder(order_amm_routes, order_price, order_type, amount_send, denom_send, order_target_denom)
 
-This function allows you to create a new order by sending a transaction to the CosmWasm contract.
+This function allows you to create a new spot order by sending a transaction to the CosmWasm contract.
 
 #### Parameters
 
@@ -20,7 +20,7 @@ This function allows you to create a new order by sending a transaction to the C
 #### Usage
 
 ```javascript
-createOrder(
+createSpotOrder(
   "your_amm_routes_here",
   {"base_denom", "quote_denom", "rate"},
   "order_type",
@@ -30,7 +30,7 @@ createOrder(
 );
 ```
 
-### 2. cancelOrder(order_id)
+### 2. cancelSpotOrder(order_id)
 
 This function allows you to cancel an existing order by sending a transaction to the CosmWasm contract.
 
@@ -41,10 +41,10 @@ This function allows you to cancel an existing order by sending a transaction to
 #### Usage
 
 ```javascript
-cancelOrder("your_order_id_here");
+cancelSpotOrder("your_order_id_here");
 ```
 
-### 3. getOrder(order_id)
+### 3. getSpotOrder(order_id)
 
 This function retrieves information about a specific order by querying a CosmWasm contract on the blockchain.
 
@@ -55,7 +55,7 @@ This function retrieves information about a specific order by querying a CosmWas
 #### Usage
 
 ```javascript
-getOrder("your_order_id_here");
+getSpotOrder("your_order_id_here");
 ```
 
 ## Configuration

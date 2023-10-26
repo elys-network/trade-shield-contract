@@ -10,13 +10,13 @@ pub fn instantiate(
     _info: MessageInfo,
     msg: InstantiateMsg,
 ) -> StdResult<Response<ElysMsg>> {
-    ORDER.save(deps.storage, &vec![])?;
-
     // Verify the existence of a real address by querying its balance
     deps.querier
         .query_balance(msg.process_order_executor.clone(), "usdc")?;
 
-    PROCESS_ORDER_EXECUTOR.save(deps.storage, &Addr::unchecked(msg.process_order_executor))?;
+    SPOT_ORDER.save(deps.storage, &vec![])?;
+    PROCESSED_SPOT_ORDER.save(deps.storage, &vec![])?;
+    PROCESS_SPOT_ORDER_EXECUTOR.save(deps.storage, &Addr::unchecked(msg.process_order_executor))?;
 
     Ok(Response::new())
 }

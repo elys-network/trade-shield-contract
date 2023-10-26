@@ -129,6 +129,7 @@ impl Module for ElysModule {
                 routes,
                 token_in,
                 token_out_min_amount,
+                meta_data,
             } => {
                 let route = routes[0].clone();
                 let prices = self.get_all_price(storage)?;
@@ -143,7 +144,8 @@ impl Module for ElysModule {
                     route.token_out_denom(),
                 );
                 let data = to_binary(&MsgSwapExactAmountInResp::new(
-                    mint_amount[0].amount.u128() as i64
+                    mint_amount[0].amount.u128() as i64,
+                    meta_data,
                 ))?;
 
                 let mint = BankSudo::Mint {

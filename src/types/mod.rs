@@ -1,6 +1,6 @@
 mod order_type;
-mod order {
-    pub mod order;
+mod spot_order {
+    pub mod spot_order;
     mod impls {
         mod new;
         #[cfg(test)]
@@ -16,11 +16,11 @@ mod price;
 mod swap_route;
 
 pub use asset_info::AssetInfo;
-pub use order::order::Order;
-pub use order_price::OrderPrice;
-pub use order_type::OrderType;
+pub use order_price::SpotOrderPrice;
+pub use order_type::SpotOrderType;
 pub use page_request::PageRequest;
 pub use page_response::PageResponse;
 pub use pool::*;
 pub use price::Price;
+pub use spot_order::spot_order::SpotOrder;
 pub use swap_route::*;
