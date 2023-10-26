@@ -10,6 +10,9 @@ mod spot_order {
 
 mod margin_order {
     pub mod margin_order;
+    mod impls {
+        mod new;
+    }
 }
 mod asset_info;
 mod margin_position;
