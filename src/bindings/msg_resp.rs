@@ -7,6 +7,16 @@ pub struct MsgSwapExactAmountInResp {
     pub meta_data: Option<Binary>,
 }
 
+#[cw_serde]
+pub struct MsgOpenResponse {
+    meta_data: Option<Binary>,
+}
+
+#[cw_serde]
+pub struct MsgCloseResponse {
+    meta_data: Option<Binary>,
+}
+
 impl MsgSwapExactAmountInResp {
     pub fn token_out_amount(&self) -> u128 {
         self.token_out_amount.i64().clone() as u128

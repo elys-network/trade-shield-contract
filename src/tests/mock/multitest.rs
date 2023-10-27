@@ -3,7 +3,7 @@ use crate::{
         msg::ElysMsg, msg_resp::MsgSwapExactAmountInResp, query::ElysQuery,
         query_resp::QuerySwapEstimationResponse,
     },
-    types::AssetInfo,
+    types::{AssetInfo, MarginOrder},
 };
 use anyhow::{bail, Error, Result as AnyResult};
 use cosmwasm_schema::cw_serde;
@@ -21,6 +21,7 @@ use std::ops::{Deref, DerefMut};
 pub const PRICES: Item<Vec<Coin>> = Item::new("prices");
 pub const ASSET_INFO: Item<Vec<AssetInfo>> = Item::new("asset_info");
 pub const BLOCK_TIME: u64 = 5;
+pub const MARGIN_OPENED_POSITION: Item<Vec<MarginOrder>> = Item::new("margin_opened_position");
 
 pub struct ElysModule {}
 
@@ -172,6 +173,7 @@ impl Module for ElysModule {
                     data: Some(data),
                 })
             }
+            _ => unimplemented!(),
         }
     }
 

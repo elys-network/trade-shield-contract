@@ -30,5 +30,6 @@ pub fn execute(
         ),
         CancelSpotOrder { order_id } => cancel_spot_order(info, deps, order_id),
         ProcessSpotOrders {} => process_spot_orders(deps, info, env),
+        _ => unimplemented!(),
     }
 }
