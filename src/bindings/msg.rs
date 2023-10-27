@@ -1,7 +1,7 @@
 use cosmwasm_schema::cw_serde;
 use cosmwasm_std::{Binary, Coin, CosmosMsg, CustomMsg, Decimal, Int128};
 
-use crate::types::SwapAmountInRoute;
+use crate::types::{MarginPosition, SwapAmountInRoute};
 
 #[cw_serde]
 pub enum ElysMsg {
@@ -51,7 +51,7 @@ impl ElysMsg {
         collateral_asset: &str,
         collateral_amount: Int128,
         borrow_asset: &str,
-        position: i32,
+        position: MarginPosition,
         leverage: Decimal,
         take_profit_price: Decimal,
         meta_data: Option<Binary>,
@@ -61,7 +61,7 @@ impl ElysMsg {
             collateral_asset: collateral_asset.to_owned(),
             collateral_amount,
             borrow_asset: borrow_asset.to_owned(),
-            position,
+            position: position as i32,
             leverage,
             take_profit_price,
             meta_data,
