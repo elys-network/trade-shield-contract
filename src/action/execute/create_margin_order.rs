@@ -24,7 +24,7 @@ pub fn create_margin_order(
 
     let borrow_token = Coin {
         denom: borrow_asset.clone(),
-        amount: leverage * collateral.amount,
+        amount: (leverage - Decimal::one()) * collateral.amount,
     };
 
     let meta_data = to_binary(&MarginOrder::new(
