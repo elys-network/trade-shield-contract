@@ -30,5 +30,19 @@ pub fn execute(
         ),
         CancelSpotOrder { order_id } => cancel_spot_order(info, deps, order_id),
         ProcessSpotOrders {} => process_spot_orders(deps, info, env),
+        CreateMarginOrder {
+            position,
+            collateral,
+            leverage,
+            borrow_asset,
+            take_profit_price,
+        } => create_margin_order(
+            info,
+            position,
+            collateral,
+            leverage,
+            borrow_asset,
+            take_profit_price,
+        ),
     }
 }

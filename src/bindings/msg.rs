@@ -1,7 +1,7 @@
 use cosmwasm_schema::cw_serde;
-use cosmwasm_std::{Binary, Coin, CosmosMsg, CustomMsg, Int128};
+use cosmwasm_std::{Binary, Coin, CosmosMsg, CustomMsg, Decimal, Int128};
 
-use crate::types::SwapAmountInRoute;
+use crate::types::{MarginPosition, SwapAmountInRoute};
 
 #[cw_serde]
 pub enum ElysMsg {
@@ -10,6 +10,21 @@ pub enum ElysMsg {
         routes: Vec<SwapAmountInRoute>,
         token_in: Coin,
         token_out_min_amount: Int128,
+        meta_data: Option<Binary>,
+    },
+    MsgOpen {
+        creator: String,
+        collateral_asset: String,
+        collateral_amount: Int128,
+        borrow_asset: String,
+        position: i32,
+        leverage: Decimal,
+        take_profit_price: Decimal,
+        meta_data: Option<Binary>,
+    },
+    MsgClose {
+        creator: String,
+        id: u64,
         meta_data: Option<Binary>,
     },
 }
@@ -27,6 +42,36 @@ impl ElysMsg {
             routes: token_route.to_owned(),
             token_in: token_in.to_owned(),
             token_out_min_amount,
+            meta_data,
+        }
+    }
+
+    pub fn open_position(
+        creator: impl Into<String>,
+        collateral_asset: impl Into<String>,
+        collateral_amount: Int128,
+        borrow_asset: impl Into<String>,
+        position: MarginPosition,
+        leverage: Decimal,
+        take_profit_price: Decimal,
+        meta_data: Option<Binary>,
+    ) -> Self {
+        Self::MsgOpen {
+            creator: creator.into(),
+            collateral_asset: collateral_asset.into(),
+            collateral_amount,
+            borrow_asset: borrow_asset.into(),
+            position: position as i32,
+            leverage,
+            take_profit_price,
+            meta_data,
+        }
+    }
+
+    pub fn close_position(creator: impl Into<String>, id: u64, meta_data: Option<Binary>) -> Self {
+        Self::MsgClose {
+            creator: creator.into(),
+            id,
             meta_data,
         }
     }

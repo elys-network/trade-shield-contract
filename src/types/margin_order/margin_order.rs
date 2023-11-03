@@ -1,9 +1,14 @@
+use crate::types::MarginPosition;
 use cosmwasm_schema::cw_serde;
-
-use crate::types::MarginSpotOrderType;
+use cosmwasm_std::{Coin, Decimal};
 
 #[cw_serde]
-pub struct MarginSpotOrder {
+pub struct MarginOrder {
     pub order_id: u64,
-    pub order_type: MarginSpotOrderType,
+    pub position: MarginPosition,
+    pub collateral: Coin,
+    pub borrow_token: Coin,
+    pub creator: String,
+    pub leverage: Decimal,
+    pub take_profit_price: Decimal,
 }

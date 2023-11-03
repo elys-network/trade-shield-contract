@@ -31,6 +31,7 @@ pub fn reply(
 
     match ReplyType::from(msg.id)? {
         ReplyType::SpotOrder => reply_to_spot_order(deps, data),
+        ReplyType::MarginOpenPosition => reply_to_create_margin_order(deps, data),
         _ => unimplemented!(),
     }
 }

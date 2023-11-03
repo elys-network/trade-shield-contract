@@ -1,5 +1,6 @@
-use crate::types::{SpotOrderPrice, SpotOrderType, SwapAmountInRoute};
+use crate::types::{MarginPosition, SpotOrderPrice, SpotOrderType, SwapAmountInRoute};
 use cosmwasm_schema::cw_serde;
+use cosmwasm_std::{Coin, Decimal};
 
 #[cw_serde]
 pub enum ExecuteMsg {
@@ -14,4 +15,12 @@ pub enum ExecuteMsg {
         order_id: u64,
     },
     ProcessSpotOrders {},
+
+    CreateMarginOrder {
+        position: MarginPosition,
+        collateral: Coin,
+        leverage: Decimal,
+        borrow_asset: String,
+        take_profit_price: Decimal,
+    },
 }
