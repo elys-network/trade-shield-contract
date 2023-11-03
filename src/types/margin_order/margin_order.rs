@@ -10,4 +10,5 @@ pub struct MarginOrder {
     pub borrow_token: Coin,
     pub creator: String,
     pub leverage: Decimal,
+    pub take_profit_price: Decimal,
 }

@@ -9,12 +9,13 @@ pub struct MsgSwapExactAmountInResp {
 
 #[cw_serde]
 pub struct MsgOpenResponse {
-    meta_data: Option<Binary>,
+    pub id: u64,
+    pub meta_data: Option<Binary>,
 }
 
 #[cw_serde]
 pub struct MsgCloseResponse {
-    meta_data: Option<Binary>,
+    pub meta_data: Option<Binary>,
 }
 
 impl MsgSwapExactAmountInResp {

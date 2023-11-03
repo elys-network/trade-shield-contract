@@ -21,5 +21,6 @@ pub enum ExecuteMsg {
         collateral: Coin,
         leverage: Decimal,
         borrow_asset: String,
+        take_profit_price: Decimal,
     },
 }

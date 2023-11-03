@@ -1,9 +1,11 @@
 use crate::{
     bindings::{
-        msg::ElysMsg, msg_resp::MsgSwapExactAmountInResp, query::ElysQuery,
+        msg::ElysMsg,
+        msg_resp::{MsgOpenResponse, MsgSwapExactAmountInResp},
+        query::ElysQuery,
         query_resp::QuerySwapEstimationResponse,
     },
-    types::{AssetInfo, MarginOrder},
+    types::{AssetInfo, MarginOrder, MarginPosition},
 };
 use anyhow::{bail, Error, Result as AnyResult};
 use cosmwasm_schema::cw_serde;
@@ -173,6 +175,61 @@ impl Module for ElysModule {
                     data: Some(data),
                 })
             }
+            ElysMsg::MsgOpen {
+                creator,
+                collateral_asset,
+                collateral_amount,
+                borrow_asset,
+                position,
+                leverage,
+                take_profit_price,
+                meta_data,
+            } => {
+                let mut order_vec = MARGIN_OPENED_POSITION.load(storage)?;
+
+                let order_id: u64 = match order_vec.iter().max_by_key(|s| s.order_id) {
+                    Some(x) => x.order_id + 1,
+                    None => 0,
+                };
+                let collateral = coin(collateral_amount.i128() as u128, collateral_asset);
+
+                let borrow_token = Coin {
+                    denom: borrow_asset,
+                    amount: leverage * collateral.amount,
+                };
+
+                let order: MarginOrder = MarginOrder {
+                    order_id,
+                    position: MarginPosition::try_from_i32(position).unwrap(),
+                    collateral: collateral.clone(),
+                    borrow_token,
+                    creator,
+                    leverage,
+                    take_profit_price,
+                };
+
+                let msg_resp = MsgOpenResponse {
+                    id: order_id,
+                    meta_data,
+                };
+
+                let resp = AppResponse {
+                    events: vec![],
+                    data: Some(to_binary(&msg_resp)?),
+                };
+
+                order_vec.push(order);
+
+                let burn_msg = BankMsg::Burn {
+                    amount: vec![collateral],
+                };
+                router
+                    .execute(api, storage, block, sender, burn_msg.into())
+                    .unwrap();
+
+                Ok(resp)
+            }
+
             _ => unimplemented!(),
         }
     }
@@ -240,6 +297,7 @@ impl ElysApp {
                             .init_balance(storage, &Addr::unchecked(wallet_owner), wallet_contenent)
                             .unwrap();
                     }
+                    MARGIN_OPENED_POSITION.save(storage, &vec![]).unwrap();
                 }),
         )
     }
@@ -248,7 +306,9 @@ impl ElysApp {
         Self(
             BasicAppBuilder::<ElysMsg, ElysQuery>::new_custom()
                 .with_custom(ElysModule {})
-                .build(|_roouter, _, _storage| {}),
+                .build(|_roouter, _, storage| {
+                    MARGIN_OPENED_POSITION.save(storage, &vec![]).unwrap();
+                }),
         )
     }
     pub fn block_info(&self) -> BlockInfo {

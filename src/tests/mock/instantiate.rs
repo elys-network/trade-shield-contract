@@ -24,6 +24,7 @@ pub fn instantiate(
         .query_balance(msg.process_order_executor.clone(), "usdc")?;
     PROCESS_SPOT_ORDER_EXECUTOR.save(deps.storage, &Addr::unchecked(msg.process_order_executor))?;
     PROCESSED_SPOT_ORDER.save(deps.storage, &vec![])?;
+    MARGIN_ORDER.save(deps.storage, &vec![])?;
 
     Ok(Response::new())
 }

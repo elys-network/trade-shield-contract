@@ -47,20 +47,20 @@ impl ElysMsg {
     }
 
     pub fn open_position(
-        creator: &str,
-        collateral_asset: &str,
+        creator: impl Into<String>,
+        collateral_asset: impl Into<String>,
         collateral_amount: Int128,
-        borrow_asset: &str,
+        borrow_asset: impl Into<String>,
         position: MarginPosition,
         leverage: Decimal,
         take_profit_price: Decimal,
         meta_data: Option<Binary>,
     ) -> Self {
         Self::MsgOpen {
-            creator: creator.to_owned(),
-            collateral_asset: collateral_asset.to_owned(),
+            creator: creator.into(),
+            collateral_asset: collateral_asset.into(),
             collateral_amount,
-            borrow_asset: borrow_asset.to_owned(),
+            borrow_asset: borrow_asset.into(),
             position: position as i32,
             leverage,
             take_profit_price,
@@ -68,9 +68,9 @@ impl ElysMsg {
         }
     }
 
-    pub fn close_position(creator: &str, id: u64, meta_data: Option<Binary>) -> Self {
+    pub fn close_position(creator: impl Into<String>, id: u64, meta_data: Option<Binary>) -> Self {
         Self::MsgClose {
-            creator: creator.to_owned(),
+            creator: creator.into(),
             id,
             meta_data,
         }

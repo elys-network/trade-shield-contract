@@ -47,6 +47,14 @@ mod process_spot_order {
     mod unauthorize;
 }
 
+mod create_margin_order {
+    use super::*;
+    mod coin_number;
+    mod collateral_amount;
+    mod successful_create_long_order;
+    mod succsessful_create_short_order;
+}
+
 pub use mock::instantiate::*;
 mod mock {
     pub mod instantiate;

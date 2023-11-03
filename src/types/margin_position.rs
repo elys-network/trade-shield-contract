@@ -9,7 +9,7 @@ pub enum MarginPosition {
 }
 
 impl MarginPosition {
-    fn try_from(value: i32) -> Result<Self, StdError> {
+    pub fn try_from_i32(value: i32) -> Result<Self, StdError> {
         match value {
             0 => Ok(Self::Unspecified),
             1 => Ok(Self::Long),
