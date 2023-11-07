@@ -23,4 +23,8 @@ pub enum ExecuteMsg {
         borrow_asset: String,
         take_profit_price: Decimal,
     },
+
+    CancelMarginOrder {
+        order_id: u64,
+    },
 }

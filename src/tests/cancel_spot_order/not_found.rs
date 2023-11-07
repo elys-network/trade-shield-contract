@@ -41,7 +41,7 @@ fn not_found() {
 
     // Verify that the user receives an error indicating that the order was not found.
     assert_eq!(
-        ContractError::SpotOrderNotFound { order_id: id },
+        ContractError::OrderNotFound { order_id: id },
         err.downcast().unwrap()
     );
 }

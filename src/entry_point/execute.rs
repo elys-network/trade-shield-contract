@@ -45,5 +45,6 @@ pub fn execute(
             borrow_asset,
             take_profit_price,
         ),
+        CancelMarginOrder { order_id } => cancel_margin_order(info, deps, order_id),
     }
 }

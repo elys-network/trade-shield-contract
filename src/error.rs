@@ -9,7 +9,7 @@ pub enum ContractError {
     #[error("Payment error: {0}")]
     Payment(#[from] PaymentError),
     #[error("{order_id} : Not Found")]
-    SpotOrderNotFound { order_id: u64 },
+    OrderNotFound { order_id: u64 },
     #[error("{sender} is not the owner of the order")]
     Unauthorized { sender: Addr },
     #[error("Incorrect number of funds. Only one fund is allowed.")]
