@@ -10,7 +10,9 @@ pub use reply_type::ReplyType;
 
 pub mod query_resp {
     mod get_all_prices_resp;
-    mod get_order_resp;
+    mod get_spot_order_resp;
+    mod get_spot_orders_resp;
     pub use get_all_prices_resp::GetAllPricesResponse;
-    pub use get_order_resp::GetSpotOrderResp;
+    pub use get_spot_order_resp::GetSpotOrderResp;
+    pub use get_spot_orders_resp::GetSpotOrdersResp;
 }

@@ -6,6 +6,7 @@ pub mod query {
     mod asset_info;
     mod get_all_price;
     mod get_spot_order;
+    mod get_spot_orders;
 
     use super::*;
 
@@ -15,6 +16,7 @@ pub mod query {
     pub use asset_info::asset_info;
     pub use get_all_price::get_all_prices;
     pub use get_spot_order::get_spot_order;
+    pub use get_spot_orders::get_spot_orders;
 }
 
 pub mod execute {

@@ -3,11 +3,11 @@ use cosmwasm_std::Binary;
 
 #[cw_serde]
 pub struct PageRequest {
-    key: Option<Binary>,
-    offset: Option<u64>,
-    limit: u64,
-    count_total: bool,
-    reverse: bool,
+    pub key: Option<Binary>,
+    pub offset: Option<u64>,
+    pub limit: u64,
+    pub count_total: bool,
+    pub reverse: bool,
 }
 
 impl PageRequest {
