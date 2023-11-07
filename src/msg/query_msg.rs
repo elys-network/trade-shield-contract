@@ -1,8 +1,10 @@
 #[allow(unused_imports)]
 use super::query_resp::*;
+use crate::types::SpotOrderType;
 use cosmwasm_schema::{cw_serde, QueryResponses};
 #[allow(unused_imports)]
 use elys_bindings::query_resp::*;
+use elys_bindings::types::PageRequest;
 
 #[cw_serde]
 #[derive(QueryResponses)]
@@ -13,4 +15,10 @@ pub enum QueryMsg {
     GetAllPrices {},
     #[returns(OracleAssetInfoResponse)]
     AssetInfo { denom: String },
+    #[returns(GetSpotOrdersResp)]
+    GetSpotOrders {
+        pagination: PageRequest,
+        order_owner: Option<String>,
+        order_type: Option<SpotOrderType>,
+    },
 }
