@@ -14,7 +14,7 @@ thiserror = "1"
 schemars = "0.8.1"
 cosmwasm-schema = "1.1.4"
 cw-utils = "0.13"
-elys-bindings = { version = "0.1.0", git = "https://github.com/elys-network/bindings", branch = "main" }
+elys-bindings = { version = "0.1.0", git = "https://github.com/elys-network/bindings", branch = "margin_close_msg" }
 
 [dev-dependencies]
 cw-multi-test = "0.13.4"
