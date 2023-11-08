@@ -1,7 +1,4 @@
-use crate::{
-    tests::{mock::multitest::ElysApp, read_processed_order_id::read_processed_order_id},
-    types::SwapAmountInRoute,
-};
+use crate::{tests::read_processed_order_id::read_processed_order_id, types::SwapAmountInRoute};
 
 use super::*;
 use cosmwasm_std::Coin;

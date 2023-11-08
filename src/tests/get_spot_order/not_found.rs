@@ -1,5 +1,3 @@
-use crate::tests::mock::multitest::ElysApp;
-
 use super::*;
 
 // This test case verifies that querying a non-existent order in the contract results in an "SpotOrderNotFound" error.

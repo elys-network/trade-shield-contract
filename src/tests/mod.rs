@@ -9,6 +9,7 @@ use cosmwasm_std::{coin, coins, Addr, Decimal, Event, Uint128};
 use cw_multi_test::ContractWrapper;
 mod get_order_id_from_events;
 mod read_processed_order_id;
+use cw_multi_test::Executor;
 use elys_bindings_test::*;
 
 mod create_spot_order {

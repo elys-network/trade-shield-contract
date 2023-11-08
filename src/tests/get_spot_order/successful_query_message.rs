@@ -1,5 +1,3 @@
-use crate::tests::mock::multitest::ElysApp;
-
 use super::*;
 use query_resp::GetSpotOrderResp;
 // This test case verifies the successful query of an existing order in the contract.

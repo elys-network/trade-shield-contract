@@ -1,5 +1,3 @@
-use crate::tests::mock::multitest::ElysApp;
-
 use super::*;
 // This test case verifies that an unauthorized user is unable to cancel an order in the contract.
 #[test]

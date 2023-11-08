@@ -1,5 +1,3 @@
-use crate::tests::mock::multitest::ElysApp;
-
 use super::*;
 // This test case simulates a scenario where a user attempts to cancel an order that does not exist.
 #[test]

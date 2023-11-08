@@ -1,5 +1,3 @@
-use crate::tests::mock::multitest::ElysApp;
-
 use super::*;
 use get_order_id_from_events::get_order_id_from_events;
 

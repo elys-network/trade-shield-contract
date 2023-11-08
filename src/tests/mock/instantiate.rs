@@ -1,11 +1,7 @@
+use crate::{states::*, types::SpotOrder};
 use cosmwasm_schema::cw_serde;
 use cosmwasm_std::{Addr, DepsMut, Env, MessageInfo, Response, StdResult};
-
-use crate::{
-    bindings::{msg::ElysMsg, query::ElysQuery},
-    states::*,
-    types::SpotOrder,
-};
+use elys_bindings::{ElysMsg, ElysQuery};
 
 #[cw_serde]
 pub struct InstantiateMockMsg {
