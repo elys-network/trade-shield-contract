@@ -2,10 +2,7 @@ use crate::{msg::ReplyType, states::PROCESSED_SPOT_ORDER};
 use cosmwasm_std::{to_binary, Decimal, Int128, StdResult, Storage, SubMsg};
 use std::ops::Div;
 
-use crate::{
-    bindings::{querier::ElysQuerier, query::ElysQuery},
-    states::PROCESS_SPOT_ORDER_EXECUTOR,
-};
+use crate::states::PROCESS_SPOT_ORDER_EXECUTOR;
 
 use super::*;
 
@@ -95,13 +92,13 @@ fn process_order(order: &SpotOrder, submsgs: &mut Vec<SubMsg<ElysMsg>>, sender: 
         SpotOrderType::StopLoss => Int128::zero(),
     };
 
-    let msg = ElysMsg::swap_exact_amount_in(
+    let msg = ElysMsg::Amm(AmmMsg::swap_exact_amount_in(
         sender,
         &order.order_amount,
         &order.order_amm_routes,
         token_out_min_amount,
         Some(to_binary(&order.order_id).unwrap()),
-    );
+    ));
 
     submsgs.push(SubMsg::reply_on_success(msg, ReplyType::SpotOrder as u64))
 }

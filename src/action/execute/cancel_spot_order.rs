@@ -1,4 +1,4 @@
-use crate::{bindings::query::ElysQuery, states::PROCESSED_SPOT_ORDER};
+use crate::states::PROCESSED_SPOT_ORDER;
 
 use super::*;
 

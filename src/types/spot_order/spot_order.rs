@@ -1,4 +1,4 @@
-use crate::types::{order_type::SpotOrderType, swap_route::SwapAmountInRoute, SpotOrderPrice};
+use crate::types::{spot_order_type::SpotOrderType, SpotOrderPrice, SwapAmountInRoute};
 use cosmwasm_schema::cw_serde;
 use cosmwasm_std::{Addr, Coin};
 

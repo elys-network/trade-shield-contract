@@ -1,5 +1,4 @@
 use super::*;
-use crate::bindings::msg_resp::MsgOpenResponse;
 use cosmwasm_std::{from_binary, Binary, StdError};
 
 pub fn reply_to_create_margin_order(
