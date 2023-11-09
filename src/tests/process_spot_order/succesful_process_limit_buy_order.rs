@@ -16,8 +16,14 @@ fn successful_process_limit_buy_order() {
     let mut app = ElysApp::new_with_wallets(wallets);
 
     // Define ubtc and USDC prices at two different time intervals (t0 and t1).
-    let prices_at_t0 = vec![coin(70, "ubtc"), coin(1, "usdc")];
-    let prices_at_t1 = vec![coin(40, "ubtc"), coin(1, "usdc")];
+    let prices_at_t0 = vec![
+        Price::new("ubtc", Decimal::from_atomics(Uint128::new(70), 0).unwrap()),
+        Price::new("usdc", Decimal::from_atomics(Uint128::new(1), 0).unwrap()),
+    ];
+    let prices_at_t1 = vec![
+        Price::new("ubtc", Decimal::from_atomics(Uint128::new(40), 0).unwrap()),
+        Price::new("usdc", Decimal::from_atomics(Uint128::new(1), 0).unwrap()),
+    ];
 
     // Create a contract wrapper and store its code.
     let code =

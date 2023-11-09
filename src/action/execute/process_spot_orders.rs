@@ -116,5 +116,5 @@ fn calculate_token_out_min_amount(order: &SpotOrder) -> Int128 {
         order_amount.amount * Decimal::one().div(order_price.rate)
     };
 
-    Int128::new(amount.u128() as i128)
+    Int128::new((amount.u128() - 1) as i128) //slippage integration
 }
