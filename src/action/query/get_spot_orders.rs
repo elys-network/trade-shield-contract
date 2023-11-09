@@ -9,19 +9,6 @@ pub fn get_spot_orders(
 ) -> Result<GetSpotOrdersResp, ContractError> {
     let static_orders = SPOT_ORDER.load(deps.storage)?;
     let mut orders = static_orders.clone();
-    let key: Option<u32> = if let Some(key) = pagination.key {
-        Some(from_binary(&key)?)
-    } else {
-        None
-    };
-
-    if let Some(key_value) = key {
-        if key_value + 1 > orders.len() as u32 {
-            return Ok(GetSpotOrdersResp::empty(pagination.count_total));
-        } else {
-            orders = orders.split_off(key_value as usize)
-        }
-    }
 
     let mut orders = filter_orders(orders, order_owner, order_type);
 

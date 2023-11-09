@@ -38,6 +38,11 @@ mod get_spot_order {
     mod successful_query_message;
 }
 
+mod get_spot_orders {
+    use super::*;
+    mod get_spot_orders;
+}
+
 mod process_spot_order {
     use super::*;
     mod succesful_process_limit_buy_order;
