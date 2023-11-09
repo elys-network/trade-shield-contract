@@ -1,5 +1,3 @@
-use crate::tests::mock::multitest::ElysApp;
-
 use super::*;
 
 // This test case verifies a successful order cancellation in the contract using a dummy order.

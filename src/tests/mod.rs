@@ -6,10 +6,12 @@ use crate::{
 };
 
 use cosmwasm_std::{coin, coins, Addr, Decimal, Event, Uint128};
-use cw_multi_test::{ContractWrapper, Executor};
-use mock::multitest::ElysApp;
+use cw_multi_test::ContractWrapper;
 mod get_order_id_from_events;
 mod read_processed_order_id;
+use cw_multi_test::Executor;
+use elys_bindings_test::*;
+
 mod create_spot_order {
     use super::*;
     mod coin_number;
@@ -63,7 +65,4 @@ mod create_margin_order {
 pub use mock::instantiate::*;
 mod mock {
     pub mod instantiate;
-    #[allow(dead_code, unused)]
-    pub mod multitest;
-    mod test;
 }

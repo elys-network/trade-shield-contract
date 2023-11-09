@@ -1,7 +1,5 @@
 use cosmwasm_std::{OverflowError, StdError};
 
-use crate::tests::mock::multitest::ElysApp;
-
 use super::*;
 
 // This test case verifies that attempting to create an order with insufficient funds results in an "Overflow" error.

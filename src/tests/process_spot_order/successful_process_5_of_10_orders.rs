@@ -1,7 +1,4 @@
-use crate::{
-    tests::{mock::multitest::ElysApp, read_processed_order_id::read_processed_order_id},
-    types::SwapAmountInRoute,
-};
+use crate::{tests::read_processed_order_id::read_processed_order_id, types::SwapAmountInRoute};
 
 use super::*;
 use cosmwasm_std::Coin;
@@ -14,8 +11,22 @@ fn successful_process_5_of_10_orders() {
     ];
     let mut app = ElysApp::new_with_wallets(wallets);
 
-    let prices_at_t0 = vec![coin(20000, "btc"), coin(1, "usdc"), coin(2000, "eth")];
-    let prices_at_t1 = vec![coin(30000, "btc"), coin(1, "usdc"), coin(1700, "eth")];
+    let prices_at_t0 = vec![
+        Price::new(
+            "btc",
+            Decimal::from_atomics(Uint128::new(20000), 0).unwrap(),
+        ),
+        Price::new("usdc", Decimal::from_atomics(Uint128::new(1), 0).unwrap()),
+        Price::new("eth", Decimal::from_atomics(Uint128::new(2000), 0).unwrap()),
+    ];
+    let prices_at_t1 = vec![
+        Price::new(
+            "btc",
+            Decimal::from_atomics(Uint128::new(30000), 0).unwrap(),
+        ),
+        Price::new("usdc", Decimal::from_atomics(Uint128::new(1), 0).unwrap()),
+        Price::new("eth", Decimal::from_atomics(Uint128::new(1700), 0).unwrap()),
+    ];
 
     let code = ContractWrapper::new(execute, instantiate, query).with_reply(reply);
     let code_id = app.store_code(Box::new(code));

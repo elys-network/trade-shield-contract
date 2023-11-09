@@ -4,7 +4,6 @@ pub mod types;
 pub use error::ContractError;
 
 mod action;
-mod bindings;
 mod error;
 mod states;
 

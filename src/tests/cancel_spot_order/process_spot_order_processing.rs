@@ -1,7 +1,4 @@
-use crate::{
-    tests::{mock::multitest::ElysApp, read_processed_order_id::read_processed_order_id},
-    types::SwapAmountInRoute,
-};
+use crate::{tests::read_processed_order_id::read_processed_order_id, types::SwapAmountInRoute};
 
 use super::*;
 use cosmwasm_std::{coins, Coin};
@@ -13,7 +10,10 @@ fn process_spot_order_processing() {
     let mut app = ElysApp::new_with_wallets(wallets);
 
     // Define ubtc and USDC prices at two different time intervals (t0 and t1).
-    let prices = vec![coin(40, "ubtc"), coin(1, "usdc")];
+    let prices: Vec<Price> = vec![
+        Price::new("ubtc", Decimal::from_atomics(Uint128::new(40), 0).unwrap()),
+        Price::new("usdc", Decimal::from_atomics(Uint128::new(1), 0).unwrap()),
+    ];
 
     // Create a contract wrapper and store its code.
     let code =

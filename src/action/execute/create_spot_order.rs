@@ -1,5 +1,3 @@
-use crate::bindings::query::ElysQuery;
-
 use super::*;
 
 pub fn create_spot_order(

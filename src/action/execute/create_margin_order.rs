@@ -36,7 +36,7 @@ pub fn create_margin_order(
         take_profit_price,
     ))?;
 
-    let sub_msg = ElysMsg::open_position(
+    let sub_msg = ElysMsg::Margin(MarginMsg::open_position(
         &info.sender,
         &collateral.denom,
         Int128::from(collateral.amount.u128() as i128),
@@ -45,7 +45,7 @@ pub fn create_margin_order(
         leverage,
         take_profit_price,
         Some(meta_data),
-    );
+    ));
 
     Ok(Response::new().add_submessage(SubMsg::reply_always(
         sub_msg,

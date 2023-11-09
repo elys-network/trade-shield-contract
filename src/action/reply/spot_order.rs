@@ -1,4 +1,3 @@
-use crate::{bindings::msg_resp::MsgSwapExactAmountInResp, states::PROCESSED_SPOT_ORDER};
 use cosmwasm_std::{coins, from_binary, Binary, DepsMut, StdError};
 
 use super::*;
@@ -27,7 +26,7 @@ pub fn reply_to_spot_order(
     let bank_msg = BankMsg::Send {
         to_address: order.owner_address.to_string(),
         amount: coins(
-            amm_response.token_out_amount(),
+            amm_response.token_out_amount.i64() as u128,
             order.order_target_denom.to_string(),
         ),
     };

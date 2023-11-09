@@ -1,6 +1,6 @@
-use crate::bindings::{msg::ElysMsg, query::ElysQuery};
 use crate::{states::*, types::*, ContractError};
 use cosmwasm_std::{BankMsg, CosmosMsg, DepsMut, Env, MessageInfo, Response};
+use elys_bindings::*;
 
 pub mod query {
     mod asset_info;
@@ -12,6 +12,7 @@ pub mod query {
 
     use crate::msg::query_resp::*;
     use cosmwasm_std::Deps;
+    use elys_bindings::query_resp::*;
 
     pub use asset_info::asset_info;
     pub use get_all_price::get_all_prices;
@@ -34,6 +35,7 @@ pub mod execute {
 
 pub mod reply {
     use super::*;
+    use elys_bindings::msg_resp::*;
 
     mod create_margin_order;
     mod spot_order;

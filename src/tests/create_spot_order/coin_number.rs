@@ -1,7 +1,5 @@
 use cosmwasm_std::Uint128;
 
-use crate::{tests::mock::multitest::ElysApp, types::SpotOrderPrice};
-
 use super::*;
 // This test case verifies that attempting to create an order without specifying the amount results in a "CoinNumber" error.
 #[test]
