@@ -1,4 +1,4 @@
-use cosmwasm_std::{Addr, Coin, StdError};
+use cosmwasm_std::{to_binary, Addr, Coin, StdError};
 
 use super::*;
 
@@ -11,7 +11,7 @@ pub fn cancel_spot_orders(
 ) -> Result<Response<ElysMsg>, ContractError> {
     if info.sender.as_str() != owner_address {
         return Err(ContractError::Unauthorized {
-            sender: Addr::unchecked(owner_address),
+            sender: info.sender,
         });
     }
 
@@ -47,9 +47,16 @@ pub fn cancel_spot_orders(
 
     SPOT_ORDER.save(deps.storage, &new_orders_list)?;
 
+    let order_ids: Vec<u64> = match order_ids {
+        Some(order_ids) => order_ids,
+        None => filtered_order.iter().map(|order| order.order_id).collect(),
+    };
+
     let refund_msg = make_refund_msg(filtered_order, owner_address);
 
-    Ok(Response::new().add_message(refund_msg))
+    Ok(Response::new()
+        .add_message(refund_msg)
+        .set_data(to_binary(&order_ids)?))
 }
 
 fn filter_order_by_id(
