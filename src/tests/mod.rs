@@ -33,6 +33,14 @@ mod cancel_spot_order {
     mod unauthorized;
 }
 
+mod cancel_spot_orders {
+    use super::*;
+    mod successfully_cancel_orders;
+    mod successfully_cancel_orders_id;
+    mod successfully_cancel_orders_type;
+    mod unauthorize;
+}
+
 mod get_spot_order {
     use super::*;
     use cosmwasm_std::{Binary, StdError};
