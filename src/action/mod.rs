@@ -20,12 +20,14 @@ pub mod query {
 
 pub mod execute {
     mod cancel_spot_order;
+    mod cancel_spot_orders;
     mod create_margin_order;
     mod create_spot_order;
     mod process_spot_orders;
     use super::*;
 
     pub use cancel_spot_order::cancel_spot_order;
+    pub use cancel_spot_orders::cancel_spot_orders;
     pub use create_margin_order::create_margin_order;
     pub use create_spot_order::create_spot_order;
     pub use process_spot_orders::process_spot_orders;
