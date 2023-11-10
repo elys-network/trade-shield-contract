@@ -14,6 +14,13 @@ pub enum ExecuteMsg {
     CancelSpotOrder {
         order_id: u64,
     },
+
+    CancelSpotOrders {
+        order_ids: Option<Vec<u64>>,
+        owner_address: String,
+        order_type: Option<SpotOrderType>,
+    },
+
     ProcessSpotOrders {},
 
     CreateMarginOrder {
