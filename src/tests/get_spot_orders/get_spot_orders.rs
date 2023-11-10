@@ -40,7 +40,43 @@ fn get_spot_orders() {
         )
         .unwrap();
 
-    let (first_half, second_half) = orders.split_at(2);
+    let (first_third, the_rest) = orders.split_at(2);
+
+    assert_eq!(&resp.orders, first_third);
+
+    page_req.update(resp.page_response.next_key);
+
+    let resp: GetSpotOrdersResp = app
+        .wrap()
+        .query_wasm_smart(
+            &addr,
+            &QueryMsg::GetSpotOrders {
+                pagination: page_req.clone(),
+                order_owner: None,
+                order_type: None,
+            },
+        )
+        .unwrap();
+
+    let (second_third, last_order) = the_rest.split_at(2);
+
+    assert_eq!(&resp.orders, second_third);
+
+    page_req.update(resp.page_response.next_key);
+
+    let resp: GetSpotOrdersResp = app
+        .wrap()
+        .query_wasm_smart(
+            &addr,
+            &QueryMsg::GetSpotOrders {
+                pagination: page_req.clone(),
+                order_owner: None,
+                order_type: None,
+            },
+        )
+        .unwrap();
+
+    assert_eq!(&resp.orders, last_order);
 }
 
 fn create_orders() -> Vec<SpotOrder> {
