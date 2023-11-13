@@ -5,6 +5,8 @@ use elys_bindings::*;
 pub mod query {
     mod asset_info;
     mod get_all_price;
+    mod get_margin_order;
+    mod get_margin_orders;
     mod get_spot_order;
 
     use super::*;
@@ -15,6 +17,8 @@ pub mod query {
 
     pub use asset_info::asset_info;
     pub use get_all_price::get_all_prices;
+    pub use get_margin_order::get_margin_order;
+    pub use get_margin_orders::get_margin_orders;
     pub use get_spot_order::get_spot_order;
 }
 
