@@ -11,6 +11,6 @@ pub enum QueryMsg {
     GetSpotOrder { order_id: u64 },
     #[returns(GetAllPricesResponse)]
     GetAllPrices {},
-    #[returns(AssetInfoResponse)]
+    #[returns(OracleAssetInfoResponse)]
     AssetInfo { denom: String },
 }

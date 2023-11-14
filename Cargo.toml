@@ -19,7 +19,7 @@ elys-bindings = { version = "0.1.0", git = "https://github.com/elys-network/bind
 [dev-dependencies]
 cw-multi-test = "0.13.4"
 serde_json = "1.0.107"
-elys-bindings = { version = "0.1.0", git = "https://github.com/elys-network/bindings", branch = "main", features = [
+elys-bindings = { version = "0.1.0", git = "https://github.com/elys-network/bindings", features = [
     "testing",
-] }
+], branch = "main" }
 elys-bindings-test = { version = "0.1.0", git = "https://github.com/elys-network/bindings", branch = "main" }

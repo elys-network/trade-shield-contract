@@ -2,7 +2,7 @@ use crate::action;
 use crate::error::ContractError;
 use crate::msg;
 use cosmwasm_std::{
-    entry_point, to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult,
+    entry_point, to_json_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult,
 };
 use elys_bindings::*;
 

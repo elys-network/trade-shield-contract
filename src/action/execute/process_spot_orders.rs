@@ -1,5 +1,5 @@
 use crate::{msg::ReplyType, states::PROCESSED_SPOT_ORDER};
-use cosmwasm_std::{to_binary, Decimal, Int128, StdResult, Storage, SubMsg};
+use cosmwasm_std::{to_json_binary, Decimal, Int128, StdResult, Storage, SubMsg};
 use std::ops::Div;
 
 use crate::states::PROCESS_SPOT_ORDER_EXECUTOR;
@@ -19,6 +19,7 @@ pub fn process_spot_orders(
         });
     }
     let mut orders = SPOT_ORDER.load(deps.storage)?;
+    let mut reply_info = REPLY_INFO.load(deps.storage)?;
 
     let (send_msg, processed_order_ids) = send_token(&mut orders, deps.storage)?;
 
@@ -27,12 +28,18 @@ pub fn process_spot_orders(
 
     for order in &orders {
         if check_order(order, &querier) {
-            process_order(order, &mut submsgs, env.contract.address.as_str())
+            process_order(
+                order,
+                &mut submsgs,
+                env.contract.address.as_str(),
+                &mut reply_info,
+            )?;
         }
     }
 
-    let mut resp = Response::new().add_submessages(submsgs);
+    REPLY_INFO.save(deps.storage, &reply_info)?;
 
+    let mut resp = Response::new().add_submessages(submsgs);
     if !send_msg.is_empty() {
         resp = resp
             .add_messages(send_msg)
@@ -64,7 +71,7 @@ fn send_token(
 
 fn check_order(order: &SpotOrder, querier: &ElysQuerier) -> bool {
     let amm_swap_estimation =
-        match querier.swap_estimation(&order.order_amm_routes, &order.order_amount) {
+        match querier.amm_swap_estimation(&order.order_amm_routes, &order.order_amount) {
             Ok(res) => res,
             Err(_) => return false,
         };
@@ -85,22 +92,37 @@ fn check_order(order: &SpotOrder, querier: &ElysQuerier) -> bool {
     }
 }
 
-fn process_order(order: &SpotOrder, submsgs: &mut Vec<SubMsg<ElysMsg>>, sender: &str) {
+fn process_order(
+    order: &SpotOrder,
+    submsgs: &mut Vec<SubMsg<ElysMsg>>,
+    sender: &str,
+    reply_infos: &mut Vec<ReplyInfo>,
+) -> StdResult<()> {
     let token_out_min_amount: Int128 = match order.order_type {
         SpotOrderType::LimitBuy => calculate_token_out_min_amount(order),
         SpotOrderType::LimitSell => calculate_token_out_min_amount(order),
         SpotOrderType::StopLoss => Int128::zero(),
     };
 
-    let msg = ElysMsg::Amm(AmmMsg::swap_exact_amount_in(
+    let msg = ElysMsg::amm_swap_exact_amount_in(
         sender,
         &order.order_amount,
         &order.order_amm_routes,
         token_out_min_amount,
-        Some(to_binary(&order.order_id).unwrap()),
-    ));
+    );
 
-    submsgs.push(SubMsg::reply_on_success(msg, ReplyType::SpotOrder as u64))
+    let info_id = if let Some(max_info) = reply_infos.iter().max_by_key(|info| info.id) {
+        max_info.id + 1
+    } else {
+        0
+    };
+    reply_infos.push(ReplyInfo {
+        id: info_id,
+        reply_type: ReplyType::SpotOrder,
+        data: Some(to_json_binary(&order.order_id)?),
+    });
+    submsgs.push(SubMsg::reply_on_success(msg, info_id));
+    Ok(())
 }
 
 fn calculate_token_out_min_amount(order: &SpotOrder) -> Int128 {

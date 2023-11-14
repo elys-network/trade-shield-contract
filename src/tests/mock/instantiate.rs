@@ -21,6 +21,6 @@ pub fn instantiate(
     PROCESS_SPOT_ORDER_EXECUTOR.save(deps.storage, &Addr::unchecked(msg.process_order_executor))?;
     PROCESSED_SPOT_ORDER.save(deps.storage, &vec![])?;
     MARGIN_ORDER.save(deps.storage, &vec![])?;
-
+    REPLY_INFO.save(deps.storage, &vec![])?;
     Ok(Response::new())
 }

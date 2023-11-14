@@ -1,26 +1,34 @@
-use cosmwasm_std::{coins, from_binary, Binary, DepsMut, StdError};
+use cosmwasm_std::{coins, from_json, Binary, DepsMut, SubMsgResult};
+
+use crate::helper::get_response_from_reply;
 
 use super::*;
 
 pub fn reply_to_spot_order(
     deps: DepsMut<ElysQuery>,
-    data: Binary,
+    data: Option<Binary>,
+    module_resp: SubMsgResult,
 ) -> Result<Response<ElysMsg>, ContractError> {
-    let orders: Vec<SpotOrder> = SPOT_ORDER.load(deps.storage)?;
-    let amm_response: MsgSwapExactAmountInResp = from_binary(&data)?;
-
-    let order_id: u64 = match amm_response.meta_data {
-        Some(ref order_id) => from_binary(&order_id)?,
-        None => {
-            return Err(ContractError::StdError(StdError::GenericErr {
-                msg: "no metadata".to_string(),
-            }))
-        }
+    let amm_response: AmmSwapExactAmountInResp = match get_response_from_reply(module_resp) {
+        Ok(expr) => expr,
+        Err(err) => return Ok(err),
     };
 
-    let order = match orders.iter().find(|order| order.order_id == order_id) {
+    let orders: Vec<SpotOrder> = SPOT_ORDER.load(deps.storage)?;
+
+    let order_id: u64 = match data {
+        Some(ref order_id) => from_json(&order_id)?,
+        None => return Ok(Response::new().add_attribute("error", "no meta_data".to_string())),
+    };
+
+    let order: SpotOrder = match orders.iter().find(|order| order.order_id == order_id) {
         Some(order) => order.to_owned(),
-        None => return Err(ContractError::SpotOrderNotFound { order_id }),
+        None => {
+            return Ok(Response::new().add_attribute(
+                "error",
+                format!("{:?}", ContractError::SpotOrderNotFound { order_id }),
+            ))
+        }
     };
 
     let bank_msg = BankMsg::Send {

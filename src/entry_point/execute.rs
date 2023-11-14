@@ -38,6 +38,7 @@ pub fn execute(
             take_profit_price,
         } => create_margin_order(
             info,
+            deps,
             position,
             collateral,
             leverage,

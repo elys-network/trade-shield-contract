@@ -1,5 +1,5 @@
 use super::*;
-use crate::action::reply::*;
+use crate::{action::reply::*, states::REPLY_INFO, types::ReplyInfo};
 use cosmwasm_std::Reply;
 use msg::ReplyType;
 
@@ -9,29 +9,28 @@ pub fn reply(
     _env: Env,
     msg: Reply,
 ) -> Result<Response<ElysMsg>, ContractError> {
-    let reply = match msg.result.into_result() {
-        Ok(reply) => reply,
-        Err(err) => {
-            return Err(ContractError::StdError(
-                cosmwasm_std::StdError::GenericErr { msg: err },
-            ));
-        }
-    };
-
-    let data: Binary = match reply.data {
-        Some(data) => data,
+    let module_resp = msg.result;
+    let infos = REPLY_INFO.load(deps.storage)?;
+    let info = match infos.iter().find(|info| info.id == msg.id) {
+        Some(info) => info.to_owned(),
         None => {
-            return Err(ContractError::StdError(
-                cosmwasm_std::StdError::GenericErr {
-                    msg: "no data".to_string(),
-                },
-            ))
+            return Ok(
+                Response::new().add_attribute("error", format!("{}: reply info not fount", msg.id))
+            );
         }
     };
 
-    match ReplyType::from(msg.id)? {
-        ReplyType::SpotOrder => reply_to_spot_order(deps, data),
-        ReplyType::MarginOpenPosition => reply_to_create_margin_order(deps, data),
+    let new_infos: Vec<ReplyInfo> = infos
+        .iter()
+        .filter(|info| info.id != msg.id)
+        .cloned()
+        .collect();
+
+    REPLY_INFO.save(deps.storage, &new_infos)?;
+
+    match info.reply_type {
+        ReplyType::SpotOrder => reply_to_spot_order(deps, info.data, module_resp),
+        ReplyType::MarginOpenPosition => reply_to_create_margin_order(deps, info.data, module_resp),
         _ => unimplemented!(),
     }
 }
