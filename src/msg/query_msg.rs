@@ -1,10 +1,9 @@
 #[allow(unused_imports)]
 use super::query_resp::*;
-use crate::types::SpotOrderType;
+use crate::types::{PageRequest, SpotOrderType};
 use cosmwasm_schema::{cw_serde, QueryResponses};
 #[allow(unused_imports)]
 use elys_bindings::query_resp::*;
-use elys_bindings::types::PageRequest;
 
 #[cw_serde]
 #[derive(QueryResponses)]
