@@ -1,4 +1,4 @@
-use crate::tests::{get_order_id_from_events::get_order_id_from_events, mock::multitest::ElysApp};
+use crate::tests::get_order_id_from_events::get_order_id_from_events;
 
 use super::*;
 // This test case verifies the successful creation of a "limit buy" order in the contract.

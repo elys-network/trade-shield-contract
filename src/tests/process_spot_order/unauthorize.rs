@@ -1,5 +1,4 @@
 use super::*;
-use crate::tests::mock::multitest::ElysApp;
 
 #[test]
 fn unauthorize() {
