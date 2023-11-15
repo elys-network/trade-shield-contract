@@ -14,8 +14,8 @@ pub enum QueryMsg {
     GetAllPrices {},
     #[returns(OracleAssetInfoResponse)]
     AssetInfo { denom: String },
-    #[returns(MTPResponse)]
+    #[returns(MarginMtpResponse)]
     GetMarginOrder { address: String, id: u64 },
-    #[returns(PositionsResponse)]
+    #[returns(MarginQueryPositionsResponse)]
     GetMarginOrders { pagination: PageRequest },
 }
