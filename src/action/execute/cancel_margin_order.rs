@@ -1,4 +1,4 @@
-use cosmwasm_std::{to_binary, SubMsg};
+use cosmwasm_std::{to_json_binary, SubMsg};
 
 use crate::msg::ReplyType;
 
@@ -22,14 +22,28 @@ pub fn cancel_margin_order(
         });
     }
 
-    let meta_data = Some(to_binary(&(order_id, order.creator.clone()))?);
+    let meta_data = Some(to_json_binary(&order_id)?);
 
-    let cancel_msg = ElysMsg::close_position(order.creator, order_id, meta_data);
+    let cancel_msg = ElysMsg::margin_close_position(order.creator, order_id);
 
-    let resp = Response::new().add_submessage(SubMsg::reply_always(
-        cancel_msg,
-        ReplyType::MarginClosePosition as u64,
-    ));
+    let mut reply_infos = REPLY_INFO.load(deps.storage)?;
+
+    let reply_info_id =
+        if let Some(reply_info) = reply_infos.iter().max_by_key(|reply_info| reply_info.id) {
+            reply_info.id + 1
+        } else {
+            0
+        };
+
+    let reply_info = ReplyInfo {
+        id: reply_info_id,
+        reply_type: ReplyType::MarginClosePosition,
+        data: meta_data,
+    };
+
+    reply_infos.push(reply_info);
+
+    let resp = Response::new().add_submessage(SubMsg::reply_always(cancel_msg, reply_info_id));
 
     Ok(resp)
 }

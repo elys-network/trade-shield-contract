@@ -37,9 +37,11 @@ pub mod reply {
     use super::*;
     use elys_bindings::msg_resp::*;
 
+    mod close_margin_position;
     mod create_margin_order;
     mod spot_order;
 
+    pub use close_margin_position::reply_to_close_margin_order;
     pub use create_margin_order::reply_to_create_margin_order;
     pub use spot_order::reply_to_spot_order;
 }

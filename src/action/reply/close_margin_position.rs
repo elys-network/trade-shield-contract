@@ -1,25 +1,29 @@
+use cosmwasm_std::SubMsgResult;
+
+use crate::helper::get_response_from_reply;
+
+use super::*;
+
 pub fn reply_to_close_margin_order(
     deps: DepsMut<ElysQuery>,
-    data: Binary,
+    module_resp: SubMsgResult,
 ) -> Result<Response<ElysMsg>, ContractError> {
-    let reply_msg: MsgOpenResponse = from_binary(&data)?;
-
-    let meta_data = match reply_msg.meta_data {
-        Some(meta_data) => meta_data,
-        None => {
-            return Err(ContractError::StdError(StdError::GenericErr {
-                msg: "no metadata".to_string(),
-            }))
-        }
+    let close_resp: MarginCloseResponse = match get_response_from_reply(module_resp) {
+        Ok(close_resp) => close_resp,
+        Err(err) => return Ok(err),
     };
 
-    let mut order: MarginOrder = from_binary(&meta_data)?;
-    order.order_id = reply_msg.id;
+    let orders: Vec<MarginOrder> = MARGIN_ORDER.load(deps.storage)?;
 
-    let mut orders = MARGIN_ORDER.load(deps.storage)?;
-    orders.push(order);
+    let orders: Vec<MarginOrder> = orders
+        .iter()
+        .filter(|order| order.order_id != close_resp.id)
+        .cloned()
+        .collect();
 
-    let resp = Response::new().add_attribute("order_id", reply_msg.id.to_string());
+    MARGIN_ORDER.save(deps.storage, &orders)?;
+
+    let resp = Response::new().add_attribute("order_id", close_resp.id.to_string());
 
     Ok(resp)
 }

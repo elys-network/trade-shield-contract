@@ -26,7 +26,7 @@ pub fn reply_to_spot_order(
         None => {
             return Ok(Response::new().add_attribute(
                 "error",
-                format!("{:?}", ContractError::SpotOrderNotFound { order_id }),
+                format!("{:?}", ContractError::OrderNotFound { order_id }),
             ))
         }
     };
