@@ -85,7 +85,7 @@ fn filter_order_by_id(
             .cloned()
             .collect();
 
-        return Err(ContractError::SpotOrdersNotFound {
+        return Err(ContractError::OrderNotFound {
             order_ids: missing_order_ids,
         });
     }
