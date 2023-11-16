@@ -10,7 +10,7 @@ pub fn get_spot_order(
     let resp = GetSpotOrderResp {
         order: match have_order {
             Some(order) => order.to_owned(),
-            None => return Err(ContractError::SpotOrderNotFound { order_id }),
+            None => return Err(ContractError::OrderNotFound { order_id }),
         },
     };
 

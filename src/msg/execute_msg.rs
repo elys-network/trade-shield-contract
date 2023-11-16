@@ -14,6 +14,13 @@ pub enum ExecuteMsg {
     CancelSpotOrder {
         order_id: u64,
     },
+
+    CancelSpotOrders {
+        order_ids: Option<Vec<u64>>,
+        owner_address: String,
+        order_type: Option<SpotOrderType>,
+    },
+
     ProcessSpotOrders {},
 
     CreateMarginOrder {
@@ -22,5 +29,9 @@ pub enum ExecuteMsg {
         leverage: Decimal,
         borrow_asset: String,
         take_profit_price: Decimal,
+    },
+
+    CancelMarginOrder {
+        order_id: u64,
     },
 }

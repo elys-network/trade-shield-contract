@@ -16,5 +16,15 @@ pub fn query(deps: Deps<ElysQuery>, _env: Env, msg: QueryMsg) -> Result<Binary, 
         GetMarginOrders { pagination } => Ok(to_json_binary(&query::get_margin_orders(
             deps, pagination,
         )?)?),
+        GetSpotOrders {
+            pagination,
+            order_owner,
+            order_type,
+        } => Ok(to_json_binary(&query::get_spot_orders(
+            deps,
+            pagination,
+            order_owner,
+            order_type,
+        )?)?),
     }
 }
