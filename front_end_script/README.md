@@ -10,7 +10,7 @@ This function allows you to create a new spot order by sending a transaction to 
 
 #### Parameters
 
-- `order_amm_routes` (Vec): The route for the AMM module to swap the token.
+- `order_amm_routes` (Vec<{`pool_id` : u64, `token_out_denom` : String }>): The route for the AMM module to swap the token.
 - `order_price` ({`base_denom`:String, `quote_denom`:String, `rate` :String}): Price relates two assets exchange rate that the user should define
 - `order_type` (String): The type of the order (e.g., "stop_loss", "limit_sell", "limit_buy").
 - `amount_send` (String): The amount of cryptocurrency to send in the order.
@@ -30,6 +30,19 @@ createSpotOrder(
 );
 ```
 
+#### Exemple
+
+```js
+createSpotOrder(
+  [{ pool_id: 4, token_out_denom: "BTC" }, "AMM_Route_2"],
+  { base_denom: "BTC", quote_denom: "ETH", rate: "0.035" },
+  "limit_buy",
+  "2.5",
+  "ETH",
+  "BTC"
+);
+```
+
 ### 2. cancelSpotOrder(order_id)
 
 This function allows you to cancel an existing order by sending a transaction to the CosmWasm contract.
@@ -44,7 +57,38 @@ This function allows you to cancel an existing order by sending a transaction to
 cancelSpotOrder("your_order_id_here");
 ```
 
-### 3. getSpotOrder(order_id)
+#### Exemple
+
+```js
+cancelSpotOrder("8");
+```
+
+### 3. cancelSpotOrders(pagination, order_type, owner_address)
+
+This function retrieves information about multiple order by querying a CosmWasm contract on the blockchain.
+
+#### Parameters
+
+- `order_type` (OrderType or null): select the order type that should be canceled
+- `owner_address` (String): select the owner of the order that should be canceled
+
+#### Usage
+
+```javascript
+cancelSpotOrders("order_type", "owner_address", order_ids);
+```
+
+#### Exemple
+
+```js
+cancelSpotOrders(
+  "limit_sell",
+  "elys1x5fehwug2vtkyn4vpunwkfn9zxkpxl8jg0lwuu",
+  [5, 4, 6]
+);
+```
+
+### 4. getSpotOrder(order_id)
 
 This function retrieves information about a specific order by querying a CosmWasm contract on the blockchain.
 
@@ -56,6 +100,129 @@ This function retrieves information about a specific order by querying a CosmWas
 
 ```javascript
 getSpotOrder("your_order_id_here");
+```
+
+#### Exemple
+
+```js
+getSpotOrder("1");
+```
+
+### 5. getSpotOrders(pagination, order_type, owner_address)
+
+This function retrieves information about multiple order by querying a CosmWasm contract on the blockchain.
+
+#### Parameters
+
+- `pagination` {PageRequest} :
+- `order_type` (OrderType or null): select the order type that should be querried
+- `owner_address` (String or null): select the owner of the order that should be querried
+
+#### Usage
+
+```javascript
+getSpotOrders({"count_total", "limit", "reverse", "key"}, "order_type", "owner_address")
+```
+
+####
+
+```js
+getSpotOrders(
+  { count_total: true, limit: 10, reverse: false, key: null },
+  "stop_loss",
+  "elys12tzylat4udvjj56uuhu3vj2n4vgp7cf9fwna9w"
+);
+```
+
+### 6. createMarginOrder(position, collateral, leverage, borrow_asset, take_profit_price)
+
+This function allows you to create a margin order by sending a transaction to the CosmWasm contract.
+
+#### Parameters
+
+- `position` (String): The type of position for the margin order (e.g., "long", "short").
+- `collateral` (Coin): The amount of collateral for the margin order.
+- `leverage` (String): The leverage for the margin order.
+- `borrow_asset` (String): The asset to borrow for the margin order.
+- `take_profit_price` (String): The price at which the order will take profit.
+
+#### Usage
+
+```javascript
+createMarginOrder(
+  "position_type",
+  "collateral",
+  "leverage_value",
+  "borrow_asset",
+  "take_profit_price"
+);
+```
+
+#### Exemple
+
+```javascript
+createMarginOrder("short", { denom: "BTC", amount: "2" }, "4.3", "ETH", "2.2");
+```
+
+### 7. cancelMarginOrder(order_id)
+
+This function allows you to cancel a margin order by sending a transaction to the CosmWasm contract.
+
+#### Parameters
+
+- `order_id` (String): The unique identifier for the order you want to cancel.
+
+#### Usage
+
+```javascript
+cancelMarginOrder("your_order_id_here");
+```
+
+#### Exemple
+
+```js
+cancelMarginOrder("1");
+```
+
+### 8. getMarginOrder(address,id)
+
+This function retrieves information about a specific margin order by querying a CosmWasm contract on the blockchain.
+
+#### Parameters
+
+- `address` (String): The address associated with the margin order.
+- `order_id` (String): The unique identifier for the order you want to retrieve.
+
+#### Usage
+
+```javascript
+getMarginOrder("your_order_id_here");
+```
+
+#### Exemple
+
+```js
+getMarginOrder("255");
+```
+
+### 9. getMarginOrders(pagination)
+
+This function retrieves multiple margin orders by querying a CosmWasm contract on the blockchain.
+
+#### Parameters
+
+- `pagination` {PageRequest} : Parameters for pagination.
+
+#### Usage
+
+```javascript
+getMarginOrders("pagination");
+```
+
+#### Exemple
+
+```js
+getMarginOrders({ count_total: true, limit: 10, reverse: false, key: null });
 ```
 
 ## Configuration
