@@ -31,6 +31,6 @@ pub fn reply(
     match info.reply_type {
         ReplyType::SpotOrder => reply_to_spot_order(deps, info.data, module_resp),
         ReplyType::MarginOpenPosition => reply_to_create_margin_order(deps, info.data, module_resp),
-        _ => unimplemented!(),
+        ReplyType::MarginClosePosition => reply_to_close_margin_order(deps, module_resp),
     }
 }

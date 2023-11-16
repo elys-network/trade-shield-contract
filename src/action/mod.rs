@@ -21,6 +21,7 @@ pub mod query {
 }
 
 pub mod execute {
+    mod cancel_margin_order;
     mod cancel_spot_order;
     mod cancel_spot_orders;
     mod create_margin_order;
@@ -28,6 +29,7 @@ pub mod execute {
     mod process_spot_orders;
     use super::*;
 
+    pub use cancel_margin_order::cancel_margin_order;
     pub use cancel_spot_order::cancel_spot_order;
     pub use cancel_spot_orders::cancel_spot_orders;
     pub use create_margin_order::create_margin_order;
@@ -39,9 +41,11 @@ pub mod reply {
     use super::*;
     use elys_bindings::msg_resp::*;
 
+    mod close_margin_position;
     mod create_margin_order;
     mod spot_order;
 
+    pub use close_margin_position::reply_to_close_margin_order;
     pub use create_margin_order::reply_to_create_margin_order;
     pub use spot_order::reply_to_spot_order;
 }
