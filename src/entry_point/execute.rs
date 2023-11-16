@@ -29,6 +29,13 @@ pub fn execute(
             order_amm_routes,
         ),
         CancelSpotOrder { order_id } => cancel_spot_order(info, deps, order_id),
+
+        CancelSpotOrders {
+            order_ids,
+            owner_address,
+            order_type,
+        } => cancel_spot_orders(info, deps, order_ids, owner_address, order_type),
+
         ProcessSpotOrders {} => process_spot_orders(deps, info, env),
         CreateMarginOrder {
             position,
