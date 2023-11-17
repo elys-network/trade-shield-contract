@@ -1,4 +1,4 @@
-use cosmwasm_std::{to_binary, Addr, Coin, StdError};
+use cosmwasm_std::{to_json_binary, Coin, StdError};
 
 use super::*;
 
@@ -56,7 +56,7 @@ pub fn cancel_spot_orders(
 
     Ok(Response::new()
         .add_message(refund_msg)
-        .set_data(to_binary(&order_ids)?))
+        .set_data(to_json_binary(&order_ids)?))
 }
 
 fn filter_order_by_id(

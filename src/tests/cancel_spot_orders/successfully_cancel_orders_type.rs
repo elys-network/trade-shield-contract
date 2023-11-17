@@ -1,4 +1,4 @@
-use cosmwasm_std::{to_binary, Coin};
+use cosmwasm_std::{to_json_binary, Coin};
 
 use super::*;
 
@@ -127,7 +127,7 @@ fn successfully_cancel_orders_type() {
         )
         .unwrap();
 
-    assert_eq!(resp.data.unwrap(), to_binary(&vec![0]).unwrap());
+    assert_eq!(resp.data.unwrap(), to_json_binary(&vec![0]).unwrap());
 
     assert_eq!(
         app.wrap().query_balance("user", "btc").unwrap(),

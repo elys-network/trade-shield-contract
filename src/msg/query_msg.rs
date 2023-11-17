@@ -1,6 +1,6 @@
 #[allow(unused_imports)]
 use super::query_resp::*;
-use crate::types::{SpotOrderType};
+use crate::types::SpotOrderType;
 use cosmwasm_schema::{cw_serde, QueryResponses};
 #[allow(unused_imports)]
 use elys_bindings::query_resp::*;
