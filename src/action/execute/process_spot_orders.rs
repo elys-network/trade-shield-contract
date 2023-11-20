@@ -70,6 +70,10 @@ fn send_token(
 }
 
 fn check_order(order: &SpotOrder, querier: &ElysQuerier) -> bool {
+    if order.order_type == SpotOrderType::Market {
+        return true;
+    }
+
     let amm_swap_estimation =
         match querier.amm_swap_estimation(&order.order_amm_routes, &order.order_amount) {
             Ok(res) => res,
@@ -89,6 +93,7 @@ fn check_order(order: &SpotOrder, querier: &ElysQuerier) -> bool {
         SpotOrderType::LimitSell => order_token_out <= amm_swap_estimation.token_out.amount,
 
         SpotOrderType::StopLoss => order_token_out >= amm_swap_estimation.token_out.amount,
+        _ => false,
     }
 }
 
@@ -102,6 +107,7 @@ fn process_order(
         SpotOrderType::LimitBuy => calculate_token_out_min_amount(order),
         SpotOrderType::LimitSell => calculate_token_out_min_amount(order),
         SpotOrderType::StopLoss => Int128::zero(),
+        SpotOrderType::Market => Int128::zero(),
     };
 
     let msg = ElysMsg::amm_swap_exact_amount_in(

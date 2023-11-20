@@ -5,4 +5,5 @@ pub enum SpotOrderType {
     StopLoss,
     LimitSell,
     LimitBuy,
+    Market,
 }
