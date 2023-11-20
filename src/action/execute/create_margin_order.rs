@@ -1,4 +1,4 @@
-use cosmwasm_std::{to_json_binary, Coin, Decimal, Int128, SubMsg};
+use cosmwasm_std::{to_json_binary, Coin, Decimal, Int128, StdError, SubMsg};
 
 use crate::msg::ReplyType;
 
@@ -19,6 +19,12 @@ pub fn create_margin_order(
 
     if collateral != info.funds[0] {
         return Err(ContractError::CollateralAmount);
+    }
+
+    if position == MarginPosition::Short && collateral.denom == "uusdc" {
+        return Err(
+            StdError::generic_err("the collateral asset for a short can only be USDC").into(),
+        );
     }
 
     cw_utils::must_pay(&info, &info.funds[0].denom)?;

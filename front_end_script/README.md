@@ -161,7 +161,13 @@ createMarginOrder(
 #### Exemple
 
 ```javascript
-createMarginOrder("short", { denom: "BTC", amount: "2" }, "4.3", "ETH", "2.2");
+createMarginOrder(
+  "short",
+  { denom: "uusdc", amount: "2002" },
+  "4.3",
+  "ueth",
+  "2.2"
+);
 ```
 
 ### 7. cancelMarginOrder(order_id)
