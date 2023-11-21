@@ -73,7 +73,7 @@ fn check_denom_error(
         return Err(ContractError::SpotOrderSameDenom);
     }
 
-    if order_type == &SpotOrderType::Market {
+    if order_type == &SpotOrderType::MarketBuy {
         return Ok(());
     }
 
@@ -98,7 +98,7 @@ fn create_resp(
         .add_attribute("order_id", new_order.order_id.to_string())
         .add_message(bank_msg); // information message
 
-    if new_order.order_type != SpotOrderType::Market {
+    if new_order.order_type != SpotOrderType::MarketBuy {
         return Ok(resp);
     }
 

@@ -52,7 +52,7 @@ fn successful_create_stop_loss_order() {
             Addr::unchecked("user"),
             addr.clone(),
             &ExecuteMsg::CreateSpotOrder {
-                order_type: SpotOrderType::Market,
+                order_type: SpotOrderType::MarketBuy,
                 // Empty order price - not utilized in market orders
                 order_price: SpotOrderPrice {
                     base_denom: "".to_string(),
