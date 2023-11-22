@@ -12,7 +12,7 @@ This function allows you to create a new spot order by sending a transaction to 
 
 - `order_amm_routes` (Vec<{`pool_id` : u64, `token_out_denom` : String }>, null): The route for the AMM module to swap the token.
 - `order_price` ({`base_denom`:String, `quote_denom`:String, `rate` :String}): Price relates two assets exchange rate that the user should define
-- `order_type` (String): The type of the order (e.g., "stop_loss", "limit_sell", "limit_buy").
+- `order_type` (String): The type of the order (e.g., "stop_loss", "limit_sell", "limit_buy", "market_buy").
 - `amount_send` (String): The amount of cryptocurrency to send in the order.
 - `denom_send` (String): The denomination of the cryptocurrency to send.
 - `order_target_denom` (String) : the asset that the user want to convert their asset into
