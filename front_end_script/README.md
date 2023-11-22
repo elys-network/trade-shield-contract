@@ -10,7 +10,7 @@ This function allows you to create a new spot order by sending a transaction to 
 
 #### Parameters
 
-- `order_amm_routes` (Vec<{`pool_id` : u64, `token_out_denom` : String }>): The route for the AMM module to swap the token.
+- `order_amm_routes` (Vec<{`pool_id` : u64, `token_out_denom` : String }>, null): The route for the AMM module to swap the token.
 - `order_price` ({`base_denom`:String, `quote_denom`:String, `rate` :String}): Price relates two assets exchange rate that the user should define
 - `order_type` (String): The type of the order (e.g., "stop_loss", "limit_sell", "limit_buy").
 - `amount_send` (String): The amount of cryptocurrency to send in the order.
@@ -28,6 +28,15 @@ createSpotOrder(
   "denom_to_send_here"
   "your_target_denom"
 );
+
+createSpotOrder(
+  null,
+  {"base_denom", "quote_denom", "rate"},
+  "order_type",
+  "amount_to_send_here",
+  "denom_to_send_here"
+  "your_target_denom"
+);
 ```
 
 #### Exemple
@@ -35,6 +44,15 @@ createSpotOrder(
 ```js
 createSpotOrder(
   [{ pool_id: 4, token_out_denom: "BTC" }, "AMM_Route_2"],
+  { base_denom: "BTC", quote_denom: "ETH", rate: "0.035" },
+  "limit_buy",
+  "2.5",
+  "ETH",
+  "BTC"
+);
+
+createSpotOrder(
+  null,
   { base_denom: "BTC", quote_denom: "ETH", rate: "0.035" },
   "limit_buy",
   "2.5",
@@ -229,6 +247,32 @@ getMarginOrders("pagination");
 
 ```js
 getMarginOrders({ count_total: true, limit: 10, reverse: false, key: null });
+```
+
+### 10. SwapEstimationByDenom(amount, denom_in, denom_out)
+
+This function retrieves an estimation of the value obtained by swapping one asset for another.
+
+#### Parameters
+
+- `amount` {Coin} : the amount of the value that you want to send or recive.
+- `denom_in` {String} : The asset that you will send.
+- `denom_out` {String} : The asset that you will recive.
+
+#### Usage
+
+```js
+ SwapEstimationByDenom({"amount", "denom"}, "denom_in", "denom_out")
+```
+
+#### Exemple
+
+```js
+SwapEstimationByDenom({
+  amount: { amount: 200, denom: "usdc" },
+  denom_in: "usdc",
+  denom_out: "atom",
+});
 ```
 
 ## Configuration

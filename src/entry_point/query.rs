@@ -26,5 +26,12 @@ pub fn query(deps: Deps<ElysQuery>, _env: Env, msg: QueryMsg) -> Result<Binary, 
             order_owner,
             order_type,
         )?)?),
+        SwapEstimationByDenom {
+            amount,
+            denom_in,
+            denom_out,
+        } => Ok(to_json_binary(&query::swap_estimation_by_denom(
+            deps, amount, denom_in, denom_out,
+        )?)?),
     }
 }
