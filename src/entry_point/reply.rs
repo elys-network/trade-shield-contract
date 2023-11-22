@@ -1,6 +1,6 @@
 use super::*;
 use crate::{action::reply::*, states::REPLY_INFO, types::ReplyInfo};
-use cosmwasm_std::Reply;
+use cosmwasm_std::{Reply, StdError};
 use msg::ReplyType;
 
 #[cfg_attr(not(feature = "library"), entry_point)]
@@ -30,7 +30,7 @@ pub fn reply(
 
     match info.reply_type {
         ReplyType::SpotOrder => reply_to_spot_order(deps, info.data, module_resp),
-        ReplyType::MarginOpenPosition => reply_to_create_margin_order(deps, info.data, module_resp),
-        ReplyType::MarginClosePosition => reply_to_close_margin_order(deps, module_resp),
+        ReplyType::MarginBrokerOpen => reply_to_create_margin_order(deps, info.data, module_resp),
+        _ => return Err(StdError::generic_err("submsg unimplemented").into()),
     }
 }

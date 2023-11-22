@@ -4,7 +4,7 @@ pub fn get_spot_orders(
     deps: Deps<ElysQuery>,
     pagination: PageRequest,
     order_owner: Option<String>,
-    order_type: Option<SpotOrderType>,
+    order_type: Option<OrderType>,
 ) -> Result<GetSpotOrdersResp, ContractError> {
     let orders = SPOT_ORDER.load(deps.storage)?;
 

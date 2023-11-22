@@ -43,14 +43,17 @@ pub fn execute(
             leverage,
             borrow_asset,
             take_profit_price,
+            order_type,
         } => create_margin_order(
             info,
             deps,
+            env,
             position,
             collateral,
             leverage,
             borrow_asset,
             take_profit_price,
+            order_type,
         ),
         CancelMarginOrder { order_id } => cancel_margin_order(info, deps, order_id),
     }

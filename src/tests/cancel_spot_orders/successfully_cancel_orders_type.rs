@@ -11,7 +11,7 @@ fn successfully_cancel_orders_type() {
 
     let orders = vec![
         SpotOrder {
-            order_type: SpotOrderType::LimitBuy,
+            order_type: OrderType::LimitBuy,
             order_id: 0,
             order_price: SpotOrderPrice {
                 base_denom: "".to_string(),
@@ -24,7 +24,7 @@ fn successfully_cancel_orders_type() {
             order_amm_routes: vec![],
         },
         SpotOrder {
-            order_type: SpotOrderType::LimitSell,
+            order_type: OrderType::LimitSell,
             order_id: 1,
             order_price: SpotOrderPrice {
                 base_denom: "".to_string(),
@@ -37,7 +37,7 @@ fn successfully_cancel_orders_type() {
             order_amm_routes: vec![],
         },
         SpotOrder {
-            order_type: SpotOrderType::StopLoss,
+            order_type: OrderType::StopLoss,
             order_id: 2,
             order_price: SpotOrderPrice {
                 base_denom: "".to_string(),
@@ -50,7 +50,7 @@ fn successfully_cancel_orders_type() {
             order_amm_routes: vec![],
         },
         SpotOrder {
-            order_type: SpotOrderType::StopLoss,
+            order_type: OrderType::StopLoss,
             order_id: 3,
             order_price: SpotOrderPrice {
                 base_denom: "".to_string(),
@@ -121,7 +121,7 @@ fn successfully_cancel_orders_type() {
             &&ExecuteMsg::CancelSpotOrders {
                 order_ids: None,
                 owner_address: "user".to_string(),
-                order_type: Some(SpotOrderType::LimitBuy),
+                order_type: Some(OrderType::LimitBuy),
             },
             &[],
         )

@@ -40,7 +40,7 @@ fn successful_create_limit_buy_order() {
             Addr::unchecked("user"),
             addr.clone(),
             &ExecuteMsg::CreateSpotOrder {
-                order_type: SpotOrderType::LimitBuy,
+                order_type: OrderType::LimitBuy,
                 order_price: SpotOrderPrice {
                     base_denom: "btc".to_string(),
                     quote_denom: "usdc".to_string(),

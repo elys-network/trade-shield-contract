@@ -5,4 +5,6 @@ pub enum ReplyType {
     SpotOrder,
     MarginOpenPosition,
     MarginClosePosition,
+    MarginBrokerOpen,
+    MarginBrokerClose,
 }

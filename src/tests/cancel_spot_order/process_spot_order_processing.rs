@@ -22,7 +22,7 @@ fn process_spot_order_processing() {
 
     // Create a "limit buy" order (dummy order) with a specific rate and balance.
     let dummy_order = SpotOrder::new(
-        SpotOrderType::LimitBuy,
+        OrderType::LimitBuy,
         SpotOrderPrice {
             base_denom: "ubtc".to_string(),
             quote_denom: "usdc".to_string(),

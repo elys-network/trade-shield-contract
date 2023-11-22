@@ -38,7 +38,7 @@ fn successful_cancel_order_with_created_order() {
             Addr::unchecked("user"),
             addr.clone(),
             &ExecuteMsg::CreateSpotOrder {
-                order_type: SpotOrderType::StopLoss,
+                order_type: OrderType::StopLoss,
                 order_price: SpotOrderPrice {
                     rate: Decimal::from_atomics(Uint128::new(18), 0).unwrap(),
                     base_denom: "btc".to_string(),

@@ -70,7 +70,7 @@ fn send_token(
 }
 
 fn check_order(order: &SpotOrder, querier: &ElysQuerier) -> bool {
-    if order.order_type == SpotOrderType::MarketBuy {
+    if order.order_type == OrderType::MarketBuy {
         return true;
     }
 
@@ -88,11 +88,11 @@ fn check_order(order: &SpotOrder, querier: &ElysQuerier) -> bool {
     let order_token_out = order_spot_price * order.order_amount.amount;
 
     match order.order_type {
-        SpotOrderType::LimitBuy => order_token_out <= amm_swap_estimation.token_out.amount,
+        OrderType::LimitBuy => order_token_out <= amm_swap_estimation.token_out.amount,
 
-        SpotOrderType::LimitSell => order_token_out <= amm_swap_estimation.token_out.amount,
+        OrderType::LimitSell => order_token_out <= amm_swap_estimation.token_out.amount,
 
-        SpotOrderType::StopLoss => order_token_out >= amm_swap_estimation.token_out.amount,
+        OrderType::StopLoss => order_token_out >= amm_swap_estimation.token_out.amount,
         _ => false,
     }
 }
@@ -104,10 +104,10 @@ fn process_order(
     reply_infos: &mut Vec<ReplyInfo>,
 ) -> StdResult<()> {
     let token_out_min_amount: Int128 = match order.order_type {
-        SpotOrderType::LimitBuy => calculate_token_out_min_amount(order),
-        SpotOrderType::LimitSell => calculate_token_out_min_amount(order),
-        SpotOrderType::StopLoss => Int128::zero(),
-        SpotOrderType::MarketBuy => Int128::zero(),
+        OrderType::LimitBuy => calculate_token_out_min_amount(order),
+        OrderType::LimitSell => calculate_token_out_min_amount(order),
+        OrderType::StopLoss => Int128::zero(),
+        OrderType::MarketBuy => Int128::zero(),
     };
 
     let msg = ElysMsg::amm_swap_exact_amount_in(

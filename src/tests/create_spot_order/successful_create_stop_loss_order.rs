@@ -41,7 +41,7 @@ fn successful_create_stop_loss_order() {
             Addr::unchecked("user"),
             addr.clone(),
             &ExecuteMsg::CreateSpotOrder {
-                order_type: SpotOrderType::StopLoss,
+                order_type: OrderType::StopLoss,
                 order_price: SpotOrderPrice {
                     base_denom: "btc".to_string(),
                     quote_denom: "usdc".to_string(),

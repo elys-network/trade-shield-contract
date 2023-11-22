@@ -7,7 +7,7 @@ pub fn cancel_spot_orders(
     deps: DepsMut<ElysQuery>,
     order_ids: Option<Vec<u64>>,
     owner_address: String,
-    order_type: Option<SpotOrderType>,
+    order_type: Option<OrderType>,
 ) -> Result<Response<ElysMsg>, ContractError> {
     if info.sender.as_str() != owner_address {
         return Err(ContractError::Unauthorized {
@@ -95,7 +95,7 @@ fn filter_order_by_id(
 
 fn filter_order_by_type(
     orders: Vec<SpotOrder>,
-    order_type: Option<SpotOrderType>,
+    order_type: Option<OrderType>,
 ) -> Result<Vec<SpotOrder>, ContractError> {
     let order_type = match order_type {
         Some(order_type) => order_type,

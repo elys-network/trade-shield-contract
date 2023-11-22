@@ -238,7 +238,7 @@ fn successful_process_5_of_10_orders() {
 fn create_dummy_orders() -> Vec<SpotOrder> {
     vec![
         SpotOrder {
-            order_type: SpotOrderType::StopLoss,
+            order_type: OrderType::StopLoss,
             order_id: 0,
             order_target_denom: "usdc".to_string(),
             order_amount: coin(1, "eth"),
@@ -251,7 +251,7 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             },
         },
         SpotOrder {
-            order_type: SpotOrderType::StopLoss,
+            order_type: OrderType::StopLoss,
             order_id: 1,
             order_amount: coin(2, "btc"),
             owner_address: Addr::unchecked("user"),
@@ -264,7 +264,7 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             order_target_denom: "usdc".to_string(),
         },
         SpotOrder {
-            order_type: SpotOrderType::StopLoss,
+            order_type: OrderType::StopLoss,
             order_id: 2,
             order_amount: coin(3, "btc"),
             owner_address: Addr::unchecked("user"),
@@ -277,7 +277,7 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             order_target_denom: "usdc".to_string(),
         },
         SpotOrder {
-            order_type: SpotOrderType::StopLoss,
+            order_type: OrderType::StopLoss,
             order_id: 3,
             order_amount: coin(5, "eth"),
             owner_address: Addr::unchecked("user"),
@@ -290,7 +290,7 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             order_target_denom: "usdc".to_string(),
         },
         SpotOrder {
-            order_type: SpotOrderType::StopLoss,
+            order_type: OrderType::StopLoss,
             order_id: 4,
             order_amount: coin(1, "eth"),
             owner_address: Addr::unchecked("user"),
@@ -303,7 +303,7 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             order_target_denom: "usdc".to_string(),
         },
         SpotOrder {
-            order_type: SpotOrderType::LimitSell,
+            order_type: OrderType::LimitSell,
             order_id: 5,
             order_amount: coin(1, "eth"),
             owner_address: Addr::unchecked("user"),
@@ -316,7 +316,7 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             order_target_denom: "usdc".to_string(),
         },
         SpotOrder {
-            order_type: SpotOrderType::LimitSell,
+            order_type: OrderType::LimitSell,
             order_id: 6,
             order_amount: coin(3, "btc"),
             owner_address: Addr::unchecked("user"),
@@ -329,7 +329,7 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             order_target_denom: "usdc".to_string(),
         },
         SpotOrder {
-            order_type: SpotOrderType::LimitSell,
+            order_type: OrderType::LimitSell,
             order_id: 7,
             order_amount: coin(2, "btc"),
             owner_address: Addr::unchecked("user"),
@@ -342,7 +342,7 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             order_target_denom: "usdc".to_string(),
         },
         SpotOrder {
-            order_type: SpotOrderType::LimitSell,
+            order_type: OrderType::LimitSell,
             order_id: 8,
             order_amount: coin(1, "btc"),
             owner_address: Addr::unchecked("user"),
@@ -355,7 +355,7 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             order_target_denom: "usdc".to_string(),
         },
         SpotOrder {
-            order_type: SpotOrderType::LimitSell,
+            order_type: OrderType::LimitSell,
             order_id: 9,
             order_amount: coin(1, "eth"),
             owner_address: Addr::unchecked("user"),

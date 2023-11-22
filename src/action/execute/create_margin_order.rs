@@ -1,17 +1,17 @@
-use cosmwasm_std::{to_json_binary, Coin, Decimal, Int128, StdError, SubMsg};
-
-use crate::msg::ReplyType;
-
 use super::*;
+use crate::msg::ReplyType;
+use cosmwasm_std::{to_json_binary, Coin, Decimal, Int128, StdError, StdResult, Storage, SubMsg};
 
 pub fn create_margin_order(
     info: MessageInfo,
     deps: DepsMut<ElysQuery>,
+    env: Env,
     position: MarginPosition,
     collateral: Coin,
     leverage: Decimal,
     borrow_asset: String,
     take_profit_price: Decimal,
+    order_type: OrderType,
 ) -> Result<Response<ElysMsg>, ContractError> {
     if info.funds.len() != 1 {
         return Err(ContractError::CoinNumber);
@@ -34,39 +34,68 @@ pub fn create_margin_order(
         amount: (leverage - Decimal::one()) * collateral.amount,
     };
 
-    let meta_data = to_json_binary(&MarginOrder::new(
-        position.clone(),
-        &info.sender,
-        collateral.clone(),
-        leverage,
-        borrow_token,
-        take_profit_price,
-    ))?;
+    let mut order_vec = MARGIN_ORDER.load(deps.storage)?;
 
-    let sub_msg = ElysMsg::margin_open_position(
+    let order = MarginOrder::new(
+        &position,
+        &collateral,
+        borrow_asset,
         &info.sender,
-        &collateral.denom,
-        Int128::from(collateral.amount.u128() as i128),
-        &borrow_asset,
-        position,
-        leverage,
-        take_profit_price,
+        &leverage,
+        &take_profit_price,
+        &order_type,
+        &order_vec,
     );
 
-    let mut reply_info = REPLY_INFO.load(deps.storage)?;
+    let resp = create_response(deps.storage, &order, env.contract.address)?;
 
-    let new_info_id = match reply_info.iter().max_by_key(|info| info.id) {
-        Some(max_info) => max_info.id + 1,
+    order_vec.push(order);
+
+    MARGIN_ORDER.save(deps.storage, &order_vec)?;
+
+    Ok(resp)
+}
+
+fn create_response(
+    storage: &mut dyn Storage,
+    order: &MarginOrder,
+    contract_addr: impl Into<String>,
+) -> StdResult<Response<ElysMsg>> {
+    let mut resp: Response<ElysMsg> =
+        Response::new().add_attribute("order_id", order.order_id.to_string());
+
+    if order.order_type == OrderType::MarketBuy {
+        return Ok(resp);
+    }
+
+    let mut reply_infos = REPLY_INFO.load(storage)?;
+
+    let reply_info_id = match reply_infos.iter().max_by_key(|info| info.id) {
+        Some(info) => info.id + 1,
         None => 0,
     };
 
-    reply_info.push(ReplyInfo {
-        id: new_info_id,
+    let reply_info = ReplyInfo {
+        id: reply_info_id,
         reply_type: ReplyType::MarginOpenPosition,
-        data: Some(meta_data),
-    });
+        data: Some(to_json_binary(&order.order_id)?),
+    };
 
-    REPLY_INFO.save(deps.storage, &reply_info)?;
+    reply_infos.push(reply_info);
 
-    Ok(Response::new().add_submessage(SubMsg::reply_always(sub_msg, new_info_id)))
+    let submsg: SubMsg<ElysMsg> = SubMsg::reply_always(
+        ElysMsg::margin_broker_open_position(
+            contract_addr,
+            &order.collateral.denom,
+            Int128::new(order.collateral.amount.u128() as i128),
+            &order.borrow_asset,
+            order.position.clone() as i32,
+            order.leverage,
+            order.take_profit_price,
+            &order.owner,
+        ),
+        reply_info_id,
+    );
+
+    Ok(resp)
 }

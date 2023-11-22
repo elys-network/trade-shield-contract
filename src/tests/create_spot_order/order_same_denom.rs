@@ -14,7 +14,7 @@ fn order_same_denom() {
     };
 
     let create_order_msg = ExecuteMsg::CreateSpotOrder {
-        order_type: SpotOrderType::LimitSell,
+        order_type: OrderType::LimitSell,
         order_price: SpotOrderPrice {
             base_denom: "btc".to_string(),
             quote_denom: "eth".to_string(),
