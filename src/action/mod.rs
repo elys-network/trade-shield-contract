@@ -6,7 +6,8 @@ pub mod query {
     mod asset_info;
     mod get_all_price;
     mod get_margin_order;
-    mod get_margin_orders;
+    mod get_margin_position;
+    mod get_margin_positions;
     mod get_spot_order;
     mod get_spot_orders;
     mod swap_estimation_by_denom;
@@ -20,7 +21,8 @@ pub mod query {
     pub use asset_info::asset_info;
     pub use get_all_price::get_all_prices;
     pub use get_margin_order::get_margin_order;
-    pub use get_margin_orders::get_margin_orders;
+    pub use get_margin_position::get_margin_position;
+    pub use get_margin_positions::get_margin_positions;
     pub use get_spot_order::get_spot_order;
     pub use get_spot_orders::get_spot_orders;
     pub use swap_estimation_by_denom::swap_estimation_by_denom;

@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 use super::*;
 
 #[test]
@@ -8,7 +10,8 @@ fn coin_number() {
     // Create a mock message to instantiate the contract with no initial orders.
     let instantiate_msg = InstantiateMockMsg {
         process_order_executor: "owner".to_string(),
-        orders: vec![],
+        spot_orders: vec![],
+        margin_orders: vec![],
     };
     // Create a contract wrapper and store its code.
     let code = ContractWrapper::new(execute, instantiate, query);
@@ -34,10 +37,16 @@ fn coin_number() {
             addr,
             &ExecuteMsg::CreateMarginOrder {
                 position: MarginPosition::Short,
-                collateral: coin(600, "usdc"),
+                collateral: coin(600, "uusdc"),
                 leverage: Decimal::from_atomics(Uint128::new(500), 2).unwrap(),
                 borrow_asset: "uatom".to_string(),
                 take_profit_price: Decimal::from_atomics(Uint128::new(500), 2).unwrap(),
+                order_type: OrderType::LimitSell,
+                trigger_price: OrderPrice {
+                    base_denom: "uatom".to_string(),
+                    quote_denom: "uusdc".to_string(),
+                    rate: Decimal::from_str("1.5").unwrap(),
+                },
             },
             &[],
         )

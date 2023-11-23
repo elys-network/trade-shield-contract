@@ -36,8 +36,8 @@ fn successful_process_stop_loss_order() {
 
     // Create a "stop-loss" order (dummy order) with trigger price and balance.
     let dummy_order = SpotOrder::new(
-        SpotOrderType::StopLoss,
-        SpotOrderPrice {
+        OrderType::StopLoss,
+        OrderPrice {
             base_denom: "btc".to_string(),
             quote_denom: "usdc".to_string(),
             rate: Decimal::from_atomics(Uint128::new(20000), 0).unwrap(), // Trigger price of 20,000 USDC per BTC.
@@ -52,7 +52,8 @@ fn successful_process_stop_loss_order() {
     // Create a mock message to instantiate the contract with the dummy order.
     let instantiate_msg = InstantiateMockMsg {
         process_order_executor: "owner".to_string(),
-        orders: vec![dummy_order],
+        spot_orders: vec![dummy_order],
+        margin_orders: vec![],
     };
 
     // Create an execution message to process orders.

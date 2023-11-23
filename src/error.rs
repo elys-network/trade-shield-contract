@@ -17,11 +17,11 @@ pub enum ContractError {
     #[error("Incorrect number of funds. Only one fund is allowed.")]
     CoinNumber,
     #[error("order price already been reached")]
-    SpotOrderPriceReached,
+    OrderPriceReached,
     #[error("order_source_denom and order_target_denom cannot be the same")]
     SpotOrderSameDenom,
     #[error("denom in order_price not used")]
-    SpotOrderPriceDenom,
+    OrderPriceDenom,
     #[error("fund not used by the order")]
     SpotOrderWrongFund,
     #[error("{sender} is no autorized to use the process_orders endpoint")]

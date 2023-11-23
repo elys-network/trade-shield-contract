@@ -152,7 +152,7 @@ getSpotOrders(
 );
 ```
 
-### 6. createMarginOrder(position, collateral, leverage, borrow_asset, take_profit_price)
+### 6. createMarginOrder(position, collateral, leverage, borrow_asset, take_profit_price, order_type, trigger_price)
 
 This function allows you to create a margin order by sending a transaction to the CosmWasm contract.
 
@@ -163,6 +163,8 @@ This function allows you to create a margin order by sending a transaction to th
 - `leverage` (String): The leverage for the margin order.
 - `borrow_asset` (String): The asset to borrow for the margin order.
 - `take_profit_price` (String): The price at which the order will take profit.
+- `order_type` (String): The type of the order (e.g., "stop_loss", "limit_sell", "limit_buy").
+- `trigger_price` ({`base_denom`:String, `quote_denom`:String, `rate` :String}): Price relates two assets exchange rate that the user should define
 
 #### Usage
 
@@ -172,7 +174,9 @@ createMarginOrder(
   "collateral",
   "leverage_value",
   "borrow_asset",
-  "take_profit_price"
+  "take_profit_price",
+  "order_type",
+  "trigger_price"
 );
 ```
 
@@ -185,6 +189,8 @@ createMarginOrder(
   "4.3",
   "ueth",
   "2.2"
+  "limit_buy",
+  { base_denom: "ueth", quote_denom: "uusdc", rate: "2076.5" }
 );
 ```
 
@@ -208,7 +214,7 @@ cancelMarginOrder("your_order_id_here");
 cancelMarginOrder("1");
 ```
 
-### 8. getMarginOrder(address,id)
+### 8. getMarginOrder(id)
 
 This function retrieves information about a specific margin order by querying a CosmWasm contract on the blockchain.
 
@@ -226,10 +232,31 @@ getMarginOrder("your_order_id_here");
 #### Exemple
 
 ```js
-getMarginOrder("255");
+getMarginOrder("2");
 ```
 
-### 9. getMarginOrders(pagination)
+### 9. getMarginPosition(address,id)
+
+This function retrieves information about a specific margin order by querying a CosmWasm contract on the blockchain.
+
+#### Parameters
+
+- `address` (String): The address associated with the margin order.
+- `order_id` (String): The unique identifier for the order you want to retrieve.
+
+#### Usage
+
+```javascript
+getMarginPosition("your_address", "your_order_id_here");
+```
+
+#### Exemple
+
+```js
+getMarginPosition("elys1x5fehwug2vtkyn4vpunwkfn9zxkpxl8jg0lwuu", "255");
+```
+
+### 10. getMarginPositions(pagination)
 
 This function retrieves multiple margin orders by querying a CosmWasm contract on the blockchain.
 
@@ -240,16 +267,16 @@ This function retrieves multiple margin orders by querying a CosmWasm contract o
 #### Usage
 
 ```javascript
-getMarginOrders("pagination");
+getMarginPositions("pagination");
 ```
 
 #### Exemple
 
 ```js
-getMarginOrders({ count_total: true, limit: 10, reverse: false, key: null });
+getMarginPositions({ count_total: true, limit: 10, reverse: false, key: null });
 ```
 
-### 10. SwapEstimationByDenom(amount, denom_in, denom_out)
+### 11. SwapEstimationByDenom(amount, denom_in, denom_out)
 
 This function retrieves an estimation of the value obtained by swapping one asset for another.
 

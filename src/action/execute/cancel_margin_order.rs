@@ -1,7 +1,3 @@
-use cosmwasm_std::{to_json_binary, SubMsg};
-
-use crate::msg::ReplyType;
-
 use super::*;
 
 pub fn cancel_margin_order(
@@ -16,34 +12,28 @@ pub fn cancel_margin_order(
         None => return Err(ContractError::OrderNotFound { order_id }),
     };
 
-    if order.creator == info.sender.to_string() {
+    if order.owner != info.sender.to_string() {
         return Err(ContractError::Unauthorized {
             sender: info.sender,
         });
     }
 
-    let meta_data = Some(to_json_binary(&order_id)?);
+    let orders: Vec<MarginOrder> = orders
+        .iter()
+        .filter(|order| order.order_id != order_id)
+        .cloned()
+        .collect();
 
-    let cancel_msg = ElysMsg::margin_close_position(order.creator, order_id);
-
-    let mut reply_infos = REPLY_INFO.load(deps.storage)?;
-
-    let reply_info_id =
-        if let Some(reply_info) = reply_infos.iter().max_by_key(|reply_info| reply_info.id) {
-            reply_info.id + 1
-        } else {
-            0
-        };
-
-    let reply_info = ReplyInfo {
-        id: reply_info_id,
-        reply_type: ReplyType::MarginClosePosition,
-        data: meta_data,
+    let refund_msg = BankMsg::Send {
+        to_address: order.owner,
+        amount: vec![order.collateral],
     };
 
-    reply_infos.push(reply_info);
+    let resp = Response::new()
+        .add_message(CosmosMsg::Bank(refund_msg))
+        .add_attribute("order_id", order.order_id.to_string());
 
-    let resp = Response::new().add_submessage(SubMsg::reply_always(cancel_msg, reply_info_id));
+    MARGIN_ORDER.save(deps.storage, &orders)?;
 
     Ok(resp)
 }

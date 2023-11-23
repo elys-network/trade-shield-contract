@@ -7,7 +7,8 @@ fn unauthorize() {
     // Create a mock message to instantiate the contract with an empty list of orders.
     let instantiate_msg = InstantiateMockMsg {
         process_order_executor: "owner".to_string(),
-        orders: vec![],
+        spot_orders: vec![],
+        margin_orders: vec![],
     };
 
     let code = ContractWrapper::new(execute, instantiate, query);

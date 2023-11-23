@@ -31,11 +31,12 @@ fn successful_process_5_of_10_orders() {
     let code = ContractWrapper::new(execute, instantiate, query).with_reply(reply);
     let code_id = app.store_code(Box::new(code));
 
-    let orders = create_dummy_orders();
+    let spot_orders = create_dummy_orders();
 
     let instantiate_msg = InstantiateMockMsg {
         process_order_executor: "owner".to_string(),
-        orders,
+        spot_orders,
+        margin_orders: vec![],
     };
     let execute_msg = ExecuteMsg::ProcessSpotOrders {};
 
@@ -178,11 +179,11 @@ fn successful_process_5_of_10_orders() {
 
     let order_ids: Vec<u64> = read_processed_order_id(resp);
 
-    assert!(order_ids.contains(&instantiate_msg.orders[7].order_id));
-    assert!(order_ids.contains(&instantiate_msg.orders[3].order_id));
-    assert!(order_ids.contains(&instantiate_msg.orders[0].order_id));
-    assert!(order_ids.contains(&instantiate_msg.orders[6].order_id));
-    assert!(order_ids.contains(&instantiate_msg.orders[8].order_id));
+    assert!(order_ids.contains(&instantiate_msg.spot_orders[7].order_id));
+    assert!(order_ids.contains(&instantiate_msg.spot_orders[3].order_id));
+    assert!(order_ids.contains(&instantiate_msg.spot_orders[0].order_id));
+    assert!(order_ids.contains(&instantiate_msg.spot_orders[6].order_id));
+    assert!(order_ids.contains(&instantiate_msg.spot_orders[8].order_id));
 
     assert_eq!(
         app.wrap()
@@ -238,25 +239,25 @@ fn successful_process_5_of_10_orders() {
 fn create_dummy_orders() -> Vec<SpotOrder> {
     vec![
         SpotOrder {
-            order_type: SpotOrderType::StopLoss,
+            order_type: OrderType::StopLoss,
             order_id: 0,
             order_target_denom: "usdc".to_string(),
             order_amount: coin(1, "eth"),
             owner_address: Addr::unchecked("user"),
             order_amm_routes: vec![SwapAmountInRoute::new(1, "usdc")],
-            order_price: SpotOrderPrice {
+            order_price: OrderPrice {
                 base_denom: "eth".to_string(),
                 quote_denom: "usdc".to_string(),
                 rate: Decimal::from_atomics(Uint128::new(1700), 0).unwrap(),
             },
         },
         SpotOrder {
-            order_type: SpotOrderType::StopLoss,
+            order_type: OrderType::StopLoss,
             order_id: 1,
             order_amount: coin(2, "btc"),
             owner_address: Addr::unchecked("user"),
             order_amm_routes: vec![SwapAmountInRoute::new(1, "usdc")],
-            order_price: SpotOrderPrice {
+            order_price: OrderPrice {
                 base_denom: "btc".to_string(),
                 quote_denom: "usdc".to_string(),
                 rate: Decimal::from_atomics(Uint128::new(12000), 0).unwrap(),
@@ -264,12 +265,12 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             order_target_denom: "usdc".to_string(),
         },
         SpotOrder {
-            order_type: SpotOrderType::StopLoss,
+            order_type: OrderType::StopLoss,
             order_id: 2,
             order_amount: coin(3, "btc"),
             owner_address: Addr::unchecked("user"),
             order_amm_routes: vec![SwapAmountInRoute::new(1, "usdc")],
-            order_price: SpotOrderPrice {
+            order_price: OrderPrice {
                 base_denom: "btc".to_string(),
                 quote_denom: "usdc".to_string(),
                 rate: Decimal::from_atomics(Uint128::new(10000), 0).unwrap(),
@@ -277,12 +278,12 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             order_target_denom: "usdc".to_string(),
         },
         SpotOrder {
-            order_type: SpotOrderType::StopLoss,
+            order_type: OrderType::StopLoss,
             order_id: 3,
             order_amount: coin(5, "eth"),
             owner_address: Addr::unchecked("user"),
             order_amm_routes: vec![SwapAmountInRoute::new(1, "usdc")],
-            order_price: SpotOrderPrice {
+            order_price: OrderPrice {
                 base_denom: "eth".to_string(),
                 quote_denom: "usdc".to_string(),
                 rate: Decimal::from_atomics(Uint128::new(1800), 0).unwrap(),
@@ -290,12 +291,12 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             order_target_denom: "usdc".to_string(),
         },
         SpotOrder {
-            order_type: SpotOrderType::StopLoss,
+            order_type: OrderType::StopLoss,
             order_id: 4,
             order_amount: coin(1, "eth"),
             owner_address: Addr::unchecked("user"),
             order_amm_routes: vec![SwapAmountInRoute::new(1, "usdc")],
-            order_price: SpotOrderPrice {
+            order_price: OrderPrice {
                 base_denom: "eth".to_string(),
                 quote_denom: "usdc".to_string(),
                 rate: Decimal::from_atomics(Uint128::new(1200), 0).unwrap(),
@@ -303,12 +304,12 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             order_target_denom: "usdc".to_string(),
         },
         SpotOrder {
-            order_type: SpotOrderType::LimitSell,
+            order_type: OrderType::LimitSell,
             order_id: 5,
             order_amount: coin(1, "eth"),
             owner_address: Addr::unchecked("user"),
             order_amm_routes: vec![SwapAmountInRoute::new(1, "usdc")],
-            order_price: SpotOrderPrice {
+            order_price: OrderPrice {
                 base_denom: "eth".to_string(),
                 quote_denom: "usdc".to_string(),
                 rate: Decimal::from_atomics(Uint128::new(2500), 0).unwrap(),
@@ -316,12 +317,12 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             order_target_denom: "usdc".to_string(),
         },
         SpotOrder {
-            order_type: SpotOrderType::LimitSell,
+            order_type: OrderType::LimitSell,
             order_id: 6,
             order_amount: coin(3, "btc"),
             owner_address: Addr::unchecked("user"),
             order_amm_routes: vec![SwapAmountInRoute::new(1, "usdc")],
-            order_price: SpotOrderPrice {
+            order_price: OrderPrice {
                 base_denom: "btc".to_string(),
                 quote_denom: "usdc".to_string(),
                 rate: Decimal::from_atomics(Uint128::new(21000), 0).unwrap(),
@@ -329,12 +330,12 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             order_target_denom: "usdc".to_string(),
         },
         SpotOrder {
-            order_type: SpotOrderType::LimitSell,
+            order_type: OrderType::LimitSell,
             order_id: 7,
             order_amount: coin(2, "btc"),
             owner_address: Addr::unchecked("user"),
             order_amm_routes: vec![SwapAmountInRoute::new(1, "usdc")],
-            order_price: SpotOrderPrice {
+            order_price: OrderPrice {
                 base_denom: "btc".to_string(),
                 quote_denom: "usdc".to_string(),
                 rate: Decimal::from_atomics(Uint128::new(25000), 0).unwrap(),
@@ -342,12 +343,12 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             order_target_denom: "usdc".to_string(),
         },
         SpotOrder {
-            order_type: SpotOrderType::LimitSell,
+            order_type: OrderType::LimitSell,
             order_id: 8,
             order_amount: coin(1, "btc"),
             owner_address: Addr::unchecked("user"),
             order_amm_routes: vec![SwapAmountInRoute::new(1, "usdc")],
-            order_price: SpotOrderPrice {
+            order_price: OrderPrice {
                 base_denom: "btc".to_string(),
                 quote_denom: "usdc".to_string(),
                 rate: Decimal::from_atomics(Uint128::new(30000), 0).unwrap(),
@@ -355,12 +356,12 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             order_target_denom: "usdc".to_string(),
         },
         SpotOrder {
-            order_type: SpotOrderType::LimitSell,
+            order_type: OrderType::LimitSell,
             order_id: 9,
             order_amount: coin(1, "eth"),
             owner_address: Addr::unchecked("user"),
             order_amm_routes: vec![SwapAmountInRoute::new(1, "usdc")],
-            order_price: SpotOrderPrice {
+            order_price: OrderPrice {
                 base_denom: "eth".to_string(),
                 quote_denom: "usdc".to_string(),
                 rate: Decimal::from_atomics(Uint128::new(2100), 0).unwrap(),

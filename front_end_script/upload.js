@@ -180,3 +180,126 @@ async function SwapEstimationByDenom(amount, denom_in, denom_out) {
   );
   console.log(`Result: `, result);
 }
+
+async function createMarginOrder(
+  position_type,
+  collateral,
+  leverage_value,
+  borrow_asset,
+  take_profit_price,
+  order_type,
+  trigger_price
+) {
+  const gasPrice = GasPrice.fromString(GASPRICE);
+  const sender_wallet = await DirectSecp256k1HdWallet.fromMnemonic(
+    sender.mnemonic,
+    { prefix: "elys" }
+  );
+  const sender_client = await SigningCosmWasmClient.connectWithSigner(
+    rpcEndpoint,
+    sender_wallet
+  );
+  const executeFee = calculateFee(300_000, gasPrice);
+  const msg = {
+    create_margin_order: {
+      position_type: position_type,
+      collateral: collateral,
+      leverage_value: leverage_value,
+      borrow_asset: borrow_asset,
+      take_profit_price: take_profit_price,
+      order_type: order_type,
+      trigger_price: trigger_price,
+    },
+  };
+
+  const create_margin_order_res = await sender_client.execute(
+    sender.address,
+    trade_shield_contract_addr,
+    msg,
+    executeFee,
+    "",
+    coins(amount_send, denom_send)
+  );
+  console.log("create_margin_order_res:", create_margin_order_res);
+}
+
+async function cancelMarginOrder(order_id) {
+  const gasPrice = GasPrice.fromString(GASPRICE);
+  const sender_wallet = await DirectSecp256k1HdWallet.fromMnemonic(
+    sender.mnemonic,
+    { prefix: "elys" }
+  );
+  const sender_client = await SigningCosmWasmClient.connectWithSigner(
+    rpcEndpoint,
+    sender_wallet
+  );
+  const executeFee = calculateFee(300_000, gasPrice);
+  const msg = {
+    cancel_margin_order: {
+      order_id: order_id,
+    },
+  };
+
+  const create_margin_order_res = await sender_client.execute(
+    sender.address,
+    trade_shield_contract_addr,
+    msg,
+    executeFee,
+    ""
+  );
+  console.log("create_margin_order_res:", create_margin_order_res);
+}
+
+async function getMarginOrder(order_id) {
+  const sender_wallet = await DirectSecp256k1HdWallet.fromMnemonic(
+    sender.mnemonic,
+    { prefix: "elys" }
+  );
+  const sender_client = await SigningCosmWasmClient.connectWithSigner(
+    rpcEndpoint,
+    sender_wallet
+  );
+  const result = await sender_client.queryContractSmart(
+    trade_shield_contract_addr,
+    {
+      get_margin_order: { order_id: order_id },
+    }
+  );
+  console.log(`Result: `, result);
+}
+
+async function getMarginPosition(id, address) {
+  const sender_wallet = await DirectSecp256k1HdWallet.fromMnemonic(
+    sender.mnemonic,
+    { prefix: "elys" }
+  );
+  const sender_client = await SigningCosmWasmClient.connectWithSigner(
+    rpcEndpoint,
+    sender_wallet
+  );
+  const result = await sender_client.queryContractSmart(
+    trade_shield_contract_addr,
+    {
+      get_margin_position: { id: id, address: address },
+    }
+  );
+  console.log(`Result: `, result);
+}
+
+async function getMarginPositions(pagination) {
+  const sender_wallet = await DirectSecp256k1HdWallet.fromMnemonic(
+    sender.mnemonic,
+    { prefix: "elys" }
+  );
+  const sender_client = await SigningCosmWasmClient.connectWithSigner(
+    rpcEndpoint,
+    sender_wallet
+  );
+  const result = await sender_client.queryContractSmart(
+    trade_shield_contract_addr,
+    {
+      get_margin_positions: { pagination: pagination },
+    }
+  );
+  console.log(`Result: `, result);
+}

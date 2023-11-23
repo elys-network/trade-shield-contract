@@ -3,8 +3,8 @@ use cosmwasm_std::{Addr, Coin};
 
 impl SpotOrder {
     pub fn new(
-        order_type: SpotOrderType,
-        order_price: SpotOrderPrice,
+        order_type: OrderType,
+        order_price: OrderPrice,
         order_amount: Coin,
         owner_address: Addr,
         order_target_denom: String,

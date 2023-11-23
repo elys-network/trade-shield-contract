@@ -15,7 +15,8 @@ fn successful_create_limit_sell_order() {
     // Create a mock message to instantiate the contract with no initial orders.
     let instantiate_msg = InstantiateMockMsg {
         process_order_executor: "owner".to_string(),
-        orders: vec![],
+        spot_orders: vec![],
+        margin_orders: vec![],
     };
 
     // Create a contract wrapper and store its code.
@@ -40,8 +41,8 @@ fn successful_create_limit_sell_order() {
             Addr::unchecked("user"),
             addr.clone(),
             &ExecuteMsg::CreateSpotOrder {
-                order_type: SpotOrderType::LimitSell,
-                order_price: SpotOrderPrice {
+                order_type: OrderType::LimitSell,
+                order_price: OrderPrice {
                     base_denom: "btc".to_string(),
                     quote_denom: "usdc".to_string(),
                     rate: Decimal::from_atomics(Uint128::new(40000), 0).unwrap(), // The desired selling price of 40000 USDC per BTC.

@@ -15,7 +15,8 @@ fn successful_create_limit_buy_order() {
     // Create a mock message to instantiate the contract with no initial orders.
     let instantiate_msg = InstantiateMockMsg {
         process_order_executor: "owner".to_string(),
-        orders: vec![],
+        spot_orders: vec![],
+        margin_orders: vec![],
     };
 
     // Create a contract wrapper and store its code.
@@ -40,8 +41,8 @@ fn successful_create_limit_buy_order() {
             Addr::unchecked("user"),
             addr.clone(),
             &ExecuteMsg::CreateSpotOrder {
-                order_type: SpotOrderType::LimitBuy,
-                order_price: SpotOrderPrice {
+                order_type: OrderType::LimitBuy,
+                order_price: OrderPrice {
                     base_denom: "btc".to_string(),
                     quote_denom: "usdc".to_string(),
                     rate: Decimal::from_atomics(Uint128::new(30000), 0).unwrap(), // The maximum price of 30000 USDC per BTC.

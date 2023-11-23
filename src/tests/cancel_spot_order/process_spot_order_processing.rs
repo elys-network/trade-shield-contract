@@ -22,8 +22,8 @@ fn process_spot_order_processing() {
 
     // Create a "limit buy" order (dummy order) with a specific rate and balance.
     let dummy_order = SpotOrder::new(
-        SpotOrderType::LimitBuy,
-        SpotOrderPrice {
+        OrderType::LimitBuy,
+        OrderPrice {
             base_denom: "ubtc".to_string(),
             quote_denom: "usdc".to_string(),
             rate: Decimal::from_atomics(Uint128::new(38), 0).unwrap(), // Rate at which ubtc will be bought (38 USDC per ubtc).
@@ -38,7 +38,8 @@ fn process_spot_order_processing() {
     // Create a mock message to instantiate the contract with the dummy order.
     let instantiate_msg = InstantiateMockMsg {
         process_order_executor: "owner".to_string(),
-        orders: vec![dummy_order],
+        spot_orders: vec![dummy_order],
+        margin_orders: vec![],
     };
 
     // Create an execution message to process orders.

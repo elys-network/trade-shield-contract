@@ -18,16 +18,17 @@ A spot order is fulfilled when the specified price set by the trader aligns with
 
 - **Stop Loss Functionality**: Enable users to set automated orders that trigger when the asset's price reaches a specified lower limit, minimizing potential losses.
 - **Limit Sell Functionality**: Allow users to set automated orders that execute when the asset's price reaches a specified upper limit, securing profits.
-- **Limit Buy Fuctionality**: Allow user to set automated orders that execute when the limit price is reaches, securing profits.
+- **Limit Buy Fuctionality**: Allow users to set automated orders that execute when the limit price is reaches, securing profits.
 - **Market Buy Fuctionality**: Allow users to set automated orders that will execute at market price
 
 ### Margin Order
 
 A margin order involves trading an asset using funds provided by a third party. It allows users to trade larger positions with a smaller initial capital outlay.
 
-- **Long Position Functionality**: Allows users to borrow an asset to sell it, hoping to repurchase it later at a lower price, thus profiting from the difference.
-- **Short Position Functionality**: Allows users to borrow an asset, selling it with the expectation of buying it back at a lower price to repay the loan and pocket the difference.
-- **Unspecified Position Functionality**: A neutral or unspecified position in a margin order, potentially indicating no active trading or a position that isn't explicitly long or short.
+- **Stop Loss Functionality**: Enable users to set automated orders that trigger when the asset's price reaches a specified lower limit, minimizing potential losses.
+- **Limit Sell Functionality**: Allow users to set automated orders that execute when the asset's price reaches a specified upper limit, securing profits.
+- **Limit Buy Fuctionality**: Allow users to set automated orders that execute when the limit price is reaches, securing profits.
+- **Market Buy Fuctionality**: Allow users to set automated orders that will execute at market price
 
 ## Getting Started
 

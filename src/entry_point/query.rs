@@ -10,10 +10,10 @@ pub fn query(deps: Deps<ElysQuery>, _env: Env, msg: QueryMsg) -> Result<Binary, 
         GetSpotOrder { order_id } => Ok(to_json_binary(&query::get_spot_order(deps, order_id)?)?),
         GetAllPrices {} => Ok(to_json_binary(&query::get_all_prices(deps)?)?),
         AssetInfo { denom } => Ok(to_json_binary(&query::asset_info(deps, denom)?)?),
-        GetMarginOrder { address, id } => Ok(to_json_binary(&query::get_margin_order(
+        GetMarginPosition { address, id } => Ok(to_json_binary(&query::get_margin_position(
             deps, address, id,
         )?)?),
-        GetMarginOrders { pagination } => Ok(to_json_binary(&query::get_margin_orders(
+        GetMarginPositions { pagination } => Ok(to_json_binary(&query::get_margin_positions(
             deps, pagination,
         )?)?),
         GetSpotOrders {
@@ -33,5 +33,6 @@ pub fn query(deps: Deps<ElysQuery>, _env: Env, msg: QueryMsg) -> Result<Binary, 
         } => Ok(to_json_binary(&query::swap_estimation_by_denom(
             deps, amount, denom_in, denom_out,
         )?)?),
+        GetMarginOrder { id } => Ok(to_json_binary(&query::get_margin_order(deps, id)?)?),
     }
 }

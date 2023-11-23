@@ -7,7 +7,8 @@ fn unauthorize() {
     let code_id = app.store_code(Box::new(code));
     let init_msg = InstantiateMockMsg {
         process_order_executor: "owner".to_string(),
-        orders: vec![],
+        spot_orders: vec![],
+        margin_orders: vec![],
     };
     let random_user = Addr::unchecked("random");
     let exec_msg = ExecuteMsg::ProcessSpotOrders {};

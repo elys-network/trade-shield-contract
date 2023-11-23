@@ -14,13 +14,14 @@ fn not_enough_fund() {
     // Create a mock message to instantiate the contract with no initial orders.
     let instantiate_msg = InstantiateMockMsg {
         process_order_executor: "owner".to_string(),
-        orders: vec![],
+        spot_orders: vec![],
+        margin_orders: vec![],
     };
 
     // Define the parameters for creating an order with insufficient funds.
     let create_order_msg = ExecuteMsg::CreateSpotOrder {
-        order_type: SpotOrderType::LimitSell,
-        order_price: SpotOrderPrice {
+        order_type: OrderType::LimitSell,
+        order_price: OrderPrice {
             base_denom: "btc".to_string(),
             quote_denom: "eth".to_string(),
             rate: Decimal::from_atomics(Uint128::new(19), 0).unwrap(),

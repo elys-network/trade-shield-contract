@@ -9,11 +9,11 @@ fn successfully_cancel_orders_type() {
         vec![coin(16, "btc"), coin(5, "eth"), coin(20, "usdt")],
     )];
 
-    let orders = vec![
+    let spot_orders = vec![
         SpotOrder {
-            order_type: SpotOrderType::LimitBuy,
+            order_type: OrderType::LimitBuy,
             order_id: 0,
-            order_price: SpotOrderPrice {
+            order_price: OrderPrice {
                 base_denom: "".to_string(),
                 quote_denom: "".to_string(),
                 rate: Decimal::zero(),
@@ -24,9 +24,9 @@ fn successfully_cancel_orders_type() {
             order_amm_routes: vec![],
         },
         SpotOrder {
-            order_type: SpotOrderType::LimitSell,
+            order_type: OrderType::LimitSell,
             order_id: 1,
-            order_price: SpotOrderPrice {
+            order_price: OrderPrice {
                 base_denom: "".to_string(),
                 quote_denom: "".to_string(),
                 rate: Decimal::zero(),
@@ -37,9 +37,9 @@ fn successfully_cancel_orders_type() {
             order_amm_routes: vec![],
         },
         SpotOrder {
-            order_type: SpotOrderType::StopLoss,
+            order_type: OrderType::StopLoss,
             order_id: 2,
-            order_price: SpotOrderPrice {
+            order_price: OrderPrice {
                 base_denom: "".to_string(),
                 quote_denom: "".to_string(),
                 rate: Decimal::zero(),
@@ -50,9 +50,9 @@ fn successfully_cancel_orders_type() {
             order_amm_routes: vec![],
         },
         SpotOrder {
-            order_type: SpotOrderType::StopLoss,
+            order_type: OrderType::StopLoss,
             order_id: 3,
-            order_price: SpotOrderPrice {
+            order_price: OrderPrice {
                 base_denom: "".to_string(),
                 quote_denom: "".to_string(),
                 rate: Decimal::zero(),
@@ -69,7 +69,8 @@ fn successfully_cancel_orders_type() {
     // Create a mock message to instantiate the contract with an empty list of orders.
     let instantiate_msg = InstantiateMockMsg {
         process_order_executor: "owner".to_string(),
-        orders,
+        spot_orders,
+        margin_orders: vec![],
     };
 
     let code = ContractWrapper::new(execute, instantiate, query);
@@ -121,7 +122,7 @@ fn successfully_cancel_orders_type() {
             &&ExecuteMsg::CancelSpotOrders {
                 order_ids: None,
                 owner_address: "user".to_string(),
-                order_type: Some(SpotOrderType::LimitBuy),
+                order_type: Some(OrderType::LimitBuy),
             },
             &[],
         )

@@ -27,7 +27,8 @@ fn successful_create_stop_loss_order() {
     // Create a mock message to instantiate the contract with no initial orders.
     let instantiate_msg = InstantiateMockMsg {
         process_order_executor: "owner".to_string(),
-        orders: vec![],
+        spot_orders: vec![],
+        margin_orders: vec![],
     };
 
     // Create a contract wrapper and store its code.
@@ -52,9 +53,9 @@ fn successful_create_stop_loss_order() {
             Addr::unchecked("user"),
             addr.clone(),
             &ExecuteMsg::CreateSpotOrder {
-                order_type: SpotOrderType::MarketBuy,
+                order_type: OrderType::MarketBuy,
                 // Empty order price - not utilized in market orders
-                order_price: SpotOrderPrice {
+                order_price: OrderPrice {
                     base_denom: "".to_string(),
                     quote_denom: "".to_string(),
                     rate: Decimal::zero(),

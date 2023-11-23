@@ -67,8 +67,23 @@ mod create_margin_order {
     use super::*;
     mod coin_number;
     mod collateral_amount;
-    mod successful_create_long_order;
-    mod succsessful_create_short_order;
+    mod non_usdc_collateral_for_short;
+    mod successful_create_margin_market_order;
+    mod successful_create_margin_order;
+}
+
+mod cancel_margin_order {
+    use super::*;
+    mod not_found;
+    mod succesful_cancel_an_order;
+    mod unauthorize;
+}
+
+mod get_margin_order {
+    use super::*;
+
+    mod not_found;
+    mod successful_query_message;
 }
 
 pub use mock::instantiate::*;
