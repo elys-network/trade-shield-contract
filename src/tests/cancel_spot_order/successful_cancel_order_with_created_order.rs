@@ -47,7 +47,7 @@ fn successful_cancel_order_with_created_order() {
                 },
                 order_source_denom: "eth".to_owned(),
                 order_target_denom: "btc".to_string(),
-                order_amm_routes: vec![],
+                order_amm_routes: Some(vec![]),
             },
             &coins(45, "eth"),
         )

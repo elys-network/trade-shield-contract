@@ -47,7 +47,7 @@ fn successful_create_limit_sell_order() {
                     quote_denom: "usdc".to_string(),
                     rate: Decimal::from_atomics(Uint128::new(40000), 0).unwrap(), // The desired selling price of 40000 USDC per BTC.
                 },
-                order_amm_routes: vec![],
+                order_amm_routes: Some(vec![]),
                 order_source_denom: "btc".to_string(),
                 order_target_denom: "usdc".to_string(),
             },

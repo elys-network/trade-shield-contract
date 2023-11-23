@@ -21,7 +21,7 @@ fn order_same_denom() {
             quote_denom: "eth".to_string(),
             rate: Decimal::from_atomics(Uint128::new(19), 0).unwrap(),
         },
-        order_amm_routes: vec![],
+        order_amm_routes: Some(vec![]),
         order_source_denom: "eth".to_string(),
         order_target_denom: "eth".to_string(), // Same denomination for base and quote tokens.
     };

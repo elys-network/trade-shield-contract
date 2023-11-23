@@ -60,7 +60,7 @@ fn successful_create_stop_loss_order() {
                     quote_denom: "".to_string(),
                     rate: Decimal::zero(),
                 },
-                order_amm_routes: vec![SwapAmountInRoute::new(1, "usdc")],
+                order_amm_routes: Some(vec![SwapAmountInRoute::new(1, "usdc")]),
                 order_source_denom: "btc".to_string(),
                 order_target_denom: "usdc".to_string(),
             },
