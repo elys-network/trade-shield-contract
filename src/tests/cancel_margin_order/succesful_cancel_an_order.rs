@@ -54,14 +54,13 @@ fn succesful_cancel_an_order() {
     )
     .unwrap();
 
-    let resp = app
-        .execute_contract(
-            Addr::unchecked("user"),
-            addr.clone(),
-            &ExecuteMsg::CancelMarginOrder { order_id: 0 },
-            &[],
-        )
-        .unwrap();
+    app.execute_contract(
+        Addr::unchecked("user"),
+        addr.clone(),
+        &ExecuteMsg::CancelMarginOrder { order_id: 0 },
+        &[],
+    )
+    .unwrap();
 
     assert_eq!(
         app.wrap()

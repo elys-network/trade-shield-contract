@@ -1,6 +1,6 @@
 use super::*;
 use crate::msg::ReplyType;
-use cosmwasm_std::{to_json_binary, Coin, Decimal, Int128, StdError, StdResult, Storage, SubMsg};
+use cosmwasm_std::{Coin, Decimal, Int128, StdError, StdResult, Storage, SubMsg};
 
 pub fn create_margin_order(
     info: MessageInfo,
