@@ -214,7 +214,7 @@ cancelMarginOrder("your_order_id_here");
 cancelMarginOrder("1");
 ```
 
-### 8. getMarginOrder(address,id)
+### 8. getMarginOrder(id)
 
 This function retrieves information about a specific margin order by querying a CosmWasm contract on the blockchain.
 
@@ -232,10 +232,31 @@ getMarginOrder("your_order_id_here");
 #### Exemple
 
 ```js
-getMarginOrder("255");
+getMarginOrder("2");
 ```
 
-### 9. getMarginOrders(pagination)
+### 9. getMarginPosition(address,id)
+
+This function retrieves information about a specific margin order by querying a CosmWasm contract on the blockchain.
+
+#### Parameters
+
+- `address` (String): The address associated with the margin order.
+- `order_id` (String): The unique identifier for the order you want to retrieve.
+
+#### Usage
+
+```javascript
+getMarginPosition("your_address", "your_order_id_here");
+```
+
+#### Exemple
+
+```js
+getMarginPosition("elys1x5fehwug2vtkyn4vpunwkfn9zxkpxl8jg0lwuu", "255");
+```
+
+### 10. getMarginPositions(pagination)
 
 This function retrieves multiple margin orders by querying a CosmWasm contract on the blockchain.
 
@@ -246,16 +267,16 @@ This function retrieves multiple margin orders by querying a CosmWasm contract o
 #### Usage
 
 ```javascript
-getMarginOrders("pagination");
+getMarginPositions("pagination");
 ```
 
 #### Exemple
 
 ```js
-getMarginOrders({ count_total: true, limit: 10, reverse: false, key: null });
+getMarginPositions({ count_total: true, limit: 10, reverse: false, key: null });
 ```
 
-### 10. SwapEstimationByDenom(amount, denom_in, denom_out)
+### 11. SwapEstimationByDenom(amount, denom_in, denom_out)
 
 This function retrieves an estimation of the value obtained by swapping one asset for another.
 
