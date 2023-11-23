@@ -19,6 +19,7 @@ A spot order is fulfilled when the specified price set by the trader aligns with
 - **Stop Loss Functionality**: Enable users to set automated orders that trigger when the asset's price reaches a specified lower limit, minimizing potential losses.
 - **Limit Sell Functionality**: Allow users to set automated orders that execute when the asset's price reaches a specified upper limit, securing profits.
 - **Limit Buy Fuctionality**: Allow user to set automated orders that execute when the limit price is reaches, securing profits.
+- **Market Buy Fuctionality**: Allow users to set automated orders that will execute at market price
 
 ### Margin Order
 

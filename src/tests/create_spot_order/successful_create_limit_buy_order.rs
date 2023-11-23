@@ -46,7 +46,7 @@ fn successful_create_limit_buy_order() {
                     quote_denom: "usdc".to_string(),
                     rate: Decimal::from_atomics(Uint128::new(30000), 0).unwrap(), // The maximum price of 30000 USDC per BTC.
                 },
-                order_amm_routes: vec![],
+                order_amm_routes: Some(vec![]),
                 order_source_denom: "usdc".to_string(),
                 order_target_denom: "btc".to_string(),
             },

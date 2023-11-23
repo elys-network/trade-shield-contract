@@ -9,7 +9,7 @@ pub enum ExecuteMsg {
         order_source_denom: String,
         order_target_denom: String,
         order_price: SpotOrderPrice,
-        order_amm_routes: Vec<SwapAmountInRoute>,
+        order_amm_routes: Option<Vec<SwapAmountInRoute>>,
     },
     CancelSpotOrder {
         order_id: u64,

@@ -9,6 +9,7 @@ pub mod query {
     mod get_margin_orders;
     mod get_spot_order;
     mod get_spot_orders;
+    mod swap_estimation_by_denom;
 
     use super::*;
 
@@ -22,6 +23,7 @@ pub mod query {
     pub use get_margin_orders::get_margin_orders;
     pub use get_spot_order::get_spot_order;
     pub use get_spot_orders::get_spot_orders;
+    pub use swap_estimation_by_denom::swap_estimation_by_denom;
 }
 
 pub mod execute {
