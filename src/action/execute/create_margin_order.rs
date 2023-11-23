@@ -12,6 +12,7 @@ pub fn create_margin_order(
     borrow_asset: String,
     take_profit_price: Decimal,
     order_type: OrderType,
+    trigger_price: OrderPrice,
 ) -> Result<Response<ElysMsg>, ContractError> {
     if info.funds.len() != 1 {
         return Err(ContractError::CoinNumber);
@@ -21,18 +22,13 @@ pub fn create_margin_order(
         return Err(ContractError::CollateralAmount);
     }
 
-    if position == MarginPosition::Short && collateral.denom == "uusdc" {
+    if position == MarginPosition::Short && collateral.denom != "uusdc" {
         return Err(
-            StdError::generic_err("the collateral asset for a short can only be USDC").into(),
+            StdError::generic_err("the collateral asset for a short can only be UUSDC").into(),
         );
     }
 
     cw_utils::must_pay(&info, &info.funds[0].denom)?;
-
-    let borrow_token = Coin {
-        denom: borrow_asset.clone(),
-        amount: (leverage - Decimal::one()) * collateral.amount,
-    };
 
     let mut order_vec = MARGIN_ORDER.load(deps.storage)?;
 
@@ -44,14 +40,17 @@ pub fn create_margin_order(
         &leverage,
         &take_profit_price,
         &order_type,
+        &trigger_price,
         &order_vec,
     );
 
     let resp = create_response(deps.storage, &order, env.contract.address)?;
 
-    order_vec.push(order);
+    if order.order_type != OrderType::MarketBuy {
+        order_vec.push(order);
 
-    MARGIN_ORDER.save(deps.storage, &order_vec)?;
+        MARGIN_ORDER.save(deps.storage, &order_vec)?;
+    }
 
     Ok(resp)
 }
@@ -61,11 +60,8 @@ fn create_response(
     order: &MarginOrder,
     contract_addr: impl Into<String>,
 ) -> StdResult<Response<ElysMsg>> {
-    let mut resp: Response<ElysMsg> =
-        Response::new().add_attribute("order_id", order.order_id.to_string());
-
-    if order.order_type == OrderType::MarketBuy {
-        return Ok(resp);
+    if order.order_type != OrderType::MarketBuy {
+        return Ok(Response::new().add_attribute("order_id", order.order_id.to_string()));
     }
 
     let mut reply_infos = REPLY_INFO.load(storage)?;
@@ -77,8 +73,8 @@ fn create_response(
 
     let reply_info = ReplyInfo {
         id: reply_info_id,
-        reply_type: ReplyType::MarginOpenPosition,
-        data: Some(to_json_binary(&order.order_id)?),
+        reply_type: ReplyType::MarginBrokerOpenMarketBuy,
+        data: None,
     };
 
     reply_infos.push(reply_info);
@@ -97,5 +93,5 @@ fn create_response(
         reply_info_id,
     );
 
-    Ok(resp)
+    Ok(Response::new().add_submessage(submsg))
 }

@@ -134,7 +134,7 @@ getSpotOrders(
 );
 ```
 
-### 6. createMarginOrder(position, collateral, leverage, borrow_asset, take_profit_price)
+### 6. createMarginOrder(position, collateral, leverage, borrow_asset, take_profit_price, order_type, trigger_price)
 
 This function allows you to create a margin order by sending a transaction to the CosmWasm contract.
 
@@ -145,6 +145,8 @@ This function allows you to create a margin order by sending a transaction to th
 - `leverage` (String): The leverage for the margin order.
 - `borrow_asset` (String): The asset to borrow for the margin order.
 - `take_profit_price` (String): The price at which the order will take profit.
+- `order_type` (String): The type of the order (e.g., "stop_loss", "limit_sell", "limit_buy").
+- `trigger_price` ({`base_denom`:String, `quote_denom`:String, `rate` :String}): Price relates two assets exchange rate that the user should define
 
 #### Usage
 
@@ -154,7 +156,9 @@ createMarginOrder(
   "collateral",
   "leverage_value",
   "borrow_asset",
-  "take_profit_price"
+  "take_profit_price",
+  "order_type",
+  "trigger_price"
 );
 ```
 
@@ -167,6 +171,8 @@ createMarginOrder(
   "4.3",
   "ueth",
   "2.2"
+  "limit_buy",
+  { base_denom: "ueth", quote_denom: "uusdc", rate: "2076.5" }
 );
 ```
 

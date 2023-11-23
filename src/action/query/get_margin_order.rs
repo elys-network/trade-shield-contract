@@ -1,19 +1,13 @@
-use cosmwasm_std::StdError;
-
 use super::*;
 
 pub fn get_margin_order(
     deps: Deps<ElysQuery>,
-    address: String,
     id: u64,
-) -> Result<Mtp, ContractError> {
-    let querier = ElysQuerier::new(&deps.querier);
+) -> Result<GetMarginOrderResp, ContractError> {
+    let orders = MARGIN_ORDER.load(deps.storage)?;
 
-    let resp: MarginMtpResponse = querier.mtp(address, id)?;
-
-    if let Some(mtp) = resp.mtp {
-        Ok(mtp)
-    } else {
-        Err(StdError::not_found("margin trading prosition").into())
+    match orders.iter().find(|order| order.order_id == id).cloned() {
+        Some(order) => Ok(GetMarginOrderResp { order }),
+        None => Err(ContractError::OrderNotFound { order_id: id }),
     }
 }

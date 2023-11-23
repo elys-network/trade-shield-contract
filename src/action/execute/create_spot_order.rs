@@ -11,7 +11,7 @@ pub fn create_spot_order(
     order_type: OrderType,
     order_source_denom: String,
     order_target_denom: String,
-    order_price: SpotOrderPrice,
+    order_price: OrderPrice,
     order_amm_routes: Vec<SwapAmountInRoute>,
 ) -> Result<Response<ElysMsg>, ContractError> {
     if info.funds.len() != 1 {
@@ -61,7 +61,7 @@ pub fn create_spot_order(
 fn check_denom_error(
     order_source_denom: &str,
     order_target_denom: &str,
-    order_price: &SpotOrderPrice,
+    order_price: &OrderPrice,
     order_type: &OrderType,
     funds_send_denom: &str,
 ) -> Result<(), ContractError> {
@@ -82,7 +82,7 @@ fn check_denom_error(
         || (order_price.quote_denom != order_source_denom
             && order_price.quote_denom != order_target_denom)
     {
-        return Err(ContractError::SpotOrderPriceDenom);
+        return Err(ContractError::OrderPriceDenom);
     }
 
     Ok(())

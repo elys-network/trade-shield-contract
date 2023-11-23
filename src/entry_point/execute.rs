@@ -44,6 +44,7 @@ pub fn execute(
             borrow_asset,
             take_profit_price,
             order_type,
+            trigger_price,
         } => create_margin_order(
             info,
             deps,
@@ -54,6 +55,7 @@ pub fn execute(
             borrow_asset,
             take_profit_price,
             order_type,
+            trigger_price,
         ),
         CancelMarginOrder { order_id } => cancel_margin_order(info, deps, order_id),
     }

@@ -1,7 +1,3 @@
-use cosmwasm_std::{to_json_binary, SubMsg};
-
-use crate::msg::ReplyType;
-
 use super::*;
 
 pub fn cancel_margin_order(
@@ -16,7 +12,7 @@ pub fn cancel_margin_order(
         None => return Err(ContractError::OrderNotFound { order_id }),
     };
 
-    if order.owner == info.sender.to_string() {
+    if order.owner != info.sender.to_string() {
         return Err(ContractError::Unauthorized {
             sender: info.sender,
         });
@@ -28,14 +24,16 @@ pub fn cancel_margin_order(
         .cloned()
         .collect();
 
-    let return_msg = BankMsg::Send {
+    let refund_msg = BankMsg::Send {
         to_address: order.owner,
         amount: vec![order.collateral],
     };
 
+    let resp = Response::new()
+        .add_message(CosmosMsg::Bank(refund_msg))
+        .add_attribute("order_id", order.order_id.to_string());
+
     MARGIN_ORDER.save(deps.storage, &orders)?;
 
-    Ok(Response::new()
-        .add_message(return_msg)
-        .add_attribute("order_id", order.order_id.to_string()))
+    Ok(resp)
 }

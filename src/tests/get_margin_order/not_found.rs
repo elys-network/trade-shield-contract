@@ -1,3 +1,7 @@
+use cosmwasm_std::StdError;
+
+use crate::msg::query_resp::GetMarginOrderResp;
+
 use super::*;
 
 // This test case verifies that querying a non-existent order in the contract results in an "OrderNotFound" error.
@@ -33,10 +37,10 @@ fn not_found() {
         .unwrap();
 
     // Query the contract for the non-existent order and expect an "OrderNotFound" error.
-    let err: Result<Binary, StdError> = app
+    let err: StdError = app
         .wrap()
-        .query_wasm_smart(&addr, &QueryMsg::GetSpotOrder { order_id: id });
-    let err = err.unwrap_err();
+        .query_wasm_smart::<GetMarginOrderResp>(&addr, &QueryMsg::GetMarginOrder { id })
+        .unwrap_err();
 
     // Define the expected error message.
     let error_reference = StdError::GenericErr {

@@ -1,6 +1,6 @@
 use super::*;
 
-pub fn get_margin_orders(
+pub fn get_margin_positions(
     deps: Deps<ElysQuery>,
     pagination: PageRequest,
 ) -> Result<MarginQueryPositionsResponse, ContractError> {

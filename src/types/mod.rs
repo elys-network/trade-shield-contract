@@ -16,4 +16,4 @@ pub use margin_order::MarginOrder;
 pub use order_type::OrderType;
 pub use reply_info::ReplyInfo;
 pub use spot_order::spot_order::SpotOrder;
-pub use spot_order_price::SpotOrderPrice;
+pub use spot_order_price::OrderPrice;

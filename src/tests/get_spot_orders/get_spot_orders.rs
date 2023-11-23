@@ -4,12 +4,13 @@ use super::*;
 
 #[test]
 fn get_spot_orders() {
-    let orders: Vec<SpotOrder> = create_orders();
+    let spot_orders: Vec<SpotOrder> = create_orders();
     let mut app = ElysApp::new();
 
     let instantiate_msg = InstantiateMockMsg {
         process_order_executor: "owner".to_string(),
-        orders: orders.clone(),
+        spot_orders: spot_orders.clone(),
+        margin_orders: vec![],
     };
 
     let code = ContractWrapper::new(execute, instantiate, query);
@@ -40,7 +41,7 @@ fn get_spot_orders() {
         )
         .unwrap();
 
-    let (first_third, the_rest) = orders.split_at(2);
+    let (first_third, the_rest) = spot_orders.split_at(2);
 
     assert_eq!(&resp.orders, first_third);
 
@@ -84,7 +85,7 @@ fn create_orders() -> Vec<SpotOrder> {
         SpotOrder {
             order_type: OrderType::LimitBuy,
             order_id: 0,
-            order_price: SpotOrderPrice {
+            order_price: OrderPrice {
                 base_denom: "btc".to_owned(),
                 quote_denom: "usdc".to_owned(),
                 rate: Decimal::from_atomics(Uint128::new(25), 1).unwrap(),
@@ -97,7 +98,7 @@ fn create_orders() -> Vec<SpotOrder> {
         SpotOrder {
             order_type: OrderType::LimitSell,
             order_id: 1,
-            order_price: SpotOrderPrice {
+            order_price: OrderPrice {
                 base_denom: "eth".to_owned(),
                 quote_denom: "usdt".to_owned(),
                 rate: Decimal::from_atomics(Uint128::new(10), 1).unwrap(),
@@ -110,7 +111,7 @@ fn create_orders() -> Vec<SpotOrder> {
         SpotOrder {
             order_type: OrderType::StopLoss,
             order_id: 2,
-            order_price: SpotOrderPrice {
+            order_price: OrderPrice {
                 base_denom: "xrp".to_owned(),
                 quote_denom: "usdt".to_owned(),
                 rate: Decimal::from_atomics(Uint128::new(5), 1).unwrap(),
@@ -123,7 +124,7 @@ fn create_orders() -> Vec<SpotOrder> {
         SpotOrder {
             order_type: OrderType::StopLoss,
             order_id: 3,
-            order_price: SpotOrderPrice {
+            order_price: OrderPrice {
                 base_denom: "ltc".to_owned(),
                 quote_denom: "usdc".to_owned(),
                 rate: Decimal::from_atomics(Uint128::new(15), 1).unwrap(),
@@ -136,7 +137,7 @@ fn create_orders() -> Vec<SpotOrder> {
         SpotOrder {
             order_type: OrderType::LimitBuy,
             order_id: 4,
-            order_price: SpotOrderPrice {
+            order_price: OrderPrice {
                 base_denom: "ada".to_owned(),
                 quote_denom: "usdt".to_owned(),
                 rate: Decimal::from_atomics(Uint128::new(3), 1).unwrap(),

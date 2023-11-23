@@ -12,12 +12,13 @@ fn order_price_denom() {
 
     let instantiate_msg = InstantiateMockMsg {
         process_order_executor: "owner".to_string(),
-        orders: vec![],
+        spot_orders: vec![],
+        margin_orders: vec![],
     };
 
     let create_order_msg = ExecuteMsg::CreateSpotOrder {
         order_type: OrderType::LimitSell,
-        order_price: SpotOrderPrice {
+        order_price: OrderPrice {
             base_denom: "eth".to_string(),
             quote_denom: "usdc".to_string(), // Invalid pair.
             rate: Decimal::from_atomics(Uint128::new(1700), 0).unwrap(),
@@ -50,7 +51,7 @@ fn order_price_denom() {
         )
         .unwrap_err();
 
-    let error_msg = ContractError::SpotOrderPriceDenom;
+    let error_msg = ContractError::OrderPriceDenom;
 
     assert_eq!(error_msg, err.downcast().unwrap());
 

@@ -11,12 +11,13 @@ fn order_wrong_fund() {
 
     let instantiate_msg = InstantiateMockMsg {
         process_order_executor: "owner".to_string(),
-        orders: vec![],
+        spot_orders: vec![],
+        margin_orders: vec![],
     };
 
     let create_order_msg = ExecuteMsg::CreateSpotOrder {
         order_type: OrderType::LimitSell,
-        order_price: SpotOrderPrice {
+        order_price: OrderPrice {
             base_denom: "btc".to_string(),
             quote_denom: "eth".to_string(),
             rate: Decimal::from_atomics(Uint128::new(19), 0).unwrap(),

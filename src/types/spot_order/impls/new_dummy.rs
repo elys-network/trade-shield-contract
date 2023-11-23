@@ -9,7 +9,7 @@ impl SpotOrder {
             order_amount: coin(1000, "btc"),
             owner_address: Addr::unchecked("user"),
             order_amm_routes: vec![],
-            order_price: SpotOrderPrice {
+            order_price: OrderPrice {
                 quote_denom: "eth".to_string(),
                 base_denom: "btc".to_string(),
                 rate: Decimal::from_atomics(Uint128::new(5), 0).unwrap(),

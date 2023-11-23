@@ -13,7 +13,8 @@ fn successful_cancel_order_with_created_order() {
     // Create a mock message to instantiate the contract with no initial orders.
     let instantiate_msg = InstantiateMockMsg {
         process_order_executor: "owner".to_string(),
-        orders: vec![],
+        spot_orders: vec![],
+        margin_orders: vec![],
     };
 
     // Create a contract wrapper and store its code.
@@ -39,7 +40,7 @@ fn successful_cancel_order_with_created_order() {
             addr.clone(),
             &ExecuteMsg::CreateSpotOrder {
                 order_type: OrderType::StopLoss,
-                order_price: SpotOrderPrice {
+                order_price: OrderPrice {
                     rate: Decimal::from_atomics(Uint128::new(18), 0).unwrap(),
                     base_denom: "btc".to_string(),
                     quote_denom: "eth".to_string(),

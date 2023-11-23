@@ -1,9 +1,10 @@
-use crate::tests::get_order_id_from_events::get_order_id_from_events;
+use std::str::FromStr;
+
+use cosmwasm_std::StdError;
 
 use super::*;
-
 #[test]
-fn successful_create_long_order() {
+fn non_usdc_collateral_for_short() {
     // Create a wallet for the "user" with an initial balance of 10 BTC.
     let wallet = vec![("user", coins(10, "btc"))];
 
@@ -13,7 +14,8 @@ fn successful_create_long_order() {
     // Create a mock message to instantiate the contract with no initial orders.
     let instantiate_msg = InstantiateMockMsg {
         process_order_executor: "owner".to_string(),
-        orders: vec![],
+        spot_orders: vec![],
+        margin_orders: vec![],
     };
 
     // Create a contract wrapper and store its code.
@@ -32,42 +34,32 @@ fn successful_create_long_order() {
         )
         .unwrap();
 
-    // User "user" creates a "long position" margin order for BTC, specifying the maximum price in BTC.
-    let resp = app
+    // User "user" creates a Short position Margin order with non uusdc as collaterals
+    let err = app
         .execute_contract(
             Addr::unchecked("user"),
             addr.clone(),
             &ExecuteMsg::CreateMarginOrder {
-                position: MarginPosition::Long,
+                position: MarginPosition::Short,
                 collateral: coin(10, "btc"),
                 leverage: Decimal::from_atomics(Uint128::new(215), 2).unwrap(),
                 borrow_asset: "btc".to_string(),
                 take_profit_price: Decimal::from_atomics(Uint128::new(200), 2).unwrap(),
+                order_type: OrderType::LimitSell,
+                trigger_price: OrderPrice {
+                    base_denom: "btc".to_string(),
+                    quote_denom: "usdc".to_string(),
+                    rate: Decimal::from_str("1.7").unwrap(),
+                },
             },
             &coins(10, "btc"), // User's BTC balance.
         )
-        .unwrap();
+        .unwrap_err();
 
-    // Verify that the "user" no longer has any BTC after creating the order.
     assert_eq!(
-        app.wrap()
-            .query_balance("user", "btc")
-            .unwrap()
-            .amount
-            .u128(),
-        0
+        ContractError::StdError(StdError::generic_err(
+            "the collateral asset for a short can only be UUSDC"
+        )),
+        err.downcast().unwrap(),
     );
-
-    // Verify that the contract address sends the BTC to the margin module.
-    assert_eq!(
-        app.wrap()
-            .query_balance(&addr, "btc")
-            .unwrap()
-            .amount
-            .u128(),
-        0
-    );
-
-    // Verify that an order ID is emitted in the contract's events.
-    assert!(get_order_id_from_events(&resp.events).is_some());
 }

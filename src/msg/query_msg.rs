@@ -15,14 +15,16 @@ pub enum QueryMsg {
     GetAllPrices {},
     #[returns(OracleAssetInfoResponse)]
     AssetInfo { denom: String },
-    #[returns(MarginMtpResponse)]
-    GetMarginOrder { address: String, id: u64 },
-    #[returns(MarginQueryPositionsResponse)]
-    GetMarginOrders { pagination: PageRequest },
+    #[returns(GetMarginOrderResp)]
+    GetMarginOrder { id: u64 },
     #[returns(GetSpotOrdersResp)]
     GetSpotOrders {
         pagination: PageRequest,
         order_owner: Option<String>,
         order_type: Option<OrderType>,
     },
+    #[returns(MarginMtpResponse)]
+    GetMarginPosition { id: u64, address: String },
+    #[returns(MarginQueryPositionsResponse)]
+    GetMarginPositions { pagination: PageRequest },
 }

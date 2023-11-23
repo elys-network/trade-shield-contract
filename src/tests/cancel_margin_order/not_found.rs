@@ -1,24 +1,22 @@
 use super::*;
-// This test case simulates a scenario where a user attempts to cancel an order that does not exist.
+
 #[test]
 fn not_found() {
+    // Initialize the ElysApp.
     let mut app = ElysApp::new();
 
-    // Create a mock message to instantiate the contract with an empty list of orders.
+    // Create a mock message to instantiate the contract with no initial orders.
     let instantiate_msg = InstantiateMockMsg {
         process_order_executor: "owner".to_string(),
         spot_orders: vec![],
         margin_orders: vec![],
     };
 
-    // Specify the order ID that the user wants to cancel.
-    let id: u64 = 0;
-
     // Create a contract wrapper and store its code.
-    let code = ContractWrapper::new(execute, instantiate, query);
+    let code = ContractWrapper::new(execute, instantiate, query).with_reply(reply);
     let code_id = app.store_code(Box::new(code));
 
-    // Instantiate the contract and obtain its address.
+    // Instantiate the contract with "owner" as the deployer.
     let addr = app
         .instantiate_contract(
             code_id,
@@ -30,19 +28,17 @@ fn not_found() {
         )
         .unwrap();
 
-    // User attempts to cancel the order.
     let err = app
         .execute_contract(
             Addr::unchecked("user"),
-            addr,
-            &ExecuteMsg::CancelSpotOrder { order_id: id },
+            addr.clone(),
+            &ExecuteMsg::CancelMarginOrder { order_id: 0 },
             &[],
         )
         .unwrap_err();
 
-    // Verify that the user receives an error indicating that the order was not found.
     assert_eq!(
-        ContractError::OrderNotFound { order_id: id },
+        ContractError::OrderNotFound { order_id: 0 },
         err.downcast().unwrap()
     );
 }

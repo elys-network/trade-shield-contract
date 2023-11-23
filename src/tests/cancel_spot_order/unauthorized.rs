@@ -8,11 +8,12 @@ fn unauthorized() {
     // Create a mock message to instantiate the contract with an order owned by the "user"
     let instantiate_msg = InstantiateMockMsg {
         process_order_executor: "owner".to_string(),
-        orders: vec![SpotOrder::new_dummy()],
+        spot_orders: vec![SpotOrder::new_dummy()],
+        margin_orders: vec![],
     };
 
     // Retrieve the order ID from the instantiated message for later use.
-    let id = instantiate_msg.orders[0].order_id.clone().to_owned();
+    let id = instantiate_msg.spot_orders[0].order_id.clone().to_owned();
 
     // Create a contract wrapper and store its code.
     let code = ContractWrapper::new(execute, instantiate, query);
