@@ -21,7 +21,7 @@ elysd tx wasm store artifacts/trade_shield_contract.wasm --from=treasury --keyri
 sleep 2
 instantiate_hash=$(extract_txhash elysd tx wasm instantiate 1 '{"process_order_executor": "elys1ehdv05a4jvxnpqdlhznqxanpzun7uhle5rqyn2"}' --from=treasury --label "Contract" --chain-id=elystestnet-1 --gas=auto --gas-adjustment=1.3 -b=sync --keyring-backend=test --no-admin -y 2> /dev/null)  
 sleep 2
-addr=$(extract_contract_address elysd q tx $instantiate_hash)
+addr=$(extract_contract_address elysd q tx $instantiate_hash) 
 echo "contract addr:"
 echo     "$addr"
-elysd q wasm contract-state smart $addr  '{"get_all_prices": {}}'
+# elysd q wasm contract-state smart $addr  '{"get_all_prices": {}}'

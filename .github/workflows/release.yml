@@ -1,0 +1,25 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Compile with Docker
+        run: |
+          docker run --rm -v "$(pwd)":/code \
+          --mount type=volume,source="$(basename "$(pwd)")_cache",target=/target \
+          --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
+          cosmwasm/rust-optimizer:0.14.0
+          tar -zcvf cosmwasm-artifacts.tar.gz artifacts
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: cosmwasm-artifacts.tar.gz
+          body_path: CHANGELOG.md
