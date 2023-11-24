@@ -36,4 +36,8 @@ pub enum ExecuteMsg {
     CancelMarginOrder {
         order_id: u64,
     },
+
+    CloseMarginPosition {
+        id: u64,
+    },
 }
