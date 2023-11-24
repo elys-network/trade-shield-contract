@@ -20,9 +20,6 @@ pub enum ExecuteMsg {
         owner_address: String,
         order_type: Option<OrderType>,
     },
-
-    ProcessSpotOrders {},
-
     CreateMarginOrder {
         position: MarginPosition,
         collateral: Coin,

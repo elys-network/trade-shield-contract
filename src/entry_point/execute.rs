@@ -36,7 +36,6 @@ pub fn execute(
             order_type,
         } => cancel_spot_orders(info, deps, order_ids, owner_address, order_type),
 
-        ProcessSpotOrders {} => process_spot_orders(deps, info, env),
         CreateMarginOrder {
             position,
             collateral,

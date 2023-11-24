@@ -29,7 +29,8 @@ sleep 2
 elysd tx wasm exec $addr '{"create_spot_order": {"order_amm_routes" : [{"pool_id" : 1 , "token_out_denom" : "uatom"}], "order_price" : {"base_denom": "uusdc","quote_denom" : "uatom" ,"rate" : "1"}, "order_type" : "stop_loss", "order_target_denom" : "uatom", "order_source_denom" : "uusdc"}}' --from treasury --gas-prices 0.25uelys --gas auto --gas-adjustment 1.3 -b sync -y  --keyring-backend=test --chain-id=elystestnet-1 --amount=200uusdc
 sleep 2
 balance_before=$(elysd q bank balances $addr)
-sleep 2
-elysd tx wasm exec $addr '{"process_spot_orders": {}}' --from treasury --gas-prices 0.25uelys --gas auto --gas-adjustment 1.3 -b sync -y  --keyring-backend=test --chain-id=elystestnet-1
-sleep 2
-elysd tx wasm exec $addr '{"process_spot_orders": {}}' --from treasury --gas-prices 0.25uelys --gas auto --gas-adjustment 1.3 -b sync -y  --keyring-backend=test --chain-id=elystestnet-1
+#NOT WORKING ANYMORE
+# sleep 2
+# elysd tx wasm exec $addr '{"process_spot_orders": {}}' --from treasury --gas-prices 0.25uelys --gas auto --gas-adjustment 1.3 -b sync -y  --keyring-backend=test --chain-id=elystestnet-1
+# sleep 2
+# elysd tx wasm exec $addr '{"process_spot_orders": {}}' --from treasury --gas-prices 0.25uelys --gas auto --gas-adjustment 1.3 -b sync -y  --keyring-backend=test --chain-id=elystestnet-1

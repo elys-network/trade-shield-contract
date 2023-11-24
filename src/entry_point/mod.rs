@@ -10,8 +10,10 @@ mod execute;
 mod instantiate;
 mod query;
 mod reply;
+mod sudo;
 
 pub use execute::execute;
 pub use instantiate::instantiate;
 pub use query::query;
 pub use reply::reply;
+pub use sudo::sudo;

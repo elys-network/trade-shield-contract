@@ -9,7 +9,6 @@ fn order_same_denom() {
     let mut app = ElysApp::new_with_wallets(wallets);
 
     let instantiate_msg = InstantiateMockMsg {
-        process_order_executor: "owner".to_string(),
         spot_orders: vec![],
         margin_orders: vec![],
     };

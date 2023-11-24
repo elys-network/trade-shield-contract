@@ -28,17 +28,19 @@ fn successful_process_5_of_10_orders() {
         Price::new("eth", Decimal::from_atomics(Uint128::new(1700), 0).unwrap()),
     ];
 
-    let code = ContractWrapper::new(execute, instantiate, query).with_reply(reply);
+    let code = ContractWrapper::new(execute, instantiate, query)
+        .with_reply(reply)
+        .with_sudo(sudo);
     let code_id = app.store_code(Box::new(code));
 
     let spot_orders = create_dummy_orders();
 
     let instantiate_msg = InstantiateMockMsg {
-        process_order_executor: "owner".to_string(),
         spot_orders,
         margin_orders: vec![],
     };
-    let execute_msg = ExecuteMsg::ProcessSpotOrders {};
+
+    let sudo_msg = SudoMsg::ClockEndBlock {};
 
     let addr = app
         .instantiate_contract(
@@ -54,9 +56,8 @@ fn successful_process_5_of_10_orders() {
     app.init_modules(|router, _, store| router.custom.set_prices(store, &prices_at_t0))
         .unwrap();
 
-    let resp = app
-        .execute_contract(Addr::unchecked("owner"), addr.clone(), &execute_msg, &[])
-        .unwrap();
+    // Execute the order processing.
+    let resp = app.wasm_sudo(addr.clone(), &sudo_msg).unwrap();
 
     assert_eq!(
         app.wrap()
@@ -115,9 +116,8 @@ fn successful_process_5_of_10_orders() {
     app.init_modules(|router, _, store| router.custom.set_prices(store, &prices_at_t1))
         .unwrap();
 
-    let resp = app
-        .execute_contract(Addr::unchecked("owner"), addr.clone(), &execute_msg, &[])
-        .unwrap();
+    // Execute the order processing.
+    let resp = app.wasm_sudo(addr.clone(), &sudo_msg).unwrap();
 
     assert_eq!(
         app.wrap()
@@ -173,9 +173,8 @@ fn successful_process_5_of_10_orders() {
 
     assert!(order_ids.is_empty());
 
-    let resp = app
-        .execute_contract(Addr::unchecked("owner"), addr.clone(), &execute_msg, &[])
-        .unwrap();
+    // Execute the order processing.
+    let resp = app.wasm_sudo(addr.clone(), &sudo_msg).unwrap();
 
     let order_ids: Vec<u64> = read_processed_order_id(resp);
 

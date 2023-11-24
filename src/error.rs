@@ -24,8 +24,6 @@ pub enum ContractError {
     OrderPriceDenom,
     #[error("fund not used by the order")]
     SpotOrderWrongFund,
-    #[error("{sender} is no autorized to use the process_orders endpoint")]
-    ProcessSpotOrderAuth { sender: Addr },
     #[error("{order_id} is prossessing")]
     ProcessSpotOrderProcessing { order_id: u64 },
     #[error("not the same amount send as collateral")]
