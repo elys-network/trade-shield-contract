@@ -85,6 +85,11 @@ mod get_margin_order {
     mod successful_query_message;
 }
 
+mod close_margin_position {
+    use super::*;
+    mod closing_a_margin_position;
+}
+
 pub use mock::instantiate::*;
 mod mock {
     pub mod instantiate;

@@ -29,7 +29,6 @@ pub fn execute(
             order_amm_routes,
         ),
         CancelSpotOrder { order_id } => cancel_spot_order(info, deps, order_id),
-
         CancelSpotOrders {
             order_ids,
             owner_address,
@@ -57,5 +56,6 @@ pub fn execute(
             trigger_price,
         ),
         CancelMarginOrder { order_id } => cancel_margin_order(info, deps, order_id),
+        CloseMarginPosition { id } => close_margin_position(info, env, id),
     }
 }
