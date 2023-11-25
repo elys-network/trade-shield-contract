@@ -26,13 +26,14 @@ fn successful_create_stop_loss_order() {
 
     // Create a mock message to instantiate the contract with no initial orders.
     let instantiate_msg = InstantiateMockMsg {
-        process_order_executor: "owner".to_string(),
         spot_orders: vec![],
         margin_orders: vec![],
     };
 
     // Create a contract wrapper and store its code.
-    let code = ContractWrapper::new(execute, instantiate, query).with_reply(reply);
+    let code = ContractWrapper::new(execute, instantiate, query)
+        .with_reply(reply)
+        .with_sudo(sudo);
     let code_id = app.store_code(Box::new(code));
 
     // Instantiate the contract with "owner" as the deployer.
@@ -101,14 +102,8 @@ fn successful_create_stop_loss_order() {
     // Verify that an order ID is emitted in the contract's events.
     assert!(get_order_id_from_events(&resp.events).is_some());
 
-    app.execute_contract(
-        Addr::unchecked("owner"),
-        addr.clone(),
-        &ExecuteMsg::ProcessSpotOrders {},
-        &[],
-    )
-    .unwrap();
-
+    app.wasm_sudo(addr.clone(), &SudoMsg::ClockEndBlock {})
+        .unwrap();
     // Verify that the user got his swaped token
     assert_eq!(
         app.wrap()

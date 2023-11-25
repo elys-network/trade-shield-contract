@@ -16,8 +16,9 @@ fn process_spot_order_processing() {
     ];
 
     // Create a contract wrapper and store its code.
-    let code =
-        ContractWrapper::new(execute, instantiate, query).with_reply(crate::entry_point::reply);
+    let code = ContractWrapper::new(execute, instantiate, query)
+        .with_reply(reply)
+        .with_sudo(sudo);
     let code_id = app.store_code(Box::new(code));
 
     // Create a "limit buy" order (dummy order) with a specific rate and balance.
@@ -37,13 +38,12 @@ fn process_spot_order_processing() {
 
     // Create a mock message to instantiate the contract with the dummy order.
     let instantiate_msg = InstantiateMockMsg {
-        process_order_executor: "owner".to_string(),
         spot_orders: vec![dummy_order],
         margin_orders: vec![],
     };
 
-    // Create an execution message to process orders.
-    let execute_msg = ExecuteMsg::ProcessSpotOrders {};
+    // Create an sudo message to process orders.
+    let sudo_msg = SudoMsg::ClockEndBlock {};
 
     // Instantiate the contract with "owner" as the deployer and deposit 120 USDC.
     let addr = app
@@ -62,9 +62,7 @@ fn process_spot_order_processing() {
         .unwrap();
 
     // Execute the order processing.
-    let resp = app
-        .execute_contract(Addr::unchecked("owner"), addr.clone(), &execute_msg, &[])
-        .unwrap();
+    let resp = app.wasm_sudo(addr.clone(), &sudo_msg).unwrap();
 
     // Verify the swap occurred.
 

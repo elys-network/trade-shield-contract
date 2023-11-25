@@ -35,7 +35,6 @@ pub mod execute {
     mod close_margin_position;
     mod create_margin_order;
     mod create_spot_order;
-    mod process_spot_orders;
     use super::*;
 
     pub use cancel_margin_order::cancel_margin_order;
@@ -44,7 +43,6 @@ pub mod execute {
     pub use close_margin_position::close_margin_position;
     pub use create_margin_order::create_margin_order;
     pub use create_spot_order::create_spot_order;
-    pub use process_spot_orders::process_spot_orders;
 }
 
 pub mod reply {
@@ -58,4 +56,11 @@ pub mod reply {
     pub use close_margin_position::reply_to_close_margin_order;
     pub use create_margin_order::reply_to_create_margin_order;
     pub use spot_order::reply_to_spot_order;
+}
+
+pub mod sudo {
+    use super::*;
+
+    mod process_spot_orders;
+    pub use process_spot_orders::process_spot_orders;
 }

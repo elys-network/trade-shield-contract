@@ -1,5 +1,5 @@
 use crate::{
-    entry_point::{execute, query, reply},
+    entry_point::{execute, query, reply, sudo},
     msg::*,
     types::*,
     ContractError,
@@ -60,7 +60,6 @@ mod process_spot_order {
     mod successful_process_5_of_10_orders;
     mod successful_process_limit_sell_order;
     mod successful_process_stop_loss_order;
-    mod unauthorize;
 }
 
 mod create_margin_order {

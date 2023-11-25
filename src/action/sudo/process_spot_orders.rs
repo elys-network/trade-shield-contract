@@ -2,22 +2,12 @@ use crate::{msg::ReplyType, states::PROCESSED_SPOT_ORDER};
 use cosmwasm_std::{to_json_binary, Decimal, Int128, StdResult, Storage, SubMsg};
 use std::ops::Div;
 
-use crate::states::PROCESS_SPOT_ORDER_EXECUTOR;
-
 use super::*;
 
 pub fn process_spot_orders(
     deps: DepsMut<ElysQuery>,
-    info: MessageInfo,
     env: Env,
 ) -> Result<Response<ElysMsg>, ContractError> {
-    let process_order_executor = PROCESS_SPOT_ORDER_EXECUTOR.load(deps.storage)?;
-
-    if process_order_executor != info.sender {
-        return Err(ContractError::ProcessSpotOrderAuth {
-            sender: info.sender,
-        });
-    }
     let mut orders = SPOT_ORDER.load(deps.storage)?;
     let mut reply_info = REPLY_INFO.load(deps.storage)?;
 

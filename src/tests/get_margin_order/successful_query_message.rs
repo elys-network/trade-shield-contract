@@ -25,7 +25,6 @@ fn successful_query_message() {
 
     // Create a mock message to instantiate the contract with an initial dummy order.
     let instantiate_msg = InstantiateMockMsg {
-        process_order_executor: "owner".to_string(),
         spot_orders: vec![],
         margin_orders: vec![order.clone()],
     };

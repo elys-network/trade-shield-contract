@@ -8,7 +8,6 @@ fn get_spot_orders() {
     let mut app = ElysApp::new();
 
     let instantiate_msg = InstantiateMockMsg {
-        process_order_executor: "owner".to_string(),
         spot_orders: spot_orders.clone(),
         margin_orders: vec![],
     };
