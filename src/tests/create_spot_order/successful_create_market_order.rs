@@ -1,4 +1,6 @@
-use crate::tests::get_order_id_from_events::get_order_id_from_events;
+use crate::{
+    msg::query_resp::GetSpotOrdersResp, tests::get_order_id_from_events::get_order_id_from_events,
+};
 
 use super::*;
 
@@ -117,4 +119,17 @@ fn successful_create_stop_loss_order() {
             .u128(),
         0
     );
+
+    let res: GetSpotOrdersResp = app
+        .wrap()
+        .query_wasm_smart(
+            addr.clone(),
+            &QueryMsg::GetSpotOrders {
+                pagination: PageRequest::new(5),
+                order_owner: None,
+                order_type: None,
+            },
+        )
+        .unwrap();
+    assert!(res.orders.is_empty());
 }

@@ -14,6 +14,8 @@ pub fn process_spot_orders(
 
     let (send_msg, processed_order_ids) = send_token(&mut orders, deps.storage)?;
 
+    SPOT_ORDER.save(deps.storage, &orders)?;
+
     let querier = ElysQuerier::new(&deps.querier);
     let mut submsgs: Vec<SubMsg<ElysMsg>> = vec![];
 
