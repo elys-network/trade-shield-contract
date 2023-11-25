@@ -1,5 +1,5 @@
-use cosmwasm_std::{to_json_binary, Int128, Decimal, StdResult, Storage, SubMsg};
-use elys_bindings::query_resp::InRouteByDenomResponse;
+use cosmwasm_std::{to_json_binary, Decimal, Int128, StdResult, Storage, SubMsg};
+use elys_bindings::query_resp::AmmSwapEstimationByDenomResponse;
 
 use crate::msg::ReplyType;
 
@@ -13,11 +13,12 @@ pub fn create_spot_order(
     order_source_denom: String,
     order_target_denom: String,
     order_price: OrderPrice,
-    order_amm_routes: Option<Vec<SwapAmountInRoute>>,
 ) -> Result<Response<ElysMsg>, ContractError> {
     if info.funds.len() != 1 {
         return Err(ContractError::CoinNumber);
     };
+
+    let querier = ElysQuerier::new(&deps.querier);
 
     check_denom_error(
         &order_source_denom,
@@ -27,19 +28,13 @@ pub fn create_spot_order(
         &info.funds[0].denom,
     )?;
 
+    let AmmSwapEstimationByDenomResponse { in_route, .. } = querier.amm_swap_estimation_by_denom(
+        &info.funds[0],
+        &order_source_denom,
+        &order_target_denom,
+    )?;
+
     let mut order_vec = SPOT_ORDER.load(deps.storage)?;
-
-    let order_amm_routes = match order_amm_routes {
-        Some(routes) => routes,
-        None => {
-            let querier = ElysQuerier::new(&deps.querier);
-
-            let InRouteByDenomResponse { in_routes } =
-                querier.in_route_by_denom(&order_source_denom, &order_target_denom)?;
-
-            in_routes
-        }
-    };
 
     let new_order: SpotOrder = SpotOrder::new(
         order_type.clone(),
@@ -47,7 +42,7 @@ pub fn create_spot_order(
         info.funds[0].clone(),
         info.sender.clone(),
         order_target_denom,
-        order_amm_routes,
+        in_route.unwrap(),
         &order_vec,
     );
 

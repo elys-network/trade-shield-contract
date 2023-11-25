@@ -43,7 +43,6 @@ fn coin_number() {
                 },
                 order_source_denom: "eth".to_owned(),
                 order_target_denom: "btc".to_string(),
-                order_amm_routes: Some(vec![]),
             },
             &[],
         )

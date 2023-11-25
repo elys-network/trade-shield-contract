@@ -11,6 +11,7 @@ mod get_order_id_from_events;
 mod read_processed_order_id;
 use cw_multi_test::Executor;
 use elys_bindings_test::*;
+use std::str::FromStr;
 
 mod create_spot_order {
     use super::*;

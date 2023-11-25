@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 use super::*;
 use get_order_id_from_events::get_order_id_from_events;
 
@@ -9,6 +11,12 @@ fn successful_cancel_order_with_created_order() {
 
     // Initialize the ElysApp instance with the specified wallets.
     let mut app = ElysApp::new_with_wallets(wallets);
+
+    let prices = vec![
+        Price::new("btc", Decimal::from_str("30000.0").unwrap()),
+        Price::new("eth", Decimal::from_str("2040.0").unwrap()),
+    ];
+    app.init_modules(|router, _, store| router.custom.set_prices(store, &prices).unwrap());
 
     // Create a mock message to instantiate the contract with no initial orders.
     let instantiate_msg = InstantiateMockMsg {
@@ -46,7 +54,6 @@ fn successful_cancel_order_with_created_order() {
                 },
                 order_source_denom: "eth".to_owned(),
                 order_target_denom: "btc".to_string(),
-                order_amm_routes: Some(vec![]),
             },
             &coins(45, "eth"),
         )

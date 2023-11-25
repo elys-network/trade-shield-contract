@@ -1,4 +1,4 @@
-use crate::types::{MarginPosition, OrderPrice, OrderType, SwapAmountInRoute};
+use crate::types::{MarginPosition, OrderPrice, OrderType};
 use cosmwasm_schema::cw_serde;
 use cosmwasm_std::{Coin, Decimal};
 
@@ -9,7 +9,6 @@ pub enum ExecuteMsg {
         order_source_denom: String,
         order_target_denom: String,
         order_price: OrderPrice,
-        order_amm_routes: Option<Vec<SwapAmountInRoute>>,
     },
     CancelSpotOrder {
         order_id: u64,

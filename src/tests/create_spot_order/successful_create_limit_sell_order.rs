@@ -12,6 +12,12 @@ fn successful_create_limit_sell_order() {
     // Initialize the ElysApp instance with the specified wallet.
     let mut app = ElysApp::new_with_wallets(wallet);
 
+    let prices = vec![
+        Price::new("btc", Decimal::from_str("30000.0").unwrap()),
+        Price::new("usdc", Decimal::from_str("1.0").unwrap()),
+    ];
+    app.init_modules(|router, _, store| router.custom.set_prices(store, &prices).unwrap());
+
     // Create a mock message to instantiate the contract with no initial orders.
     let instantiate_msg = InstantiateMockMsg {
         spot_orders: vec![],
@@ -46,7 +52,7 @@ fn successful_create_limit_sell_order() {
                     quote_denom: "usdc".to_string(),
                     rate: Decimal::from_atomics(Uint128::new(40000), 0).unwrap(), // The desired selling price of 40000 USDC per BTC.
                 },
-                order_amm_routes: Some(vec![]),
+
                 order_source_denom: "btc".to_string(),
                 order_target_denom: "usdc".to_string(),
             },
