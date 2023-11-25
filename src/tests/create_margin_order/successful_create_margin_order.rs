@@ -46,11 +46,11 @@ fn successful_create_margin_order() {
                 borrow_asset: "btc".to_string(),
                 take_profit_price: Decimal::from_atomics(Uint128::new(200), 2).unwrap(),
                 order_type: OrderType::LimitSell,
-                trigger_price: OrderPrice {
+                trigger_price: Some(OrderPrice {
                     base_denom: "btc".to_string(),
                     quote_denom: "usdc".to_string(),
                     rate: Decimal::from_str("1.7").unwrap(),
-                },
+                }),
             },
             &coins(10, "btc"), // User's BTC balance.
         )

@@ -10,7 +10,7 @@ This function allows you to create a new spot order by sending a transaction to 
 
 #### Parameters
 
-- `order_price` ({`base_denom`:String, `quote_denom`:String, `rate` :String}): Price relates two assets exchange rate that the user should define
+- `order_price` ({`base_denom`:String, `quote_denom`:String, `rate` :String} or null): Price relates two assets exchange rate that the user should define, can only be null if the order type is "market_type"
 - `order_type` (String): The type of the order (e.g., "stop_loss", "limit_sell", "limit_buy", "market_buy").
 - `amount_send` (String): The amount of cryptocurrency to send in the order.
 - `denom_send` (String): The denomination of the cryptocurrency to send.
@@ -161,7 +161,7 @@ This function allows you to create a margin order by sending a transaction to th
 - `borrow_asset` (String): The asset to borrow for the margin order.
 - `take_profit_price` (String): The price at which the order will take profit.
 - `order_type` (String): The type of the order (e.g., "stop_loss", "limit_sell", "limit_buy").
-- `trigger_price` ({`base_denom`:String, `quote_denom`:String, `rate` :String}): Price relates two assets exchange rate that the user should define
+- `trigger_price` ({`base_denom`:String, `quote_denom`:String, `rate` :String} or null): Price relates two assets exchange rate that the user should define, can only be null if the order type is "market_type"
 
 #### Usage
 

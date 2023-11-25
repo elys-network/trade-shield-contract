@@ -1,4 +1,4 @@
-use cosmwasm_std::{to_json_binary, Decimal, Int128, StdResult, Storage, SubMsg};
+use cosmwasm_std::{to_json_binary, Decimal, Int128, StdError, StdResult, Storage, SubMsg};
 use elys_bindings::query_resp::AmmSwapEstimationByDenomResponse;
 
 use crate::msg::ReplyType;
@@ -12,13 +12,17 @@ pub fn create_spot_order(
     order_type: OrderType,
     order_source_denom: String,
     order_target_denom: String,
-    order_price: OrderPrice,
+    order_price: Option<OrderPrice>,
 ) -> Result<Response<ElysMsg>, ContractError> {
     if info.funds.len() != 1 {
         return Err(ContractError::CoinNumber);
     };
 
     let querier = ElysQuerier::new(&deps.querier);
+
+    if order_price.is_none() && order_type != OrderType::MarketBuy {
+        return Err(StdError::not_found("order price").into());
+    }
 
     check_denom_error(
         &order_source_denom,
@@ -69,7 +73,7 @@ pub fn create_spot_order(
 fn check_denom_error(
     order_source_denom: &str,
     order_target_denom: &str,
-    order_price: &OrderPrice,
+    order_price: &Option<OrderPrice>,
     order_type: &OrderType,
     funds_send_denom: &str,
 ) -> Result<(), ContractError> {
@@ -84,6 +88,8 @@ fn check_denom_error(
     if order_type == &OrderType::MarketBuy {
         return Ok(());
     }
+
+    let order_price = order_price.clone().unwrap();
 
     if (order_price.base_denom != order_source_denom
         && order_price.base_denom != order_target_denom)
@@ -129,7 +135,7 @@ fn create_resp(
 
     reply_infos.push(ReplyInfo {
         id: info_id,
-        reply_type: ReplyType::SpotOrder,
+        reply_type: ReplyType::SpotOrderMarketBuy,
         data: Some(to_json_binary(&new_order.order_id)?),
     });
 

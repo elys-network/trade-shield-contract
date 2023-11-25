@@ -34,11 +34,11 @@ fn successful_process_limit_buy_order() {
     // Create a "limit buy" order (dummy order) with a specific rate and balance.
     let dummy_order = SpotOrder::new(
         OrderType::LimitBuy,
-        OrderPrice {
+        Some(OrderPrice {
             base_denom: "ubtc".to_string(),
             quote_denom: "usdc".to_string(),
             rate: Decimal::from_atomics(Uint128::new(38), 0).unwrap(), // Rate at which ubtc will be bought (38 USDC per ubtc).
-        },
+        }),
         coin(120, "usdc"), // 120 USDC to be used for buying.
         Addr::unchecked("user"),
         "ubtc".to_string(),

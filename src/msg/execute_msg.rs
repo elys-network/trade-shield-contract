@@ -8,7 +8,7 @@ pub enum ExecuteMsg {
         order_type: OrderType,
         order_source_denom: String,
         order_target_denom: String,
-        order_price: OrderPrice,
+        order_price: Option<OrderPrice>,
     },
     CancelSpotOrder {
         order_id: u64,
@@ -26,7 +26,7 @@ pub enum ExecuteMsg {
         borrow_asset: String,
         take_profit_price: Decimal,
         order_type: OrderType,
-        trigger_price: OrderPrice,
+        trigger_price: Option<OrderPrice>,
     },
 
     CancelMarginOrder {

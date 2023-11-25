@@ -52,10 +52,12 @@ pub mod reply {
     mod close_margin_position;
     mod create_margin_order;
     mod spot_order;
+    mod spot_order_market;
 
     pub use close_margin_position::reply_to_close_margin_order;
     pub use create_margin_order::reply_to_create_margin_order;
     pub use spot_order::reply_to_spot_order;
+    pub use spot_order_market::reply_to_spot_order_market;
 }
 
 pub mod sudo {

@@ -15,11 +15,11 @@ fn order_same_denom() {
 
     let create_order_msg = ExecuteMsg::CreateSpotOrder {
         order_type: OrderType::LimitSell,
-        order_price: OrderPrice {
+        order_price: Some(OrderPrice {
             base_denom: "btc".to_string(),
             quote_denom: "eth".to_string(),
             rate: Decimal::from_atomics(Uint128::new(19), 0).unwrap(),
-        },
+        }),
 
         order_source_denom: "eth".to_string(),
         order_target_denom: "eth".to_string(), // Same denomination for base and quote tokens.

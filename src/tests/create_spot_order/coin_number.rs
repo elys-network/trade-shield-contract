@@ -36,11 +36,11 @@ fn coin_number() {
             addr,
             &ExecuteMsg::CreateSpotOrder {
                 order_type: OrderType::StopLoss,
-                order_price: OrderPrice {
+                order_price: Some(OrderPrice {
                     rate: Decimal::from_atomics(Uint128::new(17), 0).unwrap(),
                     base_denom: "btc".to_string(),
                     quote_denom: "eth".to_string(),
-                },
+                }),
                 order_source_denom: "eth".to_owned(),
                 order_target_denom: "btc".to_string(),
             },

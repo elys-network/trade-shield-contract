@@ -17,11 +17,11 @@ fn order_price_denom() {
 
     let create_order_msg = ExecuteMsg::CreateSpotOrder {
         order_type: OrderType::LimitSell,
-        order_price: OrderPrice {
+        order_price: Some(OrderPrice {
             base_denom: "eth".to_string(),
             quote_denom: "usdc".to_string(), // Invalid pair.
             rate: Decimal::from_atomics(Uint128::new(1700), 0).unwrap(),
-        },
+        }),
 
         order_source_denom: "eth".to_string(),
         order_target_denom: "btc".to_string(),

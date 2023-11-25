@@ -47,11 +47,11 @@ fn successful_create_limit_sell_order() {
             addr.clone(),
             &ExecuteMsg::CreateSpotOrder {
                 order_type: OrderType::LimitSell,
-                order_price: OrderPrice {
+                order_price: Some(OrderPrice {
                     base_denom: "btc".to_string(),
                     quote_denom: "usdc".to_string(),
                     rate: Decimal::from_atomics(Uint128::new(40000), 0).unwrap(), // The desired selling price of 40000 USDC per BTC.
-                },
+                }),
 
                 order_source_denom: "btc".to_string(),
                 order_target_denom: "usdc".to_string(),

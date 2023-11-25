@@ -17,11 +17,11 @@ fn succesful_cancel_an_order() {
             &Decimal::one(),
             &Decimal::one(),
             &OrderType::LimitBuy,
-            &OrderPrice {
+            &Some(OrderPrice {
                 base_denom: "btc".to_string(),
                 quote_denom: "usdc".to_string(),
                 rate: Decimal::one(),
-            },
+            }),
             &vec![],
         )],
     };
