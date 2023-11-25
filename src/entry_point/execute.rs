@@ -17,7 +17,6 @@ pub fn execute(
             order_source_denom,
             order_target_denom,
             order_price,
-            order_amm_routes,
         } => create_spot_order(
             env,
             deps,
@@ -26,7 +25,6 @@ pub fn execute(
             order_source_denom,
             order_target_denom,
             order_price,
-            order_amm_routes,
         ),
         CancelSpotOrder { order_id } => cancel_spot_order(info, deps, order_id),
         CancelSpotOrders {

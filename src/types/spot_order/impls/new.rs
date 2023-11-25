@@ -8,7 +8,6 @@ impl SpotOrder {
         order_amount: Coin,
         owner_address: Addr,
         order_target_denom: String,
-        order_amm_routes: Vec<SwapAmountInRoute>,
         order_vec: &Vec<SpotOrder>,
     ) -> SpotOrder {
         let order_id: u64 = match order_vec.iter().max_by_key(|s| s.order_id) {
@@ -22,7 +21,6 @@ impl SpotOrder {
             order_amount,
             owner_address,
             order_id,
-            order_amm_routes,
             order_target_denom,
         }
     }

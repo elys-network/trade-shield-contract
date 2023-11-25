@@ -1,5 +1,6 @@
 use crate::{msg::ReplyType, states::PROCESSED_SPOT_ORDER};
 use cosmwasm_std::{to_json_binary, Decimal, Int128, StdResult, Storage, SubMsg};
+use elys_bindings::query_resp::AmmSwapEstimationByDenomResponse;
 use std::ops::Div;
 
 use super::*;
@@ -17,12 +18,19 @@ pub fn process_spot_orders(
     let mut submsgs: Vec<SubMsg<ElysMsg>> = vec![];
 
     for order in &orders {
-        if check_order(order, &querier) {
+        let amm_swap_estimation = querier.amm_swap_estimation_by_denom(
+            &order.order_amount,
+            &order.order_amount.denom,
+            &order.order_target_denom,
+        )?;
+
+        if check_order(order, &amm_swap_estimation) {
             process_order(
                 order,
                 &mut submsgs,
                 env.contract.address.as_str(),
                 &mut reply_info,
+                amm_swap_estimation,
             )?;
         }
     }
@@ -59,16 +67,10 @@ fn send_token(
     Ok((bank_msgs, processed_order_ids))
 }
 
-fn check_order(order: &SpotOrder, querier: &ElysQuerier) -> bool {
+fn check_order(order: &SpotOrder, amm_swap_estimation: &AmmSwapEstimationByDenomResponse) -> bool {
     if order.order_type == OrderType::MarketBuy {
         return true;
     }
-
-    let amm_swap_estimation =
-        match querier.amm_swap_estimation(&order.order_amm_routes, &order.order_amount) {
-            Ok(res) => res,
-            Err(_) => return false,
-        };
 
     let order_spot_price = match order.order_amount.denom == order.order_price.base_denom {
         true => order.order_price.rate,
@@ -78,11 +80,11 @@ fn check_order(order: &SpotOrder, querier: &ElysQuerier) -> bool {
     let order_token_out = order_spot_price * order.order_amount.amount;
 
     match order.order_type {
-        OrderType::LimitBuy => order_token_out <= amm_swap_estimation.token_out.amount,
+        OrderType::LimitBuy => order_token_out <= amm_swap_estimation.amount.amount,
 
-        OrderType::LimitSell => order_token_out <= amm_swap_estimation.token_out.amount,
+        OrderType::LimitSell => order_token_out <= amm_swap_estimation.amount.amount,
 
-        OrderType::StopLoss => order_token_out >= amm_swap_estimation.token_out.amount,
+        OrderType::StopLoss => order_token_out >= amm_swap_estimation.amount.amount,
         _ => false,
     }
 }
@@ -92,6 +94,7 @@ fn process_order(
     submsgs: &mut Vec<SubMsg<ElysMsg>>,
     sender: &str,
     reply_infos: &mut Vec<ReplyInfo>,
+    amm_swap_estimation: AmmSwapEstimationByDenomResponse,
 ) -> StdResult<()> {
     let token_out_min_amount: Int128 = match order.order_type {
         OrderType::LimitBuy => calculate_token_out_min_amount(order),
@@ -103,7 +106,7 @@ fn process_order(
     let msg = ElysMsg::amm_swap_exact_amount_in(
         sender,
         &order.order_amount,
-        &order.order_amm_routes,
+        &amm_swap_estimation.in_route.unwrap(),
         token_out_min_amount,
         Decimal::zero(),
     );

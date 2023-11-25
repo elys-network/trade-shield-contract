@@ -22,7 +22,7 @@ fn order_price_denom() {
             quote_denom: "usdc".to_string(), // Invalid pair.
             rate: Decimal::from_atomics(Uint128::new(1700), 0).unwrap(),
         },
-        order_amm_routes: Some(vec![]),
+
         order_source_denom: "eth".to_string(),
         order_target_denom: "btc".to_string(),
     };

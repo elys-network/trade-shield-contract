@@ -4,13 +4,12 @@ This README provides documentation for the three main functions in the provided 
 
 ## Functions
 
-### 1. createSpotOrder(order_amm_routes, order_price, order_type, amount_send, denom_send, order_target_denom)
+### 1. createSpotOrder( order_price, order_type, amount_send, denom_send, order_target_denom)
 
 This function allows you to create a new spot order by sending a transaction to the CosmWasm contract.
 
 #### Parameters
 
-- `order_amm_routes` (Vec<{`pool_id` : u64, `token_out_denom` : String }>, null): The route for the AMM module to swap the token.
 - `order_price` ({`base_denom`:String, `quote_denom`:String, `rate` :String}): Price relates two assets exchange rate that the user should define
 - `order_type` (String): The type of the order (e.g., "stop_loss", "limit_sell", "limit_buy", "market_buy").
 - `amount_send` (String): The amount of cryptocurrency to send in the order.
@@ -21,7 +20,6 @@ This function allows you to create a new spot order by sending a transaction to 
 
 ```javascript
 createSpotOrder(
-  "your_amm_routes_here",
   {"base_denom", "quote_denom", "rate"},
   "order_type",
   "amount_to_send_here",
@@ -30,7 +28,6 @@ createSpotOrder(
 );
 
 createSpotOrder(
-  null,
   {"base_denom", "quote_denom", "rate"},
   "order_type",
   "amount_to_send_here",
@@ -159,7 +156,7 @@ This function allows you to create a margin order by sending a transaction to th
 #### Parameters
 
 - `position` (String): The type of position for the margin order (e.g., "long", "short").
-- `collateral` (Coin): The amount of collateral for the margin order.
+- `collateral` (Coin {demom: String , amount : String}): The amount of collateral for the margin order.
 - `leverage` (String): The leverage for the margin order.
 - `borrow_asset` (String): The asset to borrow for the margin order.
 - `take_profit_price` (String): The price at which the order will take profit.
