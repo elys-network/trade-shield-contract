@@ -218,7 +218,7 @@ async function createMarginOrder(
     msg,
     executeFee,
     "",
-    coins(amount_send, denom_send)
+    coins(collateral.amount, collateral.denom)
   );
   console.log("create_margin_order_res:", create_margin_order_res);
 }

@@ -42,7 +42,6 @@ pub fn create_spot_order(
         info.funds[0].clone(),
         info.sender.clone(),
         order_target_denom,
-        in_route.unwrap(),
         &order_vec,
     );
 
@@ -58,6 +57,7 @@ pub fn create_spot_order(
         &new_order,
         bank_msg,
         deps.storage,
+        in_route.unwrap(),
     )?;
 
     order_vec.push(new_order);
@@ -101,6 +101,7 @@ fn create_resp(
     new_order: &SpotOrder,
     bank_msg: BankMsg,
     storage: &mut dyn Storage,
+    in_route: Vec<SwapAmountInRoute>,
 ) -> StdResult<Response<ElysMsg>> {
     let resp = Response::new()
         .add_attribute("order_id", new_order.order_id.to_string())
@@ -115,7 +116,7 @@ fn create_resp(
     let swap_msg = ElysMsg::amm_swap_exact_amount_in(
         sender,
         &new_order.order_amount,
-        &new_order.order_amm_routes,
+        &in_route,
         Int128::zero(),
         Decimal::zero(),
     );

@@ -1,5 +1,3 @@
-use std::str::FromStr;
-
 use super::*;
 use get_order_id_from_events::get_order_id_from_events;
 

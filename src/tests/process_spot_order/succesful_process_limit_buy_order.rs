@@ -1,4 +1,4 @@
-use crate::{tests::read_processed_order_id::read_processed_order_id, types::SwapAmountInRoute};
+use crate::tests::read_processed_order_id::read_processed_order_id;
 
 use super::*;
 use cosmwasm_std::{coins, Coin};
@@ -42,7 +42,6 @@ fn successful_process_limit_buy_order() {
         coin(120, "usdc"), // 120 USDC to be used for buying.
         Addr::unchecked("user"),
         "ubtc".to_string(),
-        vec![SwapAmountInRoute::new(1, "ubtc")],
         &vec![],
     );
 

@@ -1,4 +1,4 @@
-use crate::{tests::read_processed_order_id::read_processed_order_id, types::SwapAmountInRoute};
+use crate::tests::read_processed_order_id::read_processed_order_id;
 
 use super::*;
 use cosmwasm_std::Coin;
@@ -243,7 +243,6 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             order_target_denom: "usdc".to_string(),
             order_amount: coin(1, "eth"),
             owner_address: Addr::unchecked("user"),
-            order_amm_routes: vec![SwapAmountInRoute::new(1, "usdc")],
             order_price: OrderPrice {
                 base_denom: "eth".to_string(),
                 quote_denom: "usdc".to_string(),
@@ -255,7 +254,6 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             order_id: 1,
             order_amount: coin(2, "btc"),
             owner_address: Addr::unchecked("user"),
-            order_amm_routes: vec![SwapAmountInRoute::new(1, "usdc")],
             order_price: OrderPrice {
                 base_denom: "btc".to_string(),
                 quote_denom: "usdc".to_string(),
@@ -268,7 +266,6 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             order_id: 2,
             order_amount: coin(3, "btc"),
             owner_address: Addr::unchecked("user"),
-            order_amm_routes: vec![SwapAmountInRoute::new(1, "usdc")],
             order_price: OrderPrice {
                 base_denom: "btc".to_string(),
                 quote_denom: "usdc".to_string(),
@@ -281,7 +278,6 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             order_id: 3,
             order_amount: coin(5, "eth"),
             owner_address: Addr::unchecked("user"),
-            order_amm_routes: vec![SwapAmountInRoute::new(1, "usdc")],
             order_price: OrderPrice {
                 base_denom: "eth".to_string(),
                 quote_denom: "usdc".to_string(),
@@ -294,7 +290,6 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             order_id: 4,
             order_amount: coin(1, "eth"),
             owner_address: Addr::unchecked("user"),
-            order_amm_routes: vec![SwapAmountInRoute::new(1, "usdc")],
             order_price: OrderPrice {
                 base_denom: "eth".to_string(),
                 quote_denom: "usdc".to_string(),
@@ -307,7 +302,6 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             order_id: 5,
             order_amount: coin(1, "eth"),
             owner_address: Addr::unchecked("user"),
-            order_amm_routes: vec![SwapAmountInRoute::new(1, "usdc")],
             order_price: OrderPrice {
                 base_denom: "eth".to_string(),
                 quote_denom: "usdc".to_string(),
@@ -320,7 +314,6 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             order_id: 6,
             order_amount: coin(3, "btc"),
             owner_address: Addr::unchecked("user"),
-            order_amm_routes: vec![SwapAmountInRoute::new(1, "usdc")],
             order_price: OrderPrice {
                 base_denom: "btc".to_string(),
                 quote_denom: "usdc".to_string(),
@@ -333,7 +326,6 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             order_id: 7,
             order_amount: coin(2, "btc"),
             owner_address: Addr::unchecked("user"),
-            order_amm_routes: vec![SwapAmountInRoute::new(1, "usdc")],
             order_price: OrderPrice {
                 base_denom: "btc".to_string(),
                 quote_denom: "usdc".to_string(),
@@ -346,7 +338,6 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             order_id: 8,
             order_amount: coin(1, "btc"),
             owner_address: Addr::unchecked("user"),
-            order_amm_routes: vec![SwapAmountInRoute::new(1, "usdc")],
             order_price: OrderPrice {
                 base_denom: "btc".to_string(),
                 quote_denom: "usdc".to_string(),
@@ -359,7 +350,6 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             order_id: 9,
             order_amount: coin(1, "eth"),
             owner_address: Addr::unchecked("user"),
-            order_amm_routes: vec![SwapAmountInRoute::new(1, "usdc")],
             order_price: OrderPrice {
                 base_denom: "eth".to_string(),
                 quote_denom: "usdc".to_string(),
