@@ -371,8 +371,8 @@ dependencies = [
 
 [[package]]
 name = "elys-bindings"
-version = "0.1.0"
-source = "git+https://github.com/elys-network/bindings?tag=v0.1.0#e73cc0be7a6277acd748284ed590a61fcdef250d"
+version = "0.2.0"
+source = "git+https://github.com/elys-network/bindings?tag=v0.2.0#7de2c9d1289e078b295b9ef355a530f85cad42a5"
 dependencies = [
  "cosmwasm-schema",
  "cosmwasm-std",
@@ -381,8 +381,8 @@ dependencies = [
 
 [[package]]
 name = "elys-bindings-test"
-version = "0.1.0"
-source = "git+https://github.com/elys-network/bindings?tag=v0.1.0#e73cc0be7a6277acd748284ed590a61fcdef250d"
+version = "0.2.0"
+source = "git+https://github.com/elys-network/bindings?tag=v0.2.0#7de2c9d1289e078b295b9ef355a530f85cad42a5"
 dependencies = [
  "anyhow",
  "cosmwasm-schema",
@@ -787,7 +787,7 @@ dependencies = [
 
 [[package]]
 name = "trade_shield_contract"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "cosmwasm-schema",
  "cosmwasm-std",

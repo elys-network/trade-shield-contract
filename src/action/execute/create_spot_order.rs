@@ -1,4 +1,4 @@
-use cosmwasm_std::{to_json_binary, Int128, StdResult, Storage, SubMsg};
+use cosmwasm_std::{to_json_binary, Int128, Decimal, StdResult, Storage, SubMsg};
 use elys_bindings::query_resp::InRouteByDenomResponse;
 
 use crate::msg::ReplyType;
@@ -122,6 +122,7 @@ fn create_resp(
         &new_order.order_amount,
         &new_order.order_amm_routes,
         Int128::zero(),
+        Decimal::zero(),
     );
 
     let info_id = if let Some(max_info) = reply_infos.iter().max_by_key(|info| info.id) {

@@ -105,6 +105,7 @@ fn process_order(
         &order.order_amount,
         &order.order_amm_routes,
         token_out_min_amount,
+        Decimal::zero(),
     );
 
     let info_id = if let Some(max_info) = reply_infos.iter().max_by_key(|info| info.id) {
