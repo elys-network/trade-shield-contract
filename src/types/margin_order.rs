@@ -26,12 +26,21 @@ impl MarginOrder {
         leverage: &Decimal,
         take_profit_price: &Decimal,
         order_type: &OrderType,
-        trigger_price: &OrderPrice,
+        trigger_price: &Option<OrderPrice>,
         order_vec: &Vec<MarginOrder>,
     ) -> Self {
         let order_id: u64 = match order_vec.iter().max_by_key(|s| s.order_id) {
             Some(x) => x.order_id + 1,
             None => 0,
+        };
+
+        let trigger_price = match trigger_price {
+            Some(trigger_price) => trigger_price.to_owned(),
+            None => OrderPrice {
+                base_denom: "".to_string(),
+                quote_denom: "".to_string(),
+                rate: Decimal::zero(),
+            },
         };
 
         Self {
@@ -43,7 +52,7 @@ impl MarginOrder {
             leverage: leverage.to_owned(),
             take_profit_price: take_profit_price.to_owned(),
             order_type: order_type.to_owned(),
-            trigger_price: trigger_price.to_owned(),
+            trigger_price,
         }
     }
 }

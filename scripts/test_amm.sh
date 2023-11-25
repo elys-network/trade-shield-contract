@@ -26,7 +26,7 @@ addr=$(extract_contract_address elysd q tx $instantiate_hash)
 sleep 2
 elysd tx amm create-pool 100uatom,100uusdc 100000000000uatom,100000000000uusdc --swap-fee=0.00 --exit-fee=0.00 --use-oracle=false  --from=treasury --keyring-backend=test --chain-id=elystestnet-1 --yes --gas=1000000
 sleep 2
-elysd tx wasm exec $addr '{"create_spot_order": { "order_price" : {"base_denom": "uusdc","quote_denom" : "uatom" ,"rate" : "1"}, "order_type" : "stop_loss", "order_target_denom" : "uatom", "order_source_denom" : "uusdc"}}' --from treasury --gas-prices 0.25uelys --gas auto --gas-adjustment 1.3 -b sync -y  --keyring-backend=test --chain-id=elystestnet-1 --amount=200uusdc
+elysd tx wasm exec $addr '{"create_spot_order": { "order_price" : {"base_denom": "uusdc","quote_denom" : "uatom" ,"rate" : "1"}, "order_type" : "market_buy", "order_target_denom" : "uatom", "order_source_denom" : "uusdc"}}' --from treasury --gas-prices 0.25uelys --gas auto --gas-adjustment 1.3 -b sync -y  --keyring-backend=test --chain-id=elystestnet-1 --amount=200uusdc
 sleep 2
 balance_before=$(elysd q bank balances $addr)
 #NOT WORKING ANYMORE

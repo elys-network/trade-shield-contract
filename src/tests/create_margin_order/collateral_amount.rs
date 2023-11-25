@@ -43,11 +43,11 @@ fn collateral_amount() {
                 borrow_asset: "uatom".to_string(),
                 take_profit_price: Decimal::from_atomics(Uint128::new(500), 2).unwrap(),
                 order_type: OrderType::StopLoss,
-                trigger_price: OrderPrice {
+                trigger_price: Some(OrderPrice {
                     base_denom: "uatom".to_string(),
                     quote_denom: "uusdc".to_string(),
                     rate: Decimal::from_str("1.25").unwrap(),
-                },
+                }),
             },
             &[coin(45, "usdc")],
         )

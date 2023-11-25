@@ -56,11 +56,7 @@ fn successful_create_stop_loss_order() {
             &ExecuteMsg::CreateSpotOrder {
                 order_type: OrderType::MarketBuy,
                 // Empty order price - not utilized in market orders
-                order_price: OrderPrice {
-                    base_denom: "".to_string(),
-                    quote_denom: "".to_string(),
-                    rate: Decimal::zero(),
-                },
+                order_price: None,
                 order_source_denom: "btc".to_string(),
                 order_target_denom: "usdc".to_string(),
             },

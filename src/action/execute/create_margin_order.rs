@@ -1,6 +1,5 @@
 use super::*;
-use crate::msg::ReplyType;
-use cosmwasm_std::{Coin, Decimal, Int128, StdError, StdResult, Storage, SubMsg};
+use cosmwasm_std::{Coin, Decimal, Int128, StdError, StdResult};
 
 pub fn create_margin_order(
     info: MessageInfo,
@@ -12,7 +11,7 @@ pub fn create_margin_order(
     borrow_asset: String,
     take_profit_price: Decimal,
     order_type: OrderType,
-    trigger_price: OrderPrice,
+    trigger_price: Option<OrderPrice>,
 ) -> Result<Response<ElysMsg>, ContractError> {
     if info.funds.len() != 1 {
         return Err(ContractError::CoinNumber);
@@ -20,6 +19,10 @@ pub fn create_margin_order(
 
     if collateral != info.funds[0] {
         return Err(ContractError::CollateralAmount);
+    }
+
+    if trigger_price.is_none() && order_type != OrderType::MarketBuy {
+        return Err(StdError::not_found("order price").into());
     }
 
     if position == MarginPosition::Short && collateral.denom != "uusdc" {
@@ -44,7 +47,7 @@ pub fn create_margin_order(
         &order_vec,
     );
 
-    let resp = create_response(deps.storage, &order, env.contract.address)?;
+    let resp = create_response(&order, env.contract.address)?;
 
     if order.order_type != OrderType::MarketBuy {
         order_vec.push(order);
@@ -56,7 +59,6 @@ pub fn create_margin_order(
 }
 
 fn create_response(
-    storage: &mut dyn Storage,
     order: &MarginOrder,
     contract_addr: impl Into<String>,
 ) -> StdResult<Response<ElysMsg>> {
@@ -64,34 +66,16 @@ fn create_response(
         return Ok(Response::new().add_attribute("order_id", order.order_id.to_string()));
     }
 
-    let mut reply_infos = REPLY_INFO.load(storage)?;
-
-    let reply_info_id = match reply_infos.iter().max_by_key(|info| info.id) {
-        Some(info) => info.id + 1,
-        None => 0,
-    };
-
-    let reply_info = ReplyInfo {
-        id: reply_info_id,
-        reply_type: ReplyType::MarginBrokerOpenMarketBuy,
-        data: None,
-    };
-
-    reply_infos.push(reply_info);
-
-    let submsg: SubMsg<ElysMsg> = SubMsg::reply_always(
-        ElysMsg::margin_broker_open_position(
-            contract_addr,
-            &order.collateral.denom,
-            Int128::new(order.collateral.amount.u128() as i128),
-            &order.borrow_asset,
-            order.position.clone() as i32,
-            order.leverage,
-            order.take_profit_price,
-            &order.owner,
-        ),
-        reply_info_id,
+    let msg: ElysMsg = ElysMsg::margin_broker_open_position(
+        contract_addr,
+        &order.collateral.denom,
+        Int128::new(order.collateral.amount.u128() as i128),
+        &order.borrow_asset,
+        order.position.clone() as i32,
+        order.leverage,
+        order.take_profit_price,
+        &order.owner,
     );
 
-    Ok(Response::new().add_submessage(submsg))
+    Ok(Response::new().add_message(msg))
 }

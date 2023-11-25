@@ -32,6 +32,7 @@ pub fn reply(
         ReplyType::SpotOrder => reply_to_spot_order(deps, info.data, module_resp),
         ReplyType::MarginBrokerOpenMarketBuy => reply_to_create_margin_order(module_resp),
         ReplyType::MarginBrokerClose => reply_to_close_margin_order(module_resp),
+        ReplyType::SpotOrderMarketBuy => reply_to_spot_order_market(deps, info.data, module_resp),
         _ => return Err(StdError::generic_err("submsg unimplemented").into()),
     }
 }

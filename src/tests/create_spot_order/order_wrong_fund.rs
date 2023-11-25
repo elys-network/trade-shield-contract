@@ -16,11 +16,11 @@ fn order_wrong_fund() {
 
     let create_order_msg = ExecuteMsg::CreateSpotOrder {
         order_type: OrderType::LimitSell,
-        order_price: OrderPrice {
+        order_price: Some(OrderPrice {
             base_denom: "btc".to_string(),
             quote_denom: "eth".to_string(),
             rate: Decimal::from_atomics(Uint128::new(19), 0).unwrap(),
-        },
+        }),
 
         order_source_denom: "usdc".to_string(), // Incorrect source denomination.
         order_target_denom: "btc".to_string(),

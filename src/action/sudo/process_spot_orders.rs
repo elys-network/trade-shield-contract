@@ -69,7 +69,7 @@ fn send_token(
 
 fn check_order(order: &SpotOrder, amm_swap_estimation: &AmmSwapEstimationByDenomResponse) -> bool {
     if order.order_type == OrderType::MarketBuy {
-        return true;
+        return false;
     }
 
     let order_spot_price = match order.order_amount.denom == order.order_price.base_denom {
