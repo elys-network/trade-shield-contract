@@ -1,5 +1,3 @@
-use crate::states::PROCESSED_SPOT_ORDER;
-
 use super::*;
 
 pub fn cancel_spot_order(
@@ -7,9 +5,13 @@ pub fn cancel_spot_order(
     deps: DepsMut<ElysQuery>,
     order_id: u64,
 ) -> Result<Response<ElysMsg>, ContractError> {
-    let orders_list: Vec<SpotOrder> = SPOT_ORDER.load(deps.storage)?;
-    let order: SpotOrder = match orders_list.iter().find(|order| order.order_id == order_id) {
-        Some(order) => order.to_owned(),
+    let mut orders_list: Vec<SpotOrder> = SPOT_ORDER.load(deps.storage)?;
+
+    let order: &mut SpotOrder = match orders_list
+        .iter_mut()
+        .find(|order| order.order_id == order_id)
+    {
+        Some(order) => order,
         None => return Err(ContractError::OrderNotFound { order_id }),
     };
 
@@ -19,26 +21,24 @@ pub fn cancel_spot_order(
         });
     }
 
-    let processed_spot_order = PROCESSED_SPOT_ORDER.load(deps.storage)?;
-    for (id, _) in processed_spot_order {
-        if id == order_id {
-            return Err(ContractError::ProcessSpotOrderProcessing { order_id });
-        }
+    if order.status != Status::NotProcessed {
+        return Err(ContractError::CancelStatusError {
+            order_id,
+            status: order.status.clone(),
+        });
     }
 
+    order.status = Status::Canceled;
     let refund_msg = BankMsg::Send {
         to_address: order.owner_address.to_string(),
-        amount: vec![order.order_amount],
+        amount: vec![order.order_amount.clone()],
     };
 
-    let resp = Response::new().add_message(CosmosMsg::Bank(refund_msg));
+    let resp = Response::new()
+        .add_message(CosmosMsg::Bank(refund_msg))
+        .add_attribute("canceled_spot_order_id", order_id.to_string());
 
-    let new_orders_list: Vec<SpotOrder> = orders_list
-        .into_iter()
-        .filter(|order| order.order_id != order_id)
-        .collect();
-
-    SPOT_ORDER.save(deps.storage, &new_orders_list)?;
+    SPOT_ORDER.save(deps.storage, &orders_list)?;
 
     Ok(resp)
 }

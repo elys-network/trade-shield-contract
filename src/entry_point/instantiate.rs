@@ -10,7 +10,6 @@ pub fn instantiate(
     _msg: InstantiateMsg,
 ) -> StdResult<Response<ElysMsg>> {
     SPOT_ORDER.save(deps.storage, &vec![])?;
-    PROCESSED_SPOT_ORDER.save(deps.storage, &vec![])?;
     MARGIN_ORDER.save(deps.storage, &vec![])?;
     REPLY_INFO.save(deps.storage, &vec![])?;
 

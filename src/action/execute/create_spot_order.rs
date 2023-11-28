@@ -36,6 +36,7 @@ pub fn create_spot_order(
         &info.funds[0],
         &order_source_denom,
         &order_target_denom,
+        &Decimal::zero(),
     )?;
 
     let mut order_vec = SPOT_ORDER.load(deps.storage)?;
@@ -125,6 +126,7 @@ fn create_resp(
         &in_route,
         Int128::zero(),
         Decimal::zero(),
+        &new_order.owner_address,
     );
 
     let info_id = if let Some(max_info) = reply_infos.iter().max_by_key(|info| info.id) {

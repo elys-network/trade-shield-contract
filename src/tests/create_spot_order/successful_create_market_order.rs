@@ -1,13 +1,11 @@
-use crate::{
-    msg::query_resp::GetSpotOrdersResp, tests::get_order_id_from_events::get_order_id_from_events,
-};
+use crate::msg::query_resp::GetSpotOrdersResp;
 
 use super::*;
 
 // This test case verifies the successful creation of a "market" order in the contract.
 // A "market" order is designed to execute right after.
 #[test]
-fn successful_create_stop_loss_order() {
+fn successful_create_market_buy_order() {
     // Create a wallet for the "user" with an initial balance of 2 BTC.
     let wallet = vec![("user", coins(2, "btc"))];
 
@@ -51,56 +49,20 @@ fn successful_create_stop_loss_order() {
         .unwrap();
 
     // User "user" creates a "market" order for BTC to USDC.
-    let resp = app
-        .execute_contract(
-            Addr::unchecked("user"),
-            addr.clone(),
-            &ExecuteMsg::CreateSpotOrder {
-                order_type: OrderType::MarketBuy,
-                // Empty order price - not utilized in market orders
-                order_price: None,
-                order_source_denom: "btc".to_string(),
-                order_target_denom: "usdc".to_string(),
-            },
-            &coins(2, "btc"), // User's BTC balance.
-        )
-        .unwrap();
+    app.execute_contract(
+        Addr::unchecked("user"),
+        addr.clone(),
+        &ExecuteMsg::CreateSpotOrder {
+            order_type: OrderType::MarketBuy,
+            // Empty order price - not utilized in market orders
+            order_price: None,
+            order_source_denom: "btc".to_string(),
+            order_target_denom: "usdc".to_string(),
+        },
+        &coins(2, "btc"), // User's BTC balance.
+    )
+    .unwrap();
 
-    // Verify that the "user" no longer has any BTC after creating the order.
-    assert_eq!(
-        app.wrap()
-            .query_balance("user", "btc")
-            .unwrap()
-            .amount
-            .u128(),
-        0
-    );
-
-    // Verify that the contract address has swap the 2 BTC for the order (market).
-    assert_eq!(
-        app.wrap()
-            .query_balance(&addr, "btc")
-            .unwrap()
-            .amount
-            .u128(),
-        0
-    );
-
-    // Verify that the contract address now holds the 60000 usdc.
-    assert_eq!(
-        app.wrap()
-            .query_balance(&addr, "usdc")
-            .unwrap()
-            .amount
-            .u128(),
-        60000
-    );
-
-    // Verify that an order ID is emitted in the contract's events.
-    assert!(get_order_id_from_events(&resp.events).is_some());
-
-    app.wasm_sudo(addr.clone(), &SudoMsg::ClockEndBlock {})
-        .unwrap();
     // Verify that the user got his swaped token
     assert_eq!(
         app.wrap()
@@ -131,5 +93,6 @@ fn successful_create_stop_loss_order() {
             },
         )
         .unwrap();
-    assert!(res.orders.is_empty());
+
+    assert_eq!(res.orders[0].status, Status::Processed);
 }

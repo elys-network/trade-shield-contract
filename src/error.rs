@@ -2,6 +2,8 @@ use cosmwasm_std::{Addr, StdError};
 use cw_utils::PaymentError;
 use thiserror::Error;
 
+use crate::types::Status;
+
 #[derive(Error, Debug, PartialEq)]
 pub enum ContractError {
     #[error("{0}")]
@@ -30,4 +32,6 @@ pub enum ContractError {
     CollateralAmount,
     #[error("invalid leverage amount")]
     Leverage,
+    #[error("cannot cancel order: {order_id}, status: {status:?}")]
+    CancelStatusError { order_id: u64, status: Status },
 }

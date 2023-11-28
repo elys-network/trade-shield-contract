@@ -1,5 +1,3 @@
-use crate::tests::read_processed_order_id::read_processed_order_id;
-
 use super::*;
 use cosmwasm_std::{coins, Coin};
 // This test case verifies the successful processing of a "stop-loss" order in the contract.
@@ -76,8 +74,7 @@ fn successful_process_stop_loss_order() {
         .unwrap();
 
     // Execute the order processing.
-    // Execute the order processing.
-    let resp = app.wasm_sudo(addr.clone(), &sudo_msg).unwrap();
+    app.wasm_sudo(addr.clone(), &sudo_msg).unwrap();
 
     // Verify the resulting balances after order processing.
     assert_eq!(
@@ -113,61 +110,12 @@ fn successful_process_stop_loss_order() {
         0
     );
 
-    // Find the order ID in the emitted events and ensure it's not present.
-    let order_ids = read_processed_order_id(resp);
-
-    assert!(order_ids.is_empty());
-
     // Update the BTC and USDC prices to trigger the order.
     app.init_modules(|router, _, store| router.custom.set_prices(store, &prices_at_t1))
         .unwrap();
 
     // Execute the order processing.
-    let resp = app.wasm_sudo(addr.clone(), &sudo_msg).unwrap();
-
-    // Verify the swap occurred.
-    assert_eq!(
-        app.wrap()
-            .query_balance(&addr, "btc")
-            .unwrap()
-            .amount
-            .u128(),
-        0
-    );
-    assert_eq!(
-        app.wrap()
-            .query_balance(&addr, "usdc")
-            .unwrap()
-            .amount
-            .u128(),
-        40000
-    );
-    assert_eq!(
-        app.wrap()
-            .query_balance("user", "btc")
-            .unwrap()
-            .amount
-            .u128(),
-        0
-    );
-    assert_eq!(
-        app.wrap()
-            .query_balance("user", "usdc")
-            .unwrap()
-            .amount
-            .u128(),
-        0
-    );
-
-    // Find the order ID in the emitted events and ensure it's not present.
-    let order_ids = read_processed_order_id(resp);
-
-    assert!(order_ids.is_empty());
-
-    // Execute the order processing again.
-    // Execute the order processing.
-    let resp = app.wasm_sudo(addr.clone(), &sudo_msg).unwrap();
-
+    app.wasm_sudo(addr.clone(), &sudo_msg).unwrap();
     // Verify the resulting balances after order processing.
     assert_eq!(
         app.wrap()
@@ -201,9 +149,4 @@ fn successful_process_stop_loss_order() {
             .u128(),
         40000 // User receives 40,000 USDC from the executed "stop-loss" order.
     );
-
-    // Find the order ID in the emitted events and ensure it's present.
-    let order_ids = read_processed_order_id(resp);
-
-    assert_eq!(order_ids[0], 0);
 }

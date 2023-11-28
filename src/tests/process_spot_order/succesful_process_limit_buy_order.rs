@@ -1,5 +1,3 @@
-use crate::tests::read_processed_order_id::read_processed_order_id;
-
 use super::*;
 use cosmwasm_std::{coins, Coin};
 
@@ -72,7 +70,7 @@ fn successful_process_limit_buy_order() {
 
     // Execute the order processing.
     // Execute the order processing.
-    let resp = app.wasm_sudo(addr.clone(), &sudo_msg).unwrap();
+    app.wasm_sudo(addr.clone(), &sudo_msg).unwrap();
 
     // Verify the resulting balances after order processing.
     assert_eq!(
@@ -108,64 +106,14 @@ fn successful_process_limit_buy_order() {
         0
     );
 
-    // Find the order ID in the emitted events and ensure it's not present.
-    let order_ids = read_processed_order_id(resp);
-
-    assert!(order_ids.is_empty());
-
     // Update the ubtc and USDC prices to match the order rate.
     app.init_modules(|router, _, store| router.custom.set_prices(store, &prices_at_t1))
         .unwrap();
 
     // Execute the order processing.
     // Execute the order processing.
-    let resp = app.wasm_sudo(addr.clone(), &sudo_msg).unwrap();
+    app.wasm_sudo(addr.clone(), &sudo_msg).unwrap();
 
-    // Verify the swap occurred.
-
-    assert_eq!(
-        app.wrap()
-            .query_balance(&addr, "usdc")
-            .unwrap()
-            .amount
-            .u128(),
-        0
-    );
-    assert_eq!(
-        app.wrap()
-            .query_balance(&addr, "ubtc")
-            .unwrap()
-            .amount
-            .u128(),
-        3
-    );
-    assert_eq!(
-        app.wrap()
-            .query_balance("user", "ubtc")
-            .unwrap()
-            .amount
-            .u128(),
-        0
-    );
-    assert_eq!(
-        app.wrap()
-            .query_balance("user", "usdc")
-            .unwrap()
-            .amount
-            .u128(),
-        0
-    );
-
-    // Find the order ID in the emitted events and ensure it's not present.
-    let order_ids = read_processed_order_id(resp);
-
-    assert!(order_ids.is_empty());
-
-    // Execute the order processing again.
-    // Execute the order processing.
-    let resp = app.wasm_sudo(addr.clone(), &sudo_msg).unwrap();
-
-    // Verify the resulting balances after order processing.
     assert_eq!(
         app.wrap()
             .query_balance(&addr, "ubtc")
@@ -198,9 +146,4 @@ fn successful_process_limit_buy_order() {
             .u128(),
         0
     );
-
-    // Find the order ID in the emitted events and ensure it's present.
-    let order_ids = read_processed_order_id(resp);
-
-    assert_eq!(order_ids[0], 0);
 }

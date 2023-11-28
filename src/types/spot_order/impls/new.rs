@@ -24,6 +24,12 @@ impl SpotOrder {
             },
         };
 
+        let status = if order_type == OrderType::MarketBuy {
+            Status::Processing
+        } else {
+            Status::NotProcessed
+        };
+
         SpotOrder {
             order_type,
             order_price,
@@ -31,6 +37,7 @@ impl SpotOrder {
             owner_address,
             order_id,
             order_target_denom,
+            status,
         }
     }
 }

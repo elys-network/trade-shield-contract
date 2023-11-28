@@ -92,6 +92,7 @@ fn create_orders() -> Vec<SpotOrder> {
             order_amount: coin(255, "btc"),
             owner_address: Addr::unchecked("userA"),
             order_target_denom: "btc".to_owned(),
+            status: Status::NotProcessed,
         },
         SpotOrder {
             order_type: OrderType::LimitSell,
@@ -104,6 +105,7 @@ fn create_orders() -> Vec<SpotOrder> {
             order_amount: coin(100, "eth"),
             owner_address: Addr::unchecked("userB"),
             order_target_denom: "eth".to_owned(),
+            status: Status::NotProcessed,
         },
         SpotOrder {
             order_type: OrderType::StopLoss,
@@ -116,6 +118,7 @@ fn create_orders() -> Vec<SpotOrder> {
             order_amount: coin(500, "xrp"),
             owner_address: Addr::unchecked("userC"),
             order_target_denom: "xrp".to_owned(),
+            status: Status::NotProcessed,
         },
         SpotOrder {
             order_type: OrderType::StopLoss,
@@ -128,6 +131,7 @@ fn create_orders() -> Vec<SpotOrder> {
             order_amount: coin(75, "ltc"),
             owner_address: Addr::unchecked("userD"),
             order_target_denom: "ltc".to_owned(),
+            status: Status::NotProcessed,
         },
         SpotOrder {
             order_type: OrderType::LimitBuy,
@@ -140,6 +144,7 @@ fn create_orders() -> Vec<SpotOrder> {
             order_amount: coin(200, "ada"),
             owner_address: Addr::unchecked("userE"),
             order_target_denom: "ada".to_owned(),
+            status: Status::NotProcessed,
         },
     ]
 }

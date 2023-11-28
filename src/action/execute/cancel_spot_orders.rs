@@ -15,8 +15,7 @@ pub fn cancel_spot_orders(
         });
     }
 
-    let orders: Vec<SpotOrder> = SPOT_ORDER.load(deps.storage)?;
-    let processed_spot_order: Vec<(u64, BankMsg)> = PROCESSED_SPOT_ORDER.load(deps.storage)?;
+    let mut orders: Vec<SpotOrder> = SPOT_ORDER.load(deps.storage)?;
 
     let user_orders: Vec<SpotOrder> = orders
         .iter()
@@ -32,25 +31,30 @@ pub fn cancel_spot_orders(
 
     let filtered_order: Vec<SpotOrder> = filter_order_by_id(&user_orders, &order_ids)?;
 
-    for (id, _) in processed_spot_order {
-        if filtered_order.iter().any(|order| order.order_id == id) {
-            return Err(ContractError::ProcessSpotOrderProcessing { order_id: id });
-        }
-    }
-
     let filtered_order = filter_order_by_type(filtered_order, order_type)?;
 
-    let new_orders_list = orders
-        .into_iter()
-        .filter(|order| !filtered_order.contains(order))
-        .collect();
-
-    SPOT_ORDER.save(deps.storage, &new_orders_list)?;
+    if let Some(order) = filtered_order
+        .iter()
+        .find(|order| order.status != Status::NotProcessed)
+    {
+        return Err(ContractError::CancelStatusError {
+            order_id: order.order_id,
+            status: order.status.clone(),
+        });
+    }
 
     let order_ids: Vec<u64> = match order_ids {
         Some(order_ids) => order_ids,
         None => filtered_order.iter().map(|order| order.order_id).collect(),
     };
+
+    for order in orders.iter_mut() {
+        if order_ids.contains(&order.order_id) {
+            order.status = Status::Canceled;
+        }
+    }
+
+    SPOT_ORDER.save(deps.storage, &orders)?;
 
     let refund_msg = make_refund_msg(filtered_order, owner_address);
 
@@ -60,13 +64,17 @@ pub fn cancel_spot_orders(
 }
 
 fn filter_order_by_id(
-    orders: &[SpotOrder],
+    orders: &Vec<SpotOrder>,
     order_ids: &Option<Vec<u64>>,
 ) -> Result<Vec<SpotOrder>, ContractError> {
-    let order_ids: Vec<u64> = order_ids.as_ref().map_or_else(
-        || orders.iter().map(|order| order.order_id).collect(),
-        |ids| ids.clone(),
-    );
+    let order_ids = match order_ids {
+        Some(order_ids) => order_ids,
+        None => return Ok(orders.to_owned()),
+    };
+
+    if order_ids.is_empty() {
+        return Err(StdError::generic_err("order_ids is defined empty").into());
+    }
 
     let filtered_order: Vec<SpotOrder> = orders
         .iter()

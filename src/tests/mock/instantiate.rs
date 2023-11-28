@@ -19,7 +19,6 @@ pub fn instantiate(
     msg: InstantiateMockMsg,
 ) -> StdResult<Response<ElysMsg>> {
     SPOT_ORDER.save(deps.storage, &msg.spot_orders)?;
-    PROCESSED_SPOT_ORDER.save(deps.storage, &vec![])?;
     MARGIN_ORDER.save(deps.storage, &msg.margin_orders)?;
     REPLY_INFO.save(deps.storage, &vec![])?;
     Ok(Response::new())
