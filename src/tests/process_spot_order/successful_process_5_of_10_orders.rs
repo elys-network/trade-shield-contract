@@ -141,7 +141,7 @@ fn successful_process_5_of_10_orders() {
             .unwrap()
             .amount
             .u128(),
-        190200
+        0
     );
 
     assert_eq!(
@@ -166,7 +166,7 @@ fn successful_process_5_of_10_orders() {
             .unwrap()
             .amount
             .u128(),
-        0
+        190200
     );
 
     let order_ids: Vec<u64> = read_processed_order_id(resp);
@@ -174,15 +174,7 @@ fn successful_process_5_of_10_orders() {
     assert!(order_ids.is_empty());
 
     // Execute the order processing.
-    let resp = app.wasm_sudo(addr.clone(), &sudo_msg).unwrap();
-
-    let order_ids: Vec<u64> = read_processed_order_id(resp);
-
-    assert!(order_ids.contains(&instantiate_msg.spot_orders[7].order_id));
-    assert!(order_ids.contains(&instantiate_msg.spot_orders[3].order_id));
-    assert!(order_ids.contains(&instantiate_msg.spot_orders[0].order_id));
-    assert!(order_ids.contains(&instantiate_msg.spot_orders[6].order_id));
-    assert!(order_ids.contains(&instantiate_msg.spot_orders[8].order_id));
+    app.wasm_sudo(addr.clone(), &sudo_msg).unwrap();
 
     assert_eq!(
         app.wrap()
@@ -248,6 +240,7 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
                 quote_denom: "usdc".to_string(),
                 rate: Decimal::from_atomics(Uint128::new(1700), 0).unwrap(),
             },
+            status: Status::NotProcessed,
         },
         SpotOrder {
             order_type: OrderType::StopLoss,
@@ -260,6 +253,7 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
                 rate: Decimal::from_atomics(Uint128::new(12000), 0).unwrap(),
             },
             order_target_denom: "usdc".to_string(),
+            status: Status::NotProcessed,
         },
         SpotOrder {
             order_type: OrderType::StopLoss,
@@ -272,6 +266,7 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
                 rate: Decimal::from_atomics(Uint128::new(10000), 0).unwrap(),
             },
             order_target_denom: "usdc".to_string(),
+            status: Status::NotProcessed,
         },
         SpotOrder {
             order_type: OrderType::StopLoss,
@@ -284,6 +279,7 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
                 rate: Decimal::from_atomics(Uint128::new(1800), 0).unwrap(),
             },
             order_target_denom: "usdc".to_string(),
+            status: Status::NotProcessed,
         },
         SpotOrder {
             order_type: OrderType::StopLoss,
@@ -296,6 +292,7 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
                 rate: Decimal::from_atomics(Uint128::new(1200), 0).unwrap(),
             },
             order_target_denom: "usdc".to_string(),
+            status: Status::NotProcessed,
         },
         SpotOrder {
             order_type: OrderType::LimitSell,
@@ -308,6 +305,7 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
                 rate: Decimal::from_atomics(Uint128::new(2500), 0).unwrap(),
             },
             order_target_denom: "usdc".to_string(),
+            status: Status::NotProcessed,
         },
         SpotOrder {
             order_type: OrderType::LimitSell,
@@ -320,6 +318,7 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
                 rate: Decimal::from_atomics(Uint128::new(21000), 0).unwrap(),
             },
             order_target_denom: "usdc".to_string(),
+            status: Status::NotProcessed,
         },
         SpotOrder {
             order_type: OrderType::LimitSell,
@@ -332,6 +331,7 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
                 rate: Decimal::from_atomics(Uint128::new(25000), 0).unwrap(),
             },
             order_target_denom: "usdc".to_string(),
+            status: Status::NotProcessed,
         },
         SpotOrder {
             order_type: OrderType::LimitSell,
@@ -344,6 +344,7 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
                 rate: Decimal::from_atomics(Uint128::new(30000), 0).unwrap(),
             },
             order_target_denom: "usdc".to_string(),
+            status: Status::NotProcessed,
         },
         SpotOrder {
             order_type: OrderType::LimitSell,
@@ -356,6 +357,7 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
                 rate: Decimal::from_atomics(Uint128::new(2100), 0).unwrap(),
             },
             order_target_denom: "usdc".to_string(),
+            status: Status::NotProcessed,
         },
     ]
 }

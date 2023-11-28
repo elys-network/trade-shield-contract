@@ -1,5 +1,5 @@
-use crate::{msg::ReplyType, states::PROCESSED_SPOT_ORDER};
-use cosmwasm_std::{to_json_binary, Decimal, Int128, StdResult, Storage, SubMsg};
+use crate::msg::ReplyType;
+use cosmwasm_std::{to_json_binary, Decimal, Int128, StdResult, SubMsg};
 use elys_bindings::query_resp::AmmSwapEstimationByDenomResponse;
 use std::ops::Div;
 
@@ -12,22 +12,19 @@ pub fn process_spot_orders(
     let mut orders = SPOT_ORDER.load(deps.storage)?;
     let mut reply_info = REPLY_INFO.load(deps.storage)?;
 
-    let (send_msg, processed_order_ids) = send_token(&mut orders, deps.storage)?;
-
-    SPOT_ORDER.save(deps.storage, &orders)?;
-
     let querier = ElysQuerier::new(&deps.querier);
     let mut submsgs: Vec<SubMsg<ElysMsg>> = vec![];
 
-    for order in &orders {
+    for order in orders.iter_mut() {
         let amm_swap_estimation = querier.amm_swap_estimation_by_denom(
             &order.order_amount,
             &order.order_amount.denom,
             &order.order_target_denom,
+            &Decimal::zero(),
         )?;
 
         if check_order(order, &amm_swap_estimation) {
-            process_order(
+            process_spot_order(
                 order,
                 &mut submsgs,
                 env.contract.address.as_str(),
@@ -39,38 +36,16 @@ pub fn process_spot_orders(
 
     REPLY_INFO.save(deps.storage, &reply_info)?;
 
-    let mut resp = Response::new().add_submessages(submsgs);
-    if !send_msg.is_empty() {
-        resp = resp
-            .add_messages(send_msg)
-            .add_attribute("spot_order_processed", format!("{:?}", processed_order_ids));
-    }
+    let resp = Response::new().add_submessages(submsgs);
 
     Ok(resp)
 }
 
-fn send_token(
-    unprocessed_orders: &mut Vec<SpotOrder>,
-    store: &mut dyn Storage,
-) -> StdResult<(Vec<BankMsg>, Vec<u64>)> {
-    let process_spot_orders = PROCESSED_SPOT_ORDER.load(store)?;
-    let processed_order_ids: Vec<u64> = process_spot_orders
-        .iter()
-        .map(|&(processed_order_id, _)| processed_order_id)
-        .collect();
-    let bank_msgs: Vec<BankMsg> = process_spot_orders
-        .iter()
-        .map(|(_, bank_msg)| bank_msg.to_owned())
-        .collect();
-
-    unprocessed_orders.retain(|order| !processed_order_ids.contains(&order.order_id));
-
-    PROCESSED_SPOT_ORDER.save(store, &vec![])?;
-    Ok((bank_msgs, processed_order_ids))
-}
-
 fn check_order(order: &SpotOrder, amm_swap_estimation: &AmmSwapEstimationByDenomResponse) -> bool {
     if order.order_type == OrderType::MarketBuy {
+        return false;
+    }
+    if order.status != Status::NotProcessed {
         return false;
     }
 
@@ -91,8 +66,8 @@ fn check_order(order: &SpotOrder, amm_swap_estimation: &AmmSwapEstimationByDenom
     }
 }
 
-fn process_order(
-    order: &SpotOrder,
+fn process_spot_order(
+    order: &mut SpotOrder,
     submsgs: &mut Vec<SubMsg<ElysMsg>>,
     sender: &str,
     reply_infos: &mut Vec<ReplyInfo>,
@@ -111,7 +86,10 @@ fn process_order(
         &amm_swap_estimation.in_route.unwrap(),
         token_out_min_amount,
         Decimal::zero(),
+        &order.owner_address,
     );
+
+    order.status = Status::Processing;
 
     let info_id = if let Some(max_info) = reply_infos.iter().max_by_key(|info| info.id) {
         max_info.id + 1

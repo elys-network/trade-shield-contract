@@ -21,6 +21,7 @@ fn successfully_cancel_orders() {
             order_amount: coin(10, "btc"),
             owner_address: Addr::unchecked("user"),
             order_target_denom: "".to_string(),
+            status: Status::NotProcessed,
         },
         SpotOrder {
             order_type: OrderType::LimitSell,
@@ -33,6 +34,7 @@ fn successfully_cancel_orders() {
             order_amount: coin(5, "eth"),
             owner_address: Addr::unchecked("user"),
             order_target_denom: "".to_string(),
+            status: Status::NotProcessed,
         },
         SpotOrder {
             order_type: OrderType::StopLoss,
@@ -45,6 +47,7 @@ fn successfully_cancel_orders() {
             order_amount: coin(20, "usdt"),
             owner_address: Addr::unchecked("user1"),
             order_target_denom: "".to_string(),
+            status: Status::NotProcessed,
         },
         SpotOrder {
             order_type: OrderType::StopLoss,
@@ -57,6 +60,7 @@ fn successfully_cancel_orders() {
             order_amount: coin(6, "btc"),
             owner_address: Addr::unchecked("user"),
             order_target_denom: "".to_string(),
+            status: Status::NotProcessed,
         },
     ];
 

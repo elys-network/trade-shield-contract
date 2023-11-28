@@ -10,6 +10,7 @@ mod spot_order {
 }
 mod margin_order;
 mod reply_info;
+mod status;
 
 pub use elys_bindings::types::*;
 pub use margin_order::MarginOrder;
@@ -17,3 +18,4 @@ pub use order_type::OrderType;
 pub use reply_info::ReplyInfo;
 pub use spot_order::spot_order::SpotOrder;
 pub use spot_order_price::OrderPrice;
+pub use status::Status;

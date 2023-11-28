@@ -1,5 +1,5 @@
 use super::*;
-use cosmwasm_std::Coin;
+use cosmwasm_std::{Coin, Decimal};
 
 pub fn swap_estimation_by_denom(
     deps: Deps<ElysQuery>,
@@ -10,7 +10,7 @@ pub fn swap_estimation_by_denom(
     let querier = ElysQuerier::new(&deps.querier);
 
     let resp: AmmSwapEstimationByDenomResponse =
-        querier.amm_swap_estimation_by_denom(&amount, denom_in, denom_out)?;
+        querier.amm_swap_estimation_by_denom(&amount, denom_in, denom_out, &Decimal::zero())?;
 
     Ok(resp)
 }

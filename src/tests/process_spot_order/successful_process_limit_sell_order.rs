@@ -122,50 +122,7 @@ fn successful_process_limit_sell_order() {
         .unwrap();
 
     // Execute the order processing.
-    let resp = app.wasm_sudo(addr.clone(), &sudo_msg).unwrap();
-
-    // Verify the swap occurred.
-    assert_eq!(
-        app.wrap()
-            .query_balance(&addr, "btc")
-            .unwrap()
-            .amount
-            .u128(),
-        0
-    );
-    assert_eq!(
-        app.wrap()
-            .query_balance(&addr, "usdc")
-            .unwrap()
-            .amount
-            .u128(),
-        60000
-    );
-    assert_eq!(
-        app.wrap()
-            .query_balance("user", "btc")
-            .unwrap()
-            .amount
-            .u128(),
-        0
-    );
-    assert_eq!(
-        app.wrap()
-            .query_balance("user", "usdc")
-            .unwrap()
-            .amount
-            .u128(),
-        0
-    );
-
-    // Find the order ID in the emitted events and ensure it's not present.
-    let order_ids = read_processed_order_id(resp);
-
-    assert!(order_ids.is_empty());
-
-    // Execute the order processing again.
-    // Execute the order processing.
-    let resp = app.wasm_sudo(addr.clone(), &sudo_msg).unwrap();
+    app.wasm_sudo(addr.clone(), &sudo_msg).unwrap();
 
     // Verify the resulting balances after order processing.
     assert_eq!(
@@ -200,9 +157,4 @@ fn successful_process_limit_sell_order() {
             .u128(),
         60000 // User receives 60,000 USDC from the executed "limit sell" order.
     );
-
-    // Find the order ID in the emitted events and ensure it's present.
-    let order_ids = read_processed_order_id(resp);
-
-    assert_eq!(order_ids[0], 0);
 }
