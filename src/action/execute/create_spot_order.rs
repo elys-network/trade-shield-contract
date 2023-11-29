@@ -48,6 +48,7 @@ pub fn create_spot_order(
         info.sender.clone(),
         order_target_denom,
         &order_vec,
+        &env.block,
     );
 
     let bank_msg: BankMsg = BankMsg::Send {

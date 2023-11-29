@@ -1,4 +1,4 @@
-use cosmwasm_std::{to_json_binary, Coin};
+use cosmwasm_std::{to_json_binary, Coin, Timestamp};
 
 use super::*;
 
@@ -22,6 +22,10 @@ fn successfully_cancel_orders() {
             owner_address: Addr::unchecked("user"),
             order_target_denom: "".to_string(),
             status: Status::NotProcessed,
+            date: Date {
+                height: 20,
+                time: Timestamp::from_seconds(500),
+            },
         },
         SpotOrder {
             order_type: OrderType::LimitSell,
@@ -35,6 +39,10 @@ fn successfully_cancel_orders() {
             owner_address: Addr::unchecked("user"),
             order_target_denom: "".to_string(),
             status: Status::NotProcessed,
+            date: Date {
+                height: 20,
+                time: Timestamp::from_seconds(500),
+            },
         },
         SpotOrder {
             order_type: OrderType::StopLoss,
@@ -48,6 +56,10 @@ fn successfully_cancel_orders() {
             owner_address: Addr::unchecked("user1"),
             order_target_denom: "".to_string(),
             status: Status::NotProcessed,
+            date: Date {
+                height: 20,
+                time: Timestamp::from_seconds(500),
+            },
         },
         SpotOrder {
             order_type: OrderType::StopLoss,
@@ -61,6 +73,10 @@ fn successfully_cancel_orders() {
             owner_address: Addr::unchecked("user"),
             order_target_denom: "".to_string(),
             status: Status::NotProcessed,
+            date: Date {
+                height: 20,
+                time: Timestamp::from_seconds(500),
+            },
         },
     ];
 
