@@ -1,3 +1,5 @@
+use cosmwasm_std::Timestamp;
+
 use crate::msg::query_resp::GetSpotOrdersResp;
 
 use super::*;
@@ -93,6 +95,10 @@ fn create_orders() -> Vec<SpotOrder> {
             owner_address: Addr::unchecked("userA"),
             order_target_denom: "btc".to_owned(),
             status: Status::NotProcessed,
+            date: Date {
+                height: 20,
+                time: Timestamp::from_seconds(600),
+            },
         },
         SpotOrder {
             order_type: OrderType::LimitSell,
@@ -106,6 +112,10 @@ fn create_orders() -> Vec<SpotOrder> {
             owner_address: Addr::unchecked("userB"),
             order_target_denom: "eth".to_owned(),
             status: Status::NotProcessed,
+            date: Date {
+                height: 20,
+                time: Timestamp::from_seconds(600),
+            },
         },
         SpotOrder {
             order_type: OrderType::StopLoss,
@@ -119,6 +129,10 @@ fn create_orders() -> Vec<SpotOrder> {
             owner_address: Addr::unchecked("userC"),
             order_target_denom: "xrp".to_owned(),
             status: Status::NotProcessed,
+            date: Date {
+                height: 20,
+                time: Timestamp::from_seconds(600),
+            },
         },
         SpotOrder {
             order_type: OrderType::StopLoss,
@@ -132,6 +146,10 @@ fn create_orders() -> Vec<SpotOrder> {
             owner_address: Addr::unchecked("userD"),
             order_target_denom: "ltc".to_owned(),
             status: Status::NotProcessed,
+            date: Date {
+                height: 20,
+                time: Timestamp::from_seconds(600),
+            },
         },
         SpotOrder {
             order_type: OrderType::LimitBuy,
@@ -145,6 +163,10 @@ fn create_orders() -> Vec<SpotOrder> {
             owner_address: Addr::unchecked("userE"),
             order_target_denom: "ada".to_owned(),
             status: Status::NotProcessed,
+            date: Date {
+                height: 20,
+                time: Timestamp::from_seconds(600),
+            },
         },
     ]
 }

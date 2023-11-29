@@ -1,4 +1,4 @@
-use crate::types::{order_type::OrderType, OrderPrice, Status};
+use crate::types::{order_type::OrderType, Date, OrderPrice, Status};
 use cosmwasm_schema::cw_serde;
 use cosmwasm_std::{Addr, Coin};
 
@@ -11,4 +11,5 @@ pub struct SpotOrder {
     pub owner_address: Addr,
     pub order_target_denom: String,
     pub status: Status,
+    pub date: Date,
 }

@@ -8,10 +8,12 @@ mod spot_order {
         mod new_dummy;
     }
 }
+mod date;
 mod margin_order;
 mod reply_info;
 mod status;
 
+pub use date::Date;
 pub use elys_bindings::types::*;
 pub use margin_order::MarginOrder;
 pub use order_type::OrderType;

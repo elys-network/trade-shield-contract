@@ -1,5 +1,5 @@
 use super::*;
-use cosmwasm_std::{coins, Coin};
+use cosmwasm_std::{coins, Coin, Timestamp};
 
 #[test]
 fn process_spot_order_processing() {
@@ -26,6 +26,10 @@ fn process_spot_order_processing() {
         owner_address: Addr::unchecked("user"),
         order_target_denom: "ubtc".to_string(),
         status: Status::Processed,
+        date: Date {
+            height: 20,
+            time: Timestamp::from_seconds(644),
+        },
     };
 
     // Create a mock message to instantiate the contract with the dummy order.

@@ -1,5 +1,5 @@
 use super::*;
-use cosmwasm_std::{coins, Coin};
+use cosmwasm_std::{coins, BlockInfo, Coin, Timestamp};
 // This test case verifies the successful processing of a "stop-loss" order in the contract.
 // The scenario involves a "stop-loss" order created by a user to protect against a decline in BTC price.
 // - Initially, the BTC price is 30,000 USDC, and the trigger price in the order is 20,000 USDC.
@@ -46,6 +46,11 @@ fn successful_process_stop_loss_order() {
         Addr::unchecked("user"),
         "usdc".to_string(),
         &vec![],
+        &BlockInfo {
+            height: 50,
+            time: Timestamp::from_seconds(600),
+            chain_id: "elys-app".to_string(),
+        },
     );
 
     // Create a mock message to instantiate the contract with the dummy order.

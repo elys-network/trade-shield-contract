@@ -1,7 +1,7 @@
 use crate::tests::read_processed_order_id::read_processed_order_id;
 
 use super::*;
-use cosmwasm_std::Coin;
+use cosmwasm_std::{Coin, Timestamp};
 
 #[test]
 fn successful_process_5_of_10_orders() {
@@ -241,6 +241,10 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
                 rate: Decimal::from_atomics(Uint128::new(1700), 0).unwrap(),
             },
             status: Status::NotProcessed,
+            date: Date {
+                height: 20,
+                time: Timestamp::from_seconds(500),
+            },
         },
         SpotOrder {
             order_type: OrderType::StopLoss,
@@ -254,6 +258,10 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             },
             order_target_denom: "usdc".to_string(),
             status: Status::NotProcessed,
+            date: Date {
+                height: 20,
+                time: Timestamp::from_seconds(500),
+            },
         },
         SpotOrder {
             order_type: OrderType::StopLoss,
@@ -267,6 +275,10 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             },
             order_target_denom: "usdc".to_string(),
             status: Status::NotProcessed,
+            date: Date {
+                height: 20,
+                time: Timestamp::from_seconds(500),
+            },
         },
         SpotOrder {
             order_type: OrderType::StopLoss,
@@ -280,6 +292,10 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             },
             order_target_denom: "usdc".to_string(),
             status: Status::NotProcessed,
+            date: Date {
+                height: 20,
+                time: Timestamp::from_seconds(500),
+            },
         },
         SpotOrder {
             order_type: OrderType::StopLoss,
@@ -293,6 +309,10 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             },
             order_target_denom: "usdc".to_string(),
             status: Status::NotProcessed,
+            date: Date {
+                height: 20,
+                time: Timestamp::from_seconds(500),
+            },
         },
         SpotOrder {
             order_type: OrderType::LimitSell,
@@ -306,6 +326,10 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             },
             order_target_denom: "usdc".to_string(),
             status: Status::NotProcessed,
+            date: Date {
+                height: 20,
+                time: Timestamp::from_seconds(500),
+            },
         },
         SpotOrder {
             order_type: OrderType::LimitSell,
@@ -319,6 +343,10 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             },
             order_target_denom: "usdc".to_string(),
             status: Status::NotProcessed,
+            date: Date {
+                height: 20,
+                time: Timestamp::from_seconds(500),
+            },
         },
         SpotOrder {
             order_type: OrderType::LimitSell,
@@ -332,6 +360,10 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             },
             order_target_denom: "usdc".to_string(),
             status: Status::NotProcessed,
+            date: Date {
+                height: 20,
+                time: Timestamp::from_seconds(500),
+            },
         },
         SpotOrder {
             order_type: OrderType::LimitSell,
@@ -345,6 +377,10 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             },
             order_target_denom: "usdc".to_string(),
             status: Status::NotProcessed,
+            date: Date {
+                height: 20,
+                time: Timestamp::from_seconds(500),
+            },
         },
         SpotOrder {
             order_type: OrderType::LimitSell,
@@ -358,6 +394,10 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
             },
             order_target_denom: "usdc".to_string(),
             status: Status::NotProcessed,
+            date: Date {
+                height: 20,
+                time: Timestamp::from_seconds(500),
+            },
         },
     ]
 }
