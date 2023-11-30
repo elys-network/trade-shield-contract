@@ -34,7 +34,9 @@ pub fn cancel_margin_order(
         amount: vec![order.collateral.clone()],
     };
 
-    let resp = Response::new().add_attribute("order_id", order.order_id.to_string());
+    let resp = Response::new()
+        .add_attribute("event_type", "cancel_margin_order")
+        .add_attribute("margin_order_id", order.order_id.to_string());
 
     MARGIN_ORDER.save(deps.storage, &orders)?;
 

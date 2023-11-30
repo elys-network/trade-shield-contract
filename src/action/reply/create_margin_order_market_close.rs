@@ -34,8 +34,9 @@ pub fn reply_to_create_margin_market_close(
 
     order.status = Status::Processed;
 
-    let resp =
-        Response::new().add_attribute("margin_trading_position_id", margin_resp.id.to_string());
+    let resp = Response::new()
+        .add_attribute("event_type", "reply_to_create_margin_market_close")
+        .add_attribute("margin_trading_position_id", margin_resp.id.to_string());
 
     Ok(resp)
 }

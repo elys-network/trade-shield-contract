@@ -36,7 +36,8 @@ pub fn cancel_spot_order(
 
     let resp = Response::new()
         .add_message(CosmosMsg::Bank(refund_msg))
-        .add_attribute("canceled_spot_order_id", order_id.to_string());
+        .add_attribute("event_type", "cancel_spot_order")
+        .add_attribute("order_id", order_id.to_string());
 
     SPOT_ORDER.save(deps.storage, &orders_list)?;
 

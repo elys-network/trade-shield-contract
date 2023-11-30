@@ -112,6 +112,7 @@ fn create_resp(
     in_route: Vec<SwapAmountInRoute>,
 ) -> StdResult<Response<ElysMsg>> {
     let resp = Response::new()
+        .add_attribute("event_type", "create_spot_order")
         .add_attribute("order_id", new_order.order_id.to_string())
         .add_message(bank_msg); // information message
 
