@@ -5,7 +5,7 @@ use std::ops::Div;
 
 use super::*;
 
-pub fn process_spot_orders(
+pub fn process_orders(
     deps: DepsMut<ElysQuery>,
     env: Env,
 ) -> Result<Response<ElysMsg>, ContractError> {

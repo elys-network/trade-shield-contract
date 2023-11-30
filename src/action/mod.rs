@@ -71,6 +71,6 @@ pub mod reply {
 pub mod sudo {
     use super::*;
 
-    mod process_spot_orders;
-    pub use process_spot_orders::process_spot_orders;
+    mod process_orders;
+    pub use process_orders::process_orders;
 }

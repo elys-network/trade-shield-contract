@@ -14,6 +14,6 @@ pub fn get_margin_position(
     if let Some(_) = &resp.mtp {
         Ok(resp)
     } else {
-        Err(StdError::not_found("margin trading prosition").into())
+        Err(StdError::not_found("margin trading position").into())
     }
 }
