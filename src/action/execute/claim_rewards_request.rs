@@ -2,14 +2,14 @@ use super::*;
 use crate::types::EarnType;
 
 pub fn claim_rewards_request(
-    _env: Env,
-    _info: MessageInfo,
+    env: Env,
+    info: MessageInfo,
     _deps: DepsMut<ElysQuery>,
-    delegator_address: String,
     withdraw_type: EarnType,
 ) -> Result<Response<ElysMsg>, ContractError> {
     let msg = ElysMsg::withdraw_rewards(
-        delegator_address,
+        env.contract.address.into_string(),
+        info.sender.into_string(),
         withdraw_type,
     );
 

@@ -2,14 +2,14 @@ use super::*;
 use cosmwasm_std::Int128;
 
 pub fn eden_cancel_vest_request(
-    _env: Env,
-    _info: MessageInfo,
+    env: Env,
+    info: MessageInfo,
     _deps: DepsMut<ElysQuery>,
-    creator: String,
     amount: u64,
 ) -> Result<Response<ElysMsg>, ContractError> {
     let msg = ElysMsg::eden_cancel_vesting(
-        creator,
+        env.contract.address.into_string(),
+        info.sender.into_string(),
         Int128::from(amount),
         "ueden".to_string(),
     );

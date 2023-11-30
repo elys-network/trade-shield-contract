@@ -61,13 +61,13 @@ pub fn execute(
         } => cancel_margin_orders(info, deps, order_ids, owner_address, order_type),
         CloseMarginPosition { id } => close_margin_position(info, env, id),
 
-        StakeRequest { address, amount, asset, validator_address } => stake_request(env, info, deps, address, amount, asset, validator_address),
-        UnstakeRequest { address, amount, asset, validator_address } => unstake_request(env, info, deps, address, amount, asset, validator_address),
-        ElysRedelegateRequest { delegator_address, validator_src_address, validator_dst_address, amount} => elys_redelegation_request(env, info, deps, delegator_address, validator_src_address, validator_dst_address, amount),
-        ElysCancelUnstakeRequest { delegator_address, validator_address, amount, creation_height } => elys_cancel_unstake_request(env, info, deps, delegator_address, validator_address, amount, creation_height),
-        EdenVestRequest { creator, amount} => eden_vest_request(env, info, deps, creator, amount),
-        EdenCancelVestRequest { creator, amount  } => eden_cancel_vest_request(env, info, deps, creator, amount),
-        ClaimRewardsRequest { delegator_address, withdraw_type } => claim_rewards_request(env, info, deps, delegator_address, withdraw_type),
-        ClaimValidatorCommissionRequest { delegator_address, validator_address } => claim_validator_commission_request(env, info, deps, delegator_address, validator_address),
+        StakeRequest { amount, asset, validator_address } => stake_request(env, info, deps, amount, asset, validator_address),
+        UnstakeRequest { amount, asset, validator_address } => unstake_request(env, info, deps, amount, asset, validator_address),
+        ElysRedelegateRequest { validator_src_address, validator_dst_address, amount} => elys_redelegation_request(env, info, deps, validator_src_address, validator_dst_address, amount),
+        ElysCancelUnstakeRequest { validator_address, amount, creation_height } => elys_cancel_unstake_request(env, info, deps, validator_address, amount, creation_height),
+        EdenVestRequest { amount} => eden_vest_request(env, info, deps, amount),
+        EdenCancelVestRequest { amount  } => eden_cancel_vest_request(env, info, deps, amount),
+        ClaimRewardsRequest { withdraw_type } => claim_rewards_request(env, info, deps, withdraw_type),
+        ClaimValidatorCommissionRequest { validator_address } => claim_validator_commission_request(env, info, deps, validator_address),
     }
 }

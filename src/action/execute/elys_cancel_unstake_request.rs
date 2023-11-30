@@ -2,16 +2,16 @@ use super::*;
 use cosmwasm_std::Coin;
 
 pub fn elys_cancel_unstake_request(
-    _env: Env,
-    _info: MessageInfo,
+    env: Env,
+    info: MessageInfo,
     _deps: DepsMut<ElysQuery>,
-    delegator_address: String,
     validator_address: String,
     amount: Coin,
     creation_height: i64,
 ) -> Result<Response<ElysMsg>, ContractError> {
     let msg = ElysMsg::cancel_unbonding(
-        delegator_address,
+        env.contract.address.into_string(),
+        info.sender.into_string(),
         validator_address,
         amount,
         creation_height,

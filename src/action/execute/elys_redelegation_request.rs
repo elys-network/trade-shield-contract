@@ -2,11 +2,9 @@ use super::*;
 use cosmwasm_std::Coin;
 
 pub fn elys_redelegation_request(
-    _env: Env,
-    _info: MessageInfo,
+    env: Env,
+    info: MessageInfo,
     _deps: DepsMut<ElysQuery>,
-    // the address of the current user.
-    delegator_address: String,
     // the amount to be staked in base denomination.
     validator_src_address: String,
     // The asset to be staked
@@ -16,7 +14,8 @@ pub fn elys_redelegation_request(
     amount: Coin
 ) -> Result<Response<ElysMsg>, ContractError> {
     let msg = ElysMsg::begin_redelegate(
-        delegator_address,
+        env.contract.address.into_string(),
+        info.sender.into_string(),
         validator_src_address,
         validator_dst_address,
         amount,

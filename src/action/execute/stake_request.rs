@@ -2,11 +2,9 @@ use super::*;
 use cosmwasm_std::Int128;
 
 pub fn stake_request(
-    _env: Env,
-    _info: MessageInfo,
+    env: Env,
+    info: MessageInfo,
     deps: DepsMut<ElysQuery>,
-    // the address of the current user.
-    address: String,
     // the amount to be staked in base denomination.
     amount: u64,
     // The asset to be staked
@@ -16,6 +14,7 @@ pub fn stake_request(
     validator_address: Option<String>
 ) -> Result<Response<ElysMsg>, ContractError> {
     let querier = ElysQuerier::new(&deps.querier);
+    let address = info.sender.into_string();
     let balance = querier.get_balance(address.to_owned(), asset.to_owned())?;
     let token_amount: u128 = balance.amount.into();
     if token_amount < amount as u128 {
@@ -23,6 +22,7 @@ pub fn stake_request(
     }
 
     let msg = ElysMsg::stake_token(
+        env.contract.address.into_string(),
         address,
         Int128::from(amount),
         asset,

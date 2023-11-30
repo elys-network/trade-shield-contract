@@ -1,14 +1,14 @@
 use super::*;
 // delegator_address, validator_address, denom
 pub fn claim_validator_commission_request(
-    _env: Env,
-    _info: MessageInfo,
+    env: Env,
+    info: MessageInfo,
     _deps: DepsMut<ElysQuery>,
-    delegator_address: String,
     validator_address: String,
 ) -> Result<Response<ElysMsg>, ContractError> {
     let msg = ElysMsg::withdraw_validator_commissions(
-        delegator_address,
+        env.contract.address.into_string(),
+        info.sender.into_string(),
         validator_address,
     );
 

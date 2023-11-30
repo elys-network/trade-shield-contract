@@ -372,7 +372,7 @@ dependencies = [
 [[package]]
 name = "elys-bindings"
 version = "0.5.0"
-source = "git+https://github.com/elys-network/bindings?branch=feat/import-financial#ed85a9207aee2ed29b2f9e63645883c0fc041bad"
+source = "git+https://github.com/elys-network/bindings?branch=feat/import-financial#9e6b24d6e8166b13e3cf0642d6a4c9ee5a85a273"
 dependencies = [
  "cosmwasm-schema",
  "cosmwasm-std",
@@ -382,7 +382,7 @@ dependencies = [
 [[package]]
 name = "elys-bindings-test"
 version = "0.5.0"
-source = "git+https://github.com/elys-network/bindings?branch=feat/import-financial#ed85a9207aee2ed29b2f9e63645883c0fc041bad"
+source = "git+https://github.com/elys-network/bindings?branch=feat/import-financial#9e6b24d6e8166b13e3cf0642d6a4c9ee5a85a273"
 dependencies = [
  "anyhow",
  "cosmwasm-schema",
