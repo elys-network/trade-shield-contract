@@ -31,9 +31,9 @@ pub fn reply_to_spot_order(
 
     SPOT_ORDER.save(deps.storage, &orders)?;
 
-    let resp: Response<ElysMsg> = Response::new()
-        .add_attribute("event_type", "reply_to_spot_order")
-        .add_attribute("order_id", order_id.to_string());
+    let resp: Response<ElysMsg> = Response::new().add_event(
+        Event::new("reply_to_spot_order").add_attribute("order_id", order_id.to_string()),
+    );
 
     Ok(resp)
 }

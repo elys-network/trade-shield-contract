@@ -31,10 +31,11 @@ pub fn reply_to_open_margin_position(
 
     MARGIN_ORDER.save(deps.storage, &orders)?;
 
-    let resp: Response<ElysMsg> = Response::new()
-        .add_attribute("event_type", "reply_to_open_margin_position")
-        .add_attribute("margin_order_id", order_id.to_string())
-        .add_attribute("margin_trading_position_opened_id", res.id.to_string());
+    let resp: Response<ElysMsg> = Response::new().add_event(
+        Event::new("reply_to_open_margin_position")
+            .add_attribute("margin_order_id", order_id.to_string())
+            .add_attribute("margin_trading_position_opened_id", res.id.to_string()),
+    );
 
     Ok(resp)
 }

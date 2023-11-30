@@ -1,4 +1,5 @@
 use crate::{states::*, types::*, ContractError};
+use cosmwasm_std::Event;
 use cosmwasm_std::{BankMsg, CosmosMsg, DepsMut, Env, MessageInfo, Response};
 use elys_bindings::*;
 
