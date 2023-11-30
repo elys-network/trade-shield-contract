@@ -3,7 +3,7 @@ use std::str::FromStr;
 use super::*;
 
 #[test]
-fn successful_create_margin_market_order() {
+fn successful_create_margin_market_open_order() {
     // Create a wallet for the "user" with an initial balance of 10 BTC.
     let wallet = vec![("user", coins(10, "btc"))];
 
@@ -37,17 +37,17 @@ fn successful_create_margin_market_order() {
         Addr::unchecked("user"),
         addr.clone(),
         &ExecuteMsg::CreateMarginOrder {
-            position: MarginPosition::Long,
-            collateral: coin(10, "btc"),
-            leverage: Decimal::from_atomics(Uint128::new(215), 2).unwrap(),
-            borrow_asset: "btc".to_string(),
-            take_profit_price: Decimal::from_atomics(Uint128::new(200), 2).unwrap(),
-            order_type: OrderType::MarketBuy,
+            position: Some(MarginPosition::Long),
+            leverage: Some(Decimal::from_atomics(Uint128::new(215), 2).unwrap()),
+            borrow_asset: Some("btc".to_string()),
+            take_profit_price: Some(Decimal::from_atomics(Uint128::new(200), 2).unwrap()),
+            order_type: MarginOrderType::MarketOpen,
             trigger_price: Some(OrderPrice {
                 base_denom: "btc".to_string(),
                 quote_denom: "usdc".to_string(),
                 rate: Decimal::from_str("1.7").unwrap(),
             }),
+            position_id: None,
         },
         &coins(10, "btc"), // User's BTC balance.
     )

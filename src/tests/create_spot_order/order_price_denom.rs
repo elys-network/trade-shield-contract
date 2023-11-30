@@ -16,7 +16,7 @@ fn order_price_denom() {
     };
 
     let create_order_msg = ExecuteMsg::CreateSpotOrder {
-        order_type: OrderType::LimitSell,
+        order_type: SpotOrderType::LimitSell,
         order_price: Some(OrderPrice {
             base_denom: "eth".to_string(),
             quote_denom: "usdc".to_string(), // Invalid pair.

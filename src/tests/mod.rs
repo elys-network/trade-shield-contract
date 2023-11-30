@@ -66,10 +66,9 @@ mod process_spot_order {
 mod create_margin_order {
     use super::*;
     mod coin_number;
-    mod collateral_amount;
-    mod non_usdc_collateral_for_short;
     mod successful_create_margin_market_order;
     mod successful_create_margin_order;
+    mod successful_create_nargin_market_close;
 }
 
 mod cancel_margin_order {
@@ -77,6 +76,12 @@ mod cancel_margin_order {
     mod not_found;
     mod succesful_cancel_an_order;
     mod unauthorize;
+}
+
+mod process_margin_order {
+    use super::*;
+    mod process_limit_open;
+    mod process_order_close;
 }
 
 mod get_margin_order {

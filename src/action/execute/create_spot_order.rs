@@ -9,7 +9,7 @@ pub fn create_spot_order(
     env: Env,
     deps: DepsMut<ElysQuery>,
     info: MessageInfo,
-    order_type: OrderType,
+    order_type: SpotOrderType,
     order_source_denom: String,
     order_target_denom: String,
     order_price: Option<OrderPrice>,
@@ -20,7 +20,7 @@ pub fn create_spot_order(
 
     let querier = ElysQuerier::new(&deps.querier);
 
-    if order_price.is_none() && order_type != OrderType::MarketBuy {
+    if order_price.is_none() && order_type != SpotOrderType::MarketBuy {
         return Err(StdError::not_found("order price").into());
     }
 
@@ -75,7 +75,7 @@ fn check_denom_error(
     order_source_denom: &str,
     order_target_denom: &str,
     order_price: &Option<OrderPrice>,
-    order_type: &OrderType,
+    order_type: &SpotOrderType,
     funds_send_denom: &str,
 ) -> Result<(), ContractError> {
     if order_source_denom != funds_send_denom {
@@ -86,7 +86,7 @@ fn check_denom_error(
         return Err(ContractError::SpotOrderSameDenom);
     }
 
-    if order_type == &OrderType::MarketBuy {
+    if order_type == &SpotOrderType::MarketBuy {
         return Ok(());
     }
 
@@ -114,7 +114,7 @@ fn create_resp(
         .add_attribute("order_id", new_order.order_id.to_string())
         .add_message(bank_msg); // information message
 
-    if new_order.order_type != OrderType::MarketBuy {
+    if new_order.order_type != SpotOrderType::MarketBuy {
         return Ok(resp);
     }
 

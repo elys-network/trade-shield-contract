@@ -9,18 +9,18 @@ fn succesful_cancel_an_order() {
     // Create a mock message to instantiate the contract with no initial orders.
     let instantiate_msg = InstantiateMockMsg {
         spot_orders: vec![],
-        margin_orders: vec![MarginOrder::new(
+        margin_orders: vec![MarginOrder::new_open(
+            "user",
             &MarginPosition::Long,
+            &MarginOrderType::LimitOpen,
             &coin(255, "usdc"),
             "btc",
-            "user",
-            &Decimal::one(),
-            &Decimal::one(),
-            &OrderType::LimitBuy,
+            &Decimal::from_str("1.2").unwrap(),
+            &Decimal::from_str("1.2").unwrap(),
             &Some(OrderPrice {
                 base_denom: "btc".to_string(),
                 quote_denom: "usdc".to_string(),
-                rate: Decimal::one(),
+                rate: Decimal::from_str("20000.0").unwrap(),
             }),
             &vec![],
         )],

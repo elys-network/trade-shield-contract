@@ -15,7 +15,7 @@ fn process_spot_order_processing() {
 
     // Create a "limit buy" order (dummy order) with a specific rate and balance.
     let dummy_order = SpotOrder {
-        order_type: OrderType::LimitBuy,
+        order_type: SpotOrderType::LimitBuy,
         order_id: 0,
         order_price: OrderPrice {
             base_denom: "ubtc".to_string(),

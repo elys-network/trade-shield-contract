@@ -11,7 +11,7 @@ fn successfully_cancel_orders() {
 
     let spot_orders = vec![
         SpotOrder {
-            order_type: OrderType::LimitBuy,
+            order_type: SpotOrderType::LimitBuy,
             order_id: 0,
             order_price: OrderPrice {
                 base_denom: "".to_string(),
@@ -24,7 +24,7 @@ fn successfully_cancel_orders() {
             status: Status::NotProcessed,
         },
         SpotOrder {
-            order_type: OrderType::LimitSell,
+            order_type: SpotOrderType::LimitSell,
             order_id: 1,
             order_price: OrderPrice {
                 base_denom: "".to_string(),
@@ -37,7 +37,7 @@ fn successfully_cancel_orders() {
             status: Status::NotProcessed,
         },
         SpotOrder {
-            order_type: OrderType::StopLoss,
+            order_type: SpotOrderType::StopLoss,
             order_id: 2,
             order_price: OrderPrice {
                 base_denom: "".to_string(),
@@ -50,7 +50,7 @@ fn successfully_cancel_orders() {
             status: Status::NotProcessed,
         },
         SpotOrder {
-            order_type: OrderType::StopLoss,
+            order_type: SpotOrderType::StopLoss,
             order_id: 3,
             order_price: OrderPrice {
                 base_denom: "".to_string(),

@@ -1,6 +1,6 @@
 #[allow(unused_imports)]
 use super::query_resp::*;
-use crate::types::OrderType;
+use crate::types::{MarginOrderType, SpotOrderType};
 use cosmwasm_schema::{cw_serde, QueryResponses};
 use cosmwasm_std::Coin;
 #[allow(unused_imports)]
@@ -22,7 +22,13 @@ pub enum QueryMsg {
     GetSpotOrders {
         pagination: PageRequest,
         order_owner: Option<String>,
-        order_type: Option<OrderType>,
+        order_type: Option<SpotOrderType>,
+    },
+    #[returns(GetMarginOrdersResp)]
+    GetMarginOrders {
+        pagination: PageRequest,
+        order_owner: Option<String>,
+        order_type: Option<MarginOrderType>,
     },
     #[returns(AmmSwapEstimationByDenomResponse)]
     SwapEstimationByDenom {

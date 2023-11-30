@@ -53,7 +53,7 @@ fn successful_create_market_buy_order() {
         Addr::unchecked("user"),
         addr.clone(),
         &ExecuteMsg::CreateSpotOrder {
-            order_type: OrderType::MarketBuy,
+            order_type: SpotOrderType::MarketBuy,
             // Empty order price - not utilized in market orders
             order_price: None,
             order_source_denom: "btc".to_string(),

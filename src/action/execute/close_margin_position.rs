@@ -7,7 +7,7 @@ pub fn close_margin_position(
 ) -> Result<Response<ElysMsg>, ContractError> {
     let msg = ElysMsg::margin_broker_close_position(info.sender, id, env.contract.address);
 
-    let resp = Response::new().add_message(msg);
+    let resp = Response::new().add_message(CosmosMsg::Custom(msg));
 
     Ok(resp)
 }

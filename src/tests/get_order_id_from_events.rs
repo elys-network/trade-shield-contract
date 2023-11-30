@@ -12,3 +12,12 @@ pub fn get_order_id_from_events(events: &Vec<Event>) -> Option<u64> {
     }
     None
 }
+
+pub fn get_attr_from_events(events: &Vec<Event>, key: &str) -> Option<String> {
+    for event in events {
+        if let Some(attr) = event.attributes.iter().find(|attr| attr.key == key) {
+            return Some(attr.value.clone());
+        }
+    }
+    None
+}

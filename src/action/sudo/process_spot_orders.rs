@@ -9,27 +9,46 @@ pub fn process_spot_orders(
     deps: DepsMut<ElysQuery>,
     env: Env,
 ) -> Result<Response<ElysMsg>, ContractError> {
-    let mut orders = SPOT_ORDER.load(deps.storage)?;
+    let mut spot_orders = SPOT_ORDER.load(deps.storage)?;
+    let mut margin_orders = MARGIN_ORDER.load(deps.storage)?;
     let mut reply_info = REPLY_INFO.load(deps.storage)?;
 
     let querier = ElysQuerier::new(&deps.querier);
     let mut submsgs: Vec<SubMsg<ElysMsg>> = vec![];
 
-    for order in orders.iter_mut() {
+    for spot_order in spot_orders.iter_mut() {
         let amm_swap_estimation = querier.amm_swap_estimation_by_denom(
-            &order.order_amount,
-            &order.order_amount.denom,
-            &order.order_target_denom,
+            &spot_order.order_amount,
+            &spot_order.order_amount.denom,
+            &spot_order.order_target_denom,
             &Decimal::zero(),
         )?;
 
-        if check_order(order, &amm_swap_estimation) {
+        if check_spot_order(&spot_order, &amm_swap_estimation) {
             process_spot_order(
-                order,
+                spot_order,
                 &mut submsgs,
                 env.contract.address.as_str(),
                 &mut reply_info,
                 amm_swap_estimation,
+            )?;
+        }
+    }
+
+    for margin_order in margin_orders.iter_mut() {
+        let amm_swap_estimation = querier.amm_swap_estimation_by_denom(
+            &margin_order.collateral,
+            &margin_order.collateral.denom,
+            &margin_order.borrow_asset,
+            &Decimal::zero(),
+        )?;
+
+        if check_margin_order(&margin_order, amm_swap_estimation) {
+            process_margin_order(
+                margin_order,
+                &mut submsgs,
+                env.contract.address.as_str(),
+                &mut reply_info,
             )?;
         }
     }
@@ -41,8 +60,102 @@ pub fn process_spot_orders(
     Ok(resp)
 }
 
-fn check_order(order: &SpotOrder, amm_swap_estimation: &AmmSwapEstimationByDenomResponse) -> bool {
-    if order.order_type == OrderType::MarketBuy {
+fn process_margin_order(
+    order: &mut MarginOrder,
+    submsgs: &mut Vec<SubMsg<ElysMsg>>,
+    contract_address: &str,
+    reply_infos: &mut Vec<ReplyInfo>,
+) -> StdResult<()> {
+    let (msg, reply_type) = if order.order_type == MarginOrderType::LimitOpen {
+        (
+            ElysMsg::margin_broker_open_position(
+                contract_address,
+                &order.collateral.denom,
+                Int128::new(order.collateral.amount.u128() as i128),
+                &order.borrow_asset,
+                order.position.clone() as i32,
+                order.leverage.clone(),
+                order.take_profit_price.clone(),
+                &order.owner,
+            ),
+            ReplyType::MarginBrokerOpen,
+        )
+    } else {
+        (
+            ElysMsg::margin_broker_close_position(
+                contract_address,
+                order.position_id.unwrap(),
+                &order.owner,
+            ),
+            ReplyType::MarginBrokerClose,
+        )
+    };
+
+    let info_id = if let Some(max_info) = reply_infos.iter().max_by_key(|info| info.id) {
+        max_info.id + 1
+    } else {
+        0
+    };
+
+    reply_infos.push(ReplyInfo {
+        id: info_id,
+        reply_type,
+        data: Some(to_json_binary(&order.order_id)?),
+    });
+
+    submsgs.push(SubMsg::reply_on_success(msg, info_id));
+    Ok(())
+}
+
+fn check_margin_order(
+    order: &MarginOrder,
+    amm_swap_estimation: AmmSwapEstimationByDenomResponse,
+) -> bool {
+    if order.order_type == MarginOrderType::MarketClose
+        || order.order_type == MarginOrderType::MarketOpen
+        || order.status != Status::NotProcessed
+    {
+        return false;
+    }
+
+    let trigger_price = order.trigger_price.clone().unwrap();
+
+    let order_spot_price = match order.collateral.denom == trigger_price.base_denom {
+        true => trigger_price.rate,
+        false => Decimal::one().div(trigger_price.rate),
+    };
+
+    let token_swap_estimation = amm_swap_estimation.amount.amount;
+    let order_estimation = order_spot_price * order.collateral.amount;
+
+    match (&order.order_type, &order.position) {
+        (MarginOrderType::LimitOpen, MarginPosition::Long) => {
+            token_swap_estimation <= order_estimation
+        }
+        (MarginOrderType::LimitOpen, MarginPosition::Short) => {
+            token_swap_estimation >= order_estimation
+        }
+        (MarginOrderType::LimitClose, MarginPosition::Long) => {
+            token_swap_estimation >= order_estimation
+        }
+        (MarginOrderType::LimitClose, MarginPosition::Short) => {
+            token_swap_estimation <= order_estimation
+        }
+        (MarginOrderType::StopLoss, MarginPosition::Long) => {
+            token_swap_estimation <= order_estimation
+        }
+        (MarginOrderType::StopLoss, MarginPosition::Short) => {
+            token_swap_estimation >= order_estimation
+        }
+        _ => false,
+    }
+}
+
+fn check_spot_order(
+    order: &SpotOrder,
+    amm_swap_estimation: &AmmSwapEstimationByDenomResponse,
+) -> bool {
+    if order.order_type == SpotOrderType::MarketBuy {
         return false;
     }
     if order.status != Status::NotProcessed {
@@ -57,11 +170,11 @@ fn check_order(order: &SpotOrder, amm_swap_estimation: &AmmSwapEstimationByDenom
     let order_token_out = order_spot_price * order.order_amount.amount;
 
     match order.order_type {
-        OrderType::LimitBuy => order_token_out <= amm_swap_estimation.amount.amount,
+        SpotOrderType::LimitBuy => order_token_out <= amm_swap_estimation.amount.amount,
 
-        OrderType::LimitSell => order_token_out <= amm_swap_estimation.amount.amount,
+        SpotOrderType::LimitSell => order_token_out <= amm_swap_estimation.amount.amount,
 
-        OrderType::StopLoss => order_token_out >= amm_swap_estimation.amount.amount,
+        SpotOrderType::StopLoss => order_token_out >= amm_swap_estimation.amount.amount,
         _ => false,
     }
 }
@@ -74,10 +187,10 @@ fn process_spot_order(
     amm_swap_estimation: AmmSwapEstimationByDenomResponse,
 ) -> StdResult<()> {
     let token_out_min_amount: Int128 = match order.order_type {
-        OrderType::LimitBuy => calculate_token_out_min_amount(order),
-        OrderType::LimitSell => calculate_token_out_min_amount(order),
-        OrderType::StopLoss => Int128::zero(),
-        OrderType::MarketBuy => Int128::zero(),
+        SpotOrderType::LimitBuy => calculate_token_out_min_amount(order),
+        SpotOrderType::LimitSell => calculate_token_out_min_amount(order),
+        SpotOrderType::StopLoss => Int128::zero(),
+        SpotOrderType::MarketBuy => Int128::zero(),
     };
 
     let msg = ElysMsg::amm_swap_exact_amount_in(

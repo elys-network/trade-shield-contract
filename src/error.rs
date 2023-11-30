@@ -28,8 +28,6 @@ pub enum ContractError {
     SpotOrderWrongFund,
     #[error("{order_id} is prossessing")]
     ProcessSpotOrderProcessing { order_id: u64 },
-    #[error("not the same amount send as collateral")]
-    CollateralAmount,
     #[error("invalid leverage amount")]
     Leverage,
     #[error("cannot cancel order: {order_id}, status: {status:?}")]

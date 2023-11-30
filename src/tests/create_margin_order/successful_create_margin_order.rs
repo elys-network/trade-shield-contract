@@ -1,13 +1,13 @@
 use std::str::FromStr;
 
-use crate::tests::get_order_id_from_events::get_order_id_from_events;
+use crate::tests::get_order_id_from_events::get_attr_from_events;
 
 use super::*;
 
 #[test]
 fn successful_create_margin_order() {
-    // Create a wallet for the "user" with an initial balance of 10 BTC.
-    let wallet = vec![("user", coins(10, "btc"))];
+    // Create a wallet for the "user" with an initial balance of 30000 usdc.
+    let wallet = vec![("user", coins(30000, "usdc"))];
 
     // Initialize the ElysApp instance with the specified wallet.
     let mut app = ElysApp::new_with_wallets(wallet);
@@ -40,42 +40,42 @@ fn successful_create_margin_order() {
             Addr::unchecked("user"),
             addr.clone(),
             &ExecuteMsg::CreateMarginOrder {
-                position: MarginPosition::Long,
-                collateral: coin(10, "btc"),
-                leverage: Decimal::from_atomics(Uint128::new(215), 2).unwrap(),
-                borrow_asset: "btc".to_string(),
-                take_profit_price: Decimal::from_atomics(Uint128::new(200), 2).unwrap(),
-                order_type: OrderType::LimitSell,
+                position: Some(MarginPosition::Long),
+                leverage: Some(Decimal::from_atomics(Uint128::new(215), 2).unwrap()),
+                borrow_asset: Some("btc".to_string()),
+                take_profit_price: Some(Decimal::from_atomics(Uint128::new(200), 2).unwrap()),
+                order_type: MarginOrderType::LimitOpen,
                 trigger_price: Some(OrderPrice {
                     base_denom: "btc".to_string(),
                     quote_denom: "usdc".to_string(),
-                    rate: Decimal::from_str("1.7").unwrap(),
+                    rate: Decimal::from_str("40000.1").unwrap(),
                 }),
+                position_id: None,
             },
-            &coins(10, "btc"), // User's BTC balance.
+            &coins(30000, "usdc"), // User's BTC balance.
         )
         .unwrap();
 
-    // Verify that the "user" no longer has any BTC after creating the order.
+    // Verify that the "user" no longer has any USDC after creating the order.
     assert_eq!(
         app.wrap()
-            .query_balance("user", "btc")
+            .query_balance("user", "usdc")
             .unwrap()
             .amount
             .u128(),
         0
     );
 
-    // Verify that the contract address locked the BTC.
+    // Verify that the contract address locked the USDC.
     assert_eq!(
         app.wrap()
-            .query_balance(&addr, "btc")
+            .query_balance(&addr, "usdc")
             .unwrap()
             .amount
             .u128(),
-        10
+        30000
     );
 
     // Verify that an order ID is emitted in the contract's events.
-    assert!(get_order_id_from_events(&resp.events).is_some());
+    assert!(get_attr_from_events(&resp.events, "margin_order_id").is_some());
 }

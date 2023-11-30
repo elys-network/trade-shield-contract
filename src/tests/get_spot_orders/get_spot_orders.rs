@@ -82,7 +82,7 @@ fn get_spot_orders() {
 fn create_orders() -> Vec<SpotOrder> {
     vec![
         SpotOrder {
-            order_type: OrderType::LimitBuy,
+            order_type: SpotOrderType::LimitBuy,
             order_id: 0,
             order_price: OrderPrice {
                 base_denom: "btc".to_owned(),
@@ -95,7 +95,7 @@ fn create_orders() -> Vec<SpotOrder> {
             status: Status::NotProcessed,
         },
         SpotOrder {
-            order_type: OrderType::LimitSell,
+            order_type: SpotOrderType::LimitSell,
             order_id: 1,
             order_price: OrderPrice {
                 base_denom: "eth".to_owned(),
@@ -108,7 +108,7 @@ fn create_orders() -> Vec<SpotOrder> {
             status: Status::NotProcessed,
         },
         SpotOrder {
-            order_type: OrderType::StopLoss,
+            order_type: SpotOrderType::StopLoss,
             order_id: 2,
             order_price: OrderPrice {
                 base_denom: "xrp".to_owned(),
@@ -121,7 +121,7 @@ fn create_orders() -> Vec<SpotOrder> {
             status: Status::NotProcessed,
         },
         SpotOrder {
-            order_type: OrderType::StopLoss,
+            order_type: SpotOrderType::StopLoss,
             order_id: 3,
             order_price: OrderPrice {
                 base_denom: "ltc".to_owned(),
@@ -134,7 +134,7 @@ fn create_orders() -> Vec<SpotOrder> {
             status: Status::NotProcessed,
         },
         SpotOrder {
-            order_type: OrderType::LimitBuy,
+            order_type: SpotOrderType::LimitBuy,
             order_id: 4,
             order_price: OrderPrice {
                 base_denom: "ada".to_owned(),

@@ -5,7 +5,7 @@ impl SpotOrder {
     pub fn new_dummy() -> SpotOrder {
         SpotOrder {
             order_id: 777,
-            order_type: OrderType::StopLoss,
+            order_type: SpotOrderType::StopLoss,
             order_amount: coin(1000, "btc"),
             owner_address: Addr::unchecked("user"),
             order_price: OrderPrice {
