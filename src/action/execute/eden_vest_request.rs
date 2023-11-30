@@ -1,6 +1,6 @@
-use crate::bindings::query::ElysQuery;
-
 use super::*;
+use cosmwasm_std::Int128;
+
 pub fn eden_vest_request(
     _env: Env,
     _info: MessageInfo,

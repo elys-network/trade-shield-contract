@@ -1,6 +1,6 @@
-use crate::bindings::query::ElysQuery;
-
 use super::*;
+use cosmwasm_std::Coin;
+
 pub fn elys_cancel_unstake_request(
     _env: Env,
     _info: MessageInfo,

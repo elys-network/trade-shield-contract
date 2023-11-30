@@ -1,6 +1,7 @@
 use crate::types::{MarginOrderType, MarginPosition, OrderPrice, SpotOrderType};
 use cosmwasm_schema::cw_serde;
-use cosmwasm_std::Decimal;
+use cosmwasm_std::{Decimal, Coin};
+use elys_bindings::types::EarnType;
 
 #[cw_serde]
 pub enum ExecuteMsg {

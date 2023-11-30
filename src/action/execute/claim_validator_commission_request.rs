@@ -1,5 +1,3 @@
-use crate::bindings::query::ElysQuery;
-
 use super::*;
 // delegator_address, validator_address, denom
 pub fn claim_validator_commission_request(

@@ -1,6 +1,5 @@
-use crate::bindings::query::ElysQuery;
-
 use super::*;
+use cosmwasm_std::Int128;
 
 pub fn unstake_request(
     _env: Env,

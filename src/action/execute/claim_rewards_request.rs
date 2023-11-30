@@ -1,7 +1,6 @@
-use crate::bindings::query::ElysQuery;
+use super::*;
 use crate::types::EarnType;
 
-use super::*;
 pub fn claim_rewards_request(
     _env: Env,
     _info: MessageInfo,

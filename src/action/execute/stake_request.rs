@@ -1,6 +1,5 @@
-use crate::{bindings::query::ElysQuery, bindings::querier::ElysQuerier};
-
 use super::*;
+use cosmwasm_std::Int128;
 
 pub fn stake_request(
     _env: Env,
