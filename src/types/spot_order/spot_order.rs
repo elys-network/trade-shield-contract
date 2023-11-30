@@ -11,4 +11,5 @@ pub struct SpotOrder {
     pub owner_address: Addr,
     pub order_target_denom: String,
     pub status: Status,
+    pub date: Date,
 }

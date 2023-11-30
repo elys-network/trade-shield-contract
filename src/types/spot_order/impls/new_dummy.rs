@@ -1,5 +1,5 @@
 use crate::types::*;
-use cosmwasm_std::{coin, Addr, Decimal, Uint128};
+use cosmwasm_std::{coin, Addr, Decimal, Timestamp, Uint128};
 
 impl SpotOrder {
     pub fn new_dummy() -> SpotOrder {
@@ -15,6 +15,10 @@ impl SpotOrder {
             },
             order_target_denom: "eth".to_string(),
             status: Status::NotProcessed,
+            date: Date {
+                height: 12,
+                time: Timestamp::from_nanos(500000),
+            },
         }
     }
 }

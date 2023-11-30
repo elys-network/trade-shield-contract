@@ -1,5 +1,5 @@
 use super::*;
-use cosmwasm_std::{coins, Coin};
+use cosmwasm_std::{coins, BlockInfo, Coin, Timestamp};
 
 // This test case verifies the successful processing of a "limit buy" order in the contract.
 // The scenario involves a "limit buy" order created by a user to buy ubtc at a specific price.
@@ -41,6 +41,11 @@ fn successful_process_limit_buy_order() {
         Addr::unchecked("user"),
         "ubtc".to_string(),
         &vec![],
+        &BlockInfo {
+            height: 50,
+            time: Timestamp::from_seconds(600),
+            chain_id: "elys-app".to_string(),
+        },
     );
 
     // Create a mock message to instantiate the contract with the dummy order.

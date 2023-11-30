@@ -1,7 +1,7 @@
 use crate::tests::read_processed_order_id::read_processed_order_id;
 
 use super::*;
-use cosmwasm_std::{coins, Coin};
+use cosmwasm_std::{coins, BlockInfo, Coin, Timestamp};
 // This test case verifies the successful processing of a "limit sell" order in the contract.
 // The scenario involves a "limit sell" order created by a user to sell BTC at a specific price.
 // - Initially, the BTC price is 20,000 USDC, and the order rate is set at 30,000 USDC per BTC.
@@ -47,6 +47,11 @@ fn successful_process_limit_sell_order() {
         Addr::unchecked("user"),
         "usdc".to_string(),
         &vec![],
+        &BlockInfo {
+            height: 50,
+            time: Timestamp::from_seconds(600),
+            chain_id: "elys-app".to_string(),
+        },
     );
 
     // Create a mock message to instantiate the contract with the dummy order.
