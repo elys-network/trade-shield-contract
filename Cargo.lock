@@ -787,7 +787,7 @@ dependencies = [
 
 [[package]]
 name = "trade_shield_contract"
-version = "0.7.0"
+version = "0.8.0"
 dependencies = [
  "cosmwasm-schema",
  "cosmwasm-std",
