@@ -38,6 +38,17 @@ pub mod execute {
     mod close_margin_position;
     mod create_margin_order;
     mod create_spot_order;
+    
+    mod stake_request;
+    mod unstake_request;
+
+    mod claim_rewards_request;
+    mod claim_validator_commission_request;
+    mod eden_cancel_vest_request;
+    mod eden_vest_request;
+    mod elys_cancel_unstake_request;
+    mod elys_redelegation_request;
+
     use super::*;
 
     pub use cancel_margin_order::cancel_margin_order;
@@ -47,6 +58,15 @@ pub mod execute {
     pub use close_margin_position::close_margin_position;
     pub use create_margin_order::create_margin_order;
     pub use create_spot_order::create_spot_order;
+
+    pub use stake_request::stake_request;
+    pub use unstake_request::unstake_request;
+    pub use claim_rewards_request::claim_rewards_request;
+    pub use claim_validator_commission_request::claim_validator_commission_request;
+    pub use eden_cancel_vest_request::eden_cancel_vest_request;
+    pub use eden_vest_request::eden_vest_request;
+    pub use elys_cancel_unstake_request::elys_cancel_unstake_request;
+    pub use elys_redelegation_request::elys_redelegation_request;
 }
 
 pub mod reply {
