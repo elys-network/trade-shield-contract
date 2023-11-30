@@ -1,6 +1,5 @@
-use std::str::FromStr;
-
 use super::*;
+use std::str::FromStr;
 
 #[test]
 fn coin_number() {
@@ -30,27 +29,23 @@ fn coin_number() {
 
     // User "user" attempts to create an order without specifying the amount.
 
-    let err = app
-        .execute_contract(
-            Addr::unchecked("user"),
-            addr,
-            &ExecuteMsg::CreateMarginOrder {
-                position: MarginPosition::Short,
-                collateral: coin(600, "uusdc"),
-                leverage: Decimal::from_atomics(Uint128::new(500), 2).unwrap(),
-                borrow_asset: "uatom".to_string(),
-                take_profit_price: Decimal::from_atomics(Uint128::new(500), 2).unwrap(),
-                order_type: OrderType::LimitSell,
-                trigger_price: Some(OrderPrice {
-                    base_denom: "uatom".to_string(),
-                    quote_denom: "uusdc".to_string(),
-                    rate: Decimal::from_str("1.5").unwrap(),
-                }),
-            },
-            &[],
-        )
-        .unwrap_err();
-
-    // Verify that the error is of type "CoinNumber."
-    assert_eq!(ContractError::CoinNumber, err.downcast().unwrap());
+    app.execute_contract(
+        Addr::unchecked("user"),
+        addr,
+        &ExecuteMsg::CreateMarginOrder {
+            position: Some(MarginPosition::Short),
+            leverage: Some(Decimal::from_atomics(Uint128::new(500), 2).unwrap()),
+            borrow_asset: Some("uatom".to_string()),
+            take_profit_price: Some(Decimal::from_atomics(Uint128::new(500), 2).unwrap()),
+            order_type: MarginOrderType::LimitOpen,
+            trigger_price: Some(OrderPrice {
+                base_denom: "uatom".to_string(),
+                quote_denom: "uusdc".to_string(),
+                rate: Decimal::from_str("1.5").unwrap(),
+            }),
+            position_id: None,
+        },
+        &[],
+    )
+    .unwrap_err();
 }

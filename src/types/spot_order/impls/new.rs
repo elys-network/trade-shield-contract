@@ -3,7 +3,7 @@ use cosmwasm_std::{Addr, BlockInfo, Coin, Decimal};
 
 impl SpotOrder {
     pub fn new(
-        order_type: OrderType,
+        order_type: SpotOrderType,
         order_price: Option<OrderPrice>,
         order_amount: Coin,
         owner_address: Addr,
@@ -25,7 +25,7 @@ impl SpotOrder {
             },
         };
 
-        let status = if order_type == OrderType::MarketBuy {
+        let status = if order_type == SpotOrderType::MarketBuy {
             Status::Processing
         } else {
             Status::NotProcessed

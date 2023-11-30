@@ -4,7 +4,7 @@ use crate::helper::get_response_from_reply;
 
 use super::*;
 
-pub fn reply_to_close_margin_order(
+pub fn reply_to_open_margin_position(
     deps: DepsMut<ElysQuery>,
     data: Option<Binary>,
     module_resp: SubMsgResult,
@@ -18,7 +18,7 @@ pub fn reply_to_close_margin_order(
         .find(|order| order.order_id == order_id)
         .unwrap();
 
-    let res: MarginBrokerCloseResResponse = match get_response_from_reply(module_resp) {
+    let res: MarginBrokerOpenResResponse = match get_response_from_reply(module_resp) {
         Ok(expr) => expr,
         Err(err) => {
             order.status = Status::NotProcessed;
@@ -33,7 +33,7 @@ pub fn reply_to_close_margin_order(
 
     let resp: Response<ElysMsg> = Response::new()
         .add_attribute("processed_margin_order_id", order_id.to_string())
-        .add_attribute("margin_trading_position_closed_id", res.id.to_string());
+        .add_attribute("margin_trading_position_opened_id", res.id.to_string());
 
     Ok(resp)
 }

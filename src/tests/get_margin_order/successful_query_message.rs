@@ -7,14 +7,14 @@ fn successful_query_message() {
     // Initialize the ElysApp instance.
     let mut app = ElysApp::new();
 
-    let order = MarginOrder::new(
+    let order = MarginOrder::new_open(
+        "user",
         &MarginPosition::Long,
+        &MarginOrderType::MarketOpen,
         &coin(255, "usdc"),
         "btc",
-        "user",
         &Decimal::one(),
         &Decimal::one(),
-        &OrderType::LimitBuy,
         &Some(OrderPrice {
             base_denom: "btc".to_string(),
             quote_denom: "usdc".to_string(),

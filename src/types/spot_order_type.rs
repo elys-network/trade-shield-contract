@@ -1,7 +1,7 @@
 use cosmwasm_schema::cw_serde;
 
 #[cw_serde]
-pub enum OrderType {
+pub enum SpotOrderType {
     StopLoss,
     LimitSell,
     LimitBuy,

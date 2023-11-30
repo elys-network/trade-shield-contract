@@ -13,11 +13,13 @@ pub use sudo_msg::SudoMsg;
 pub mod query_resp {
     mod get_all_prices_resp;
     mod get_margin_order_resp;
+    mod get_margin_orders_resp;
     mod get_spot_order_resp;
     mod get_spot_orders_resp;
 
     pub use get_all_prices_resp::GetAllPricesResponse;
     pub use get_margin_order_resp::GetMarginOrderResp;
+    pub use get_margin_orders_resp::GetMarginOrdersResp;
     pub use get_spot_order_resp::GetSpotOrderResp;
     pub use get_spot_orders_resp::GetSpotOrdersResp;
 }

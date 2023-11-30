@@ -35,25 +35,30 @@ pub fn execute(
 
         CreateMarginOrder {
             position,
-            collateral,
             leverage,
             borrow_asset,
             take_profit_price,
             order_type,
             trigger_price,
+            position_id,
         } => create_margin_order(
             info,
             deps,
             env,
             position,
-            collateral,
             leverage,
             borrow_asset,
             take_profit_price,
             order_type,
             trigger_price,
+            position_id,
         ),
         CancelMarginOrder { order_id } => cancel_margin_order(info, deps, order_id),
+        CancelMarginOrders {
+            order_ids,
+            owner_address,
+            order_type,
+        } => cancel_margin_orders(info, deps, order_ids, owner_address, order_type),
         CloseMarginPosition { id } => close_margin_position(info, env, id),
     }
 }

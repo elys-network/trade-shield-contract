@@ -5,6 +5,7 @@ pub enum ReplyType {
     SpotOrder,
     MarginBrokerOpen,
     MarginBrokerClose,
-    MarginBrokerOpenMarketBuy,
+    MarginBrokerMarketOpen,
+    MarginBrokerMarketClose,
     SpotOrderMarketBuy,
 }

@@ -26,6 +26,16 @@ pub fn query(deps: Deps<ElysQuery>, _env: Env, msg: QueryMsg) -> Result<Binary, 
             order_owner,
             order_type,
         )?)?),
+        GetMarginOrders {
+            pagination,
+            order_owner,
+            order_type,
+        } => Ok(to_json_binary(&query::get_margin_orders(
+            deps,
+            pagination,
+            order_owner,
+            order_type,
+        )?)?),
         SwapEstimationByDenom {
             amount,
             denom_in,

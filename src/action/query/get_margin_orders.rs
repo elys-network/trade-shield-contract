@@ -1,17 +1,17 @@
 use super::*;
 
-pub fn get_spot_orders(
+pub fn get_margin_orders(
     deps: Deps<ElysQuery>,
     pagination: PageRequest,
     order_owner: Option<String>,
-    order_type: Option<SpotOrderType>,
-) -> Result<GetSpotOrdersResp, ContractError> {
-    let orders = SPOT_ORDER.load(deps.storage)?;
+    order_type: Option<MarginOrderType>,
+) -> Result<GetMarginOrdersResp, ContractError> {
+    let orders = MARGIN_ORDER.load(deps.storage)?;
 
     let (orders, page_response) = pagination.filter(orders)?;
 
     if orders.is_empty() {
-        return Ok(GetSpotOrdersResp {
+        return Ok(GetMarginOrdersResp {
             page_response,
             orders,
         });
@@ -25,12 +25,12 @@ pub fn get_spot_orders(
             .collect(),
         (Some(owner), None) => orders
             .iter()
-            .filter(|order| order.owner_address == owner)
+            .filter(|order| order.owner == owner)
             .cloned()
             .collect(),
         (Some(owner), Some(order_type)) => orders
             .iter()
-            .filter(|order| order.owner_address == owner && order.order_type == order_type)
+            .filter(|order| order.owner == owner && order.order_type == order_type)
             .cloned()
             .collect(),
         (None, None) => orders,
@@ -44,7 +44,7 @@ pub fn get_spot_orders(
         None => page_response,
     };
 
-    Ok(GetSpotOrdersResp {
+    Ok(GetMarginOrdersResp {
         page_response,
         orders,
     })

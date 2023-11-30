@@ -5,12 +5,14 @@ pub fn cancel_margin_order(
     deps: DepsMut<ElysQuery>,
     order_id: u64,
 ) -> Result<Response<ElysMsg>, ContractError> {
-    let orders = MARGIN_ORDER.load(deps.storage)?;
+    let mut orders = MARGIN_ORDER.load(deps.storage)?;
 
-    let order: MarginOrder = match orders.iter().find(|order| order.order_id == order_id) {
-        Some(order) => order.to_owned(),
+    let order = match orders.iter_mut().find(|order| order.order_id == order_id) {
+        Some(order) => order,
         None => return Err(ContractError::OrderNotFound { order_id }),
     };
+
+    let order_type = order.order_type.clone();
 
     if order.owner != info.sender.to_string() {
         return Err(ContractError::Unauthorized {
@@ -18,22 +20,27 @@ pub fn cancel_margin_order(
         });
     }
 
-    let orders: Vec<MarginOrder> = orders
-        .iter()
-        .filter(|order| order.order_id != order_id)
-        .cloned()
-        .collect();
+    if order.status != Status::NotProcessed {
+        return Err(ContractError::CancelStatusError {
+            order_id,
+            status: order.status.clone(),
+        });
+    }
+
+    order.status = Status::Canceled;
 
     let refund_msg = BankMsg::Send {
-        to_address: order.owner,
-        amount: vec![order.collateral],
+        to_address: order.owner.clone(),
+        amount: vec![order.collateral.clone()],
     };
 
-    let resp = Response::new()
-        .add_message(CosmosMsg::Bank(refund_msg))
-        .add_attribute("order_id", order.order_id.to_string());
+    let resp = Response::new().add_attribute("order_id", order.order_id.to_string());
 
     MARGIN_ORDER.save(deps.storage, &orders)?;
 
-    Ok(resp)
+    if order_type == MarginOrderType::LimitOpen {
+        Ok(resp.add_message(CosmosMsg::Bank(refund_msg)))
+    } else {
+        Ok(resp)
+    }
 }

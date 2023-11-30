@@ -371,8 +371,8 @@ dependencies = [
 
 [[package]]
 name = "elys-bindings"
-version = "0.4.0"
-source = "git+https://github.com/elys-network/bindings?tag=v0.4.0#e07a9e8758582f7551246b80d13e55ba1bbe0858"
+version = "0.5.0"
+source = "git+https://github.com/elys-network/bindings?tag=v0.5.0#5385d600c93d1c8dd155fa82301b11750421845d"
 dependencies = [
  "cosmwasm-schema",
  "cosmwasm-std",
@@ -381,8 +381,8 @@ dependencies = [
 
 [[package]]
 name = "elys-bindings-test"
-version = "0.4.0"
-source = "git+https://github.com/elys-network/bindings?tag=v0.4.0#e07a9e8758582f7551246b80d13e55ba1bbe0858"
+version = "0.5.0"
+source = "git+https://github.com/elys-network/bindings?tag=v0.5.0#5385d600c93d1c8dd155fa82301b11750421845d"
 dependencies = [
  "anyhow",
  "cosmwasm-schema",

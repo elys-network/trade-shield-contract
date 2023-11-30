@@ -2,12 +2,12 @@ use cosmwasm_std::{to_json_binary, Coin, StdError};
 
 use super::*;
 
-pub fn cancel_spot_orders(
+pub fn cancel_margin_orders(
     info: MessageInfo,
     deps: DepsMut<ElysQuery>,
     order_ids: Option<Vec<u64>>,
     owner_address: String,
-    order_type: Option<SpotOrderType>,
+    order_type: Option<MarginOrderType>,
 ) -> Result<Response<ElysMsg>, ContractError> {
     if info.sender.as_str() != owner_address {
         return Err(ContractError::Unauthorized {
@@ -15,11 +15,11 @@ pub fn cancel_spot_orders(
         });
     }
 
-    let mut orders: Vec<SpotOrder> = SPOT_ORDER.load(deps.storage)?;
+    let mut orders: Vec<MarginOrder> = MARGIN_ORDER.load(deps.storage)?;
 
-    let user_orders: Vec<SpotOrder> = orders
+    let user_orders: Vec<MarginOrder> = orders
         .iter()
-        .filter(|order| order.owner_address == info.sender)
+        .filter(|order| order.owner == info.sender)
         .cloned()
         .collect();
 
@@ -29,7 +29,7 @@ pub fn cancel_spot_orders(
         )));
     }
 
-    let filtered_order: Vec<SpotOrder> = filter_order_by_id(&user_orders, &order_ids)?;
+    let filtered_order: Vec<MarginOrder> = filter_order_by_id(&user_orders, &order_ids)?;
 
     let filtered_order = filter_order_by_type(filtered_order, order_type)?;
 
@@ -54,7 +54,7 @@ pub fn cancel_spot_orders(
         }
     }
 
-    SPOT_ORDER.save(deps.storage, &orders)?;
+    MARGIN_ORDER.save(deps.storage, &orders)?;
 
     let refund_msg = make_refund_msg(filtered_order, owner_address);
 
@@ -64,9 +64,9 @@ pub fn cancel_spot_orders(
 }
 
 fn filter_order_by_id(
-    orders: &Vec<SpotOrder>,
+    orders: &Vec<MarginOrder>,
     order_ids: &Option<Vec<u64>>,
-) -> Result<Vec<SpotOrder>, ContractError> {
+) -> Result<Vec<MarginOrder>, ContractError> {
     let order_ids = match order_ids {
         Some(order_ids) => order_ids,
         None => return Ok(orders.to_owned()),
@@ -76,7 +76,7 @@ fn filter_order_by_id(
         return Err(StdError::generic_err("order_ids is defined empty").into());
     }
 
-    let filtered_order: Vec<SpotOrder> = orders
+    let filtered_order: Vec<MarginOrder> = orders
         .iter()
         .filter(|order| order_ids.contains(&order.order_id))
         .cloned()
@@ -102,15 +102,15 @@ fn filter_order_by_id(
 }
 
 fn filter_order_by_type(
-    orders: Vec<SpotOrder>,
-    order_type: Option<SpotOrderType>,
-) -> Result<Vec<SpotOrder>, ContractError> {
+    orders: Vec<MarginOrder>,
+    order_type: Option<MarginOrderType>,
+) -> Result<Vec<MarginOrder>, ContractError> {
     let order_type = match order_type {
         Some(order_type) => order_type,
         None => return Ok(orders),
     };
 
-    let filtered_order: Vec<SpotOrder> = orders
+    let filtered_order: Vec<MarginOrder> = orders
         .iter()
         .filter(|order| order.order_type == order_type)
         .cloned()
@@ -125,8 +125,17 @@ fn filter_order_by_type(
     }
 }
 
-fn make_refund_msg(orders: Vec<SpotOrder>, user: String) -> BankMsg {
-    let orders_amount: Vec<Coin> = orders.into_iter().map(|order| order.order_amount).collect();
+fn make_refund_msg(orders: Vec<MarginOrder>, user: String) -> BankMsg {
+    let orders_amount: Vec<Coin> = orders
+        .into_iter()
+        .filter_map(|order| {
+            if order.order_type == MarginOrderType::LimitOpen {
+                Some(order.collateral)
+            } else {
+                None
+            }
+        })
+        .collect();
 
     let mut merged_amounts: Vec<Coin> = Vec::new();
 
