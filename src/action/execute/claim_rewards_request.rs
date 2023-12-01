@@ -1,5 +1,5 @@
 use super::*;
-use crate::types::EarnType;
+use elys_bindings::types::EarnType;
 
 pub fn claim_rewards_request(
     env: Env,
