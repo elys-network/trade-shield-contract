@@ -42,37 +42,21 @@ pub enum ExecuteMsg {
         id: u64,
     },
     StakeRequest {
-<<<<<<< HEAD
-=======
-        address: String,
->>>>>>> 852e71b (chore: add execution functions)
         amount: u64,
         asset: String,
         validator_address: Option<String>,
     },
     UnstakeRequest {
-<<<<<<< HEAD
-=======
-        address: String,
->>>>>>> 852e71b (chore: add execution functions)
         amount: u64,
         asset: String,
         validator_address: Option<String>,
     },
     ElysRedelegateRequest {
-<<<<<<< HEAD
-=======
-        delegator_address:    String,
->>>>>>> 852e71b (chore: add execution functions)
         validator_src_address: String,
         validator_dst_address: String,
         amount:              Coin,
     },
     ElysCancelUnstakeRequest {
-<<<<<<< HEAD
-=======
-        delegator_address: String,
->>>>>>> 852e71b (chore: add execution functions)
         validator_address: String,
         // amount is always less than or equal to unbonding delegation entry balance
         amount: Coin,
@@ -80,7 +64,6 @@ pub enum ExecuteMsg {
         creation_height: i64,
     },
     EdenVestRequest {
-<<<<<<< HEAD
         amount:  u64,
     },
     EdenCancelVestRequest {
@@ -90,21 +73,6 @@ pub enum ExecuteMsg {
         withdraw_type: EarnType,
     },
     ClaimValidatorCommissionRequest {
-=======
-        creator: String,
-        amount:  u64,
-    },
-    EdenCancelVestRequest {
-        creator: String,
-        amount:  u64,
-    },
-    ClaimRewardsRequest {
-        delegator_address: String,
-        withdraw_type: EarnType,
-    },
-    ClaimValidatorCommissionRequest {
-        delegator_address: String,
->>>>>>> 852e71b (chore: add execution functions)
         validator_address: String,
     }
 }
