@@ -9,6 +9,6 @@ pub fn sudo(
     msg: SudoMsg,
 ) -> Result<Response<ElysMsg>, ContractError> {
     match msg {
-        SudoMsg::ClockEndBlock {} => process_spot_orders(deps, env),
+        SudoMsg::ClockEndBlock {} => process_orders(deps, env),
     }
 }

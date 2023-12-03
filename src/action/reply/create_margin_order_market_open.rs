@@ -35,8 +35,10 @@ pub fn reply_to_create_margin_market_open(
     order.status = Status::Processed;
     order.position_id = Some(margin_resp.id);
 
-    let resp =
-        Response::new().add_attribute("margin_trading_position_id", margin_resp.id.to_string());
+    let resp = Response::new().add_event(
+        Event::new("reply_to_create_margin_market_open")
+            .add_attribute("margin_trading_position_id", margin_resp.id.to_string()),
+    );
 
     Ok(resp)
 }

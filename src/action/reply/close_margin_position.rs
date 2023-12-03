@@ -31,9 +31,11 @@ pub fn reply_to_close_margin_order(
 
     MARGIN_ORDER.save(deps.storage, &orders)?;
 
-    let resp: Response<ElysMsg> = Response::new()
-        .add_attribute("processed_margin_order_id", order_id.to_string())
-        .add_attribute("margin_trading_position_closed_id", res.id.to_string());
+    let resp: Response<ElysMsg> = Response::new().add_event(
+        Event::new("reply_to_close_margin_order")
+            .add_attribute("margin_order_id", order_id.to_string())
+            .add_attribute("margin_trading_position_closed_id", res.id.to_string()),
+    );
 
     Ok(resp)
 }

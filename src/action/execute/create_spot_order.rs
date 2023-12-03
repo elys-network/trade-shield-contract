@@ -112,7 +112,10 @@ fn create_resp(
     in_route: Vec<SwapAmountInRoute>,
 ) -> StdResult<Response<ElysMsg>> {
     let resp = Response::new()
-        .add_attribute("order_id", new_order.order_id.to_string())
+        .add_event(
+            Event::new("create_spot_order")
+                .add_attribute("order_id", new_order.order_id.to_string()),
+        )
         .add_message(bank_msg); // information message
 
     if new_order.order_type != SpotOrderType::MarketBuy {
