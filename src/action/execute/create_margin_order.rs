@@ -136,7 +136,10 @@ fn create_margin_open_order(
 
     MARGIN_ORDER.save(deps.storage, &orders)?;
 
-    let resp = Response::new().add_attribute("margin_order_id", order_id.to_string());
+    let resp = Response::new().add_event(
+        Event::new("create_margin_open_order")
+            .add_attribute("margin_order_id", order_id.to_string()),
+    );
 
     if order_type != MarketOpen {
         return Ok(resp);
@@ -223,7 +226,10 @@ fn create_margin_close_order(
 
     MARGIN_ORDER.save(deps.storage, &orders)?;
 
-    let resp = Response::new().add_attribute("margin_order_id", order_id.to_string());
+    let resp = Response::new().add_event(
+        Event::new("create_margin_close_order")
+            .add_attribute("margin_order_id", order_id.to_string()),
+    );
 
     if order_type != MarketClose {
         return Ok(resp);
