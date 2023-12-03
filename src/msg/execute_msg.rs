@@ -1,6 +1,7 @@
 use crate::types::{MarginOrderType, MarginPosition, OrderPrice, SpotOrderType};
 use cosmwasm_schema::cw_serde;
-use cosmwasm_std::Decimal;
+use cosmwasm_std::{Decimal, Coin};
+use elys_bindings::types::EarnType;
 
 #[cw_serde]
 pub enum ExecuteMsg {
@@ -40,4 +41,38 @@ pub enum ExecuteMsg {
     CloseMarginPosition {
         id: u64,
     },
+    StakeRequest {
+        amount: u64,
+        asset: String,
+        validator_address: Option<String>,
+    },
+    UnstakeRequest {
+        amount: u64,
+        asset: String,
+        validator_address: Option<String>,
+    },
+    ElysRedelegateRequest {
+        validator_src_address: String,
+        validator_dst_address: String,
+        amount:              Coin,
+    },
+    ElysCancelUnstakeRequest {
+        validator_address: String,
+        // amount is always less than or equal to unbonding delegation entry balance
+        amount: Coin,
+        // creation_height is the height which the unbonding took place.
+        creation_height: i64,
+    },
+    EdenVestRequest {
+        amount:  u64,
+    },
+    EdenCancelVestRequest {
+        amount:  u64,
+    },
+    ClaimRewardsRequest {
+        withdraw_type: EarnType,
+    },
+    ClaimValidatorCommissionRequest {
+        validator_address: String,
+    }
 }
