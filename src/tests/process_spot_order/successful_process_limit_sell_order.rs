@@ -37,6 +37,7 @@ fn successful_process_limit_sell_order() {
 
     // Create a "limit sell" order (dummy order) with a specific rate and balance.
     let dummy_order = SpotOrder::new(
+        0,
         SpotOrderType::LimitSell,
         Some(OrderPrice {
             base_denom: "btc".to_string(),
@@ -46,7 +47,6 @@ fn successful_process_limit_sell_order() {
         coin(2, "btc"), // 2 BTC to be sold.
         Addr::unchecked("user"),
         "usdc".to_string(),
-        &vec![],
         &BlockInfo {
             height: 50,
             time: Timestamp::from_seconds(600),

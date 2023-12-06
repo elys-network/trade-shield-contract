@@ -1,4 +1,5 @@
 use cosmwasm_std::Uint128;
+use cw_utils::PaymentError;
 
 use super::*;
 // This test case verifies that attempting to create an order without specifying the amount results in a "CoinNumber" error.
@@ -49,5 +50,8 @@ fn coin_number() {
         .unwrap_err();
 
     // Verify that the error is of type "CoinNumber."
-    assert_eq!(ContractError::CoinNumber, err.downcast().unwrap());
+    assert_eq!(
+        ContractError::Payment(PaymentError::NoFunds {}),
+        err.downcast().unwrap()
+    );
 }

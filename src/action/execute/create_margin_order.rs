@@ -1,17 +1,16 @@
 use crate::msg::ReplyType;
 
 use super::*;
-use cosmwasm_std::{to_json_binary, Decimal, Int128, StdError, StdResult, SubMsg};
+use cosmwasm_std::{to_json_binary, Decimal, StdError, StdResult, SubMsg};
 use cw_utils;
 use MarginOrderType::*;
 
 pub fn create_margin_order(
     info: MessageInfo,
     deps: DepsMut<ElysQuery>,
-    env: Env,
     position: Option<MarginPosition>,
     leverage: Option<Decimal>,
-    borrow_asset: Option<String>,
+    trading_asset: Option<String>,
     take_profit_price: Option<Decimal>,
     order_type: MarginOrderType,
     trigger_price: Option<OrderPrice>,
@@ -20,7 +19,7 @@ pub fn create_margin_order(
     check_order_type(
         &position,
         &leverage,
-        &borrow_asset,
+        &trading_asset,
         &take_profit_price,
         &order_type,
         &trigger_price,
@@ -31,30 +30,22 @@ pub fn create_margin_order(
         create_margin_open_order(
             info,
             deps,
-            env,
             order_type,
             position.unwrap(),
-            borrow_asset.unwrap(),
+            trading_asset.unwrap(),
             leverage.unwrap(),
             take_profit_price.unwrap(),
             trigger_price,
         )
     } else {
-        create_margin_close_order(
-            info,
-            deps,
-            env,
-            order_type,
-            position_id.unwrap(),
-            trigger_price,
-        )
+        create_margin_close_order(info, deps, order_type, position_id.unwrap(), trigger_price)
     }
 }
 
 fn check_order_type(
     position: &Option<MarginPosition>,
     leverage: &Option<Decimal>,
-    borrow_asset: &Option<String>,
+    trading_asset: &Option<String>,
     take_profit_price: &Option<Decimal>,
     order_type: &MarginOrderType,
     trigger_price: &Option<OrderPrice>,
@@ -79,7 +70,7 @@ fn check_order_type(
         if leverage.is_none() {
             not_found.push("leverage");
         }
-        if borrow_asset.is_none() {
+        if trading_asset.is_none() {
             not_found.push("borrow asset");
         }
         if take_profit_price.is_none() {
@@ -101,29 +92,46 @@ fn check_order_type(
 fn create_margin_open_order(
     info: MessageInfo,
     deps: DepsMut<ElysQuery>,
-    env: Env,
+
     order_type: MarginOrderType,
     position: MarginPosition,
-    borrow_asset: String,
+    trading_asset: String,
     leverage: Decimal,
     take_profit_price: Decimal,
     trigger_price: Option<OrderPrice>,
 ) -> Result<Response<ElysMsg>, ContractError> {
     let collateral = cw_utils::one_coin(&info)?;
-    let mut orders = MARGIN_ORDER.load(deps.storage)?;
+
+    let orders: Vec<MarginOrder> = MARGIN_ORDER
+        .prefix_range(deps.storage, None, None, Order::Ascending)
+        .filter_map(|res| res.ok().map(|r| r.1))
+        .collect();
 
     if position == MarginPosition::Unspecified {
         return Err(StdError::generic_err("margin position cannot be set at: Unspecified").into());
     }
 
-    //TODO: include query to test if the collateral is valid
+    let querrier = ElysQuerier::new(&deps.querier);
+
+    let open_estimation = querrier.margin_open_estimation(
+        position.clone(),
+        leverage.clone(),
+        &trading_asset,
+        collateral.clone(),
+        take_profit_price.clone(),
+        Decimal::zero(),
+    )?;
+
+    if !open_estimation.valid_collateral {
+        return Err(StdError::generic_err("not valid collateral").into());
+    }
 
     let order = MarginOrder::new_open(
         &info.sender,
         &position,
         &order_type,
         &collateral,
-        &borrow_asset,
+        &trading_asset,
         &leverage,
         &take_profit_price,
         &trigger_price,
@@ -132,9 +140,7 @@ fn create_margin_open_order(
 
     let order_id = order.order_id;
 
-    orders.push(order);
-
-    MARGIN_ORDER.save(deps.storage, &orders)?;
+    MARGIN_ORDER.save(deps.storage, order_id, &order)?;
 
     let resp = Response::new().add_event(
         Event::new("create_margin_open_order")
@@ -145,34 +151,27 @@ fn create_margin_open_order(
         return Ok(resp);
     }
 
-    let msg = ElysMsg::margin_broker_open_position(
-        env.contract.address,
-        collateral.denom,
-        Int128::new(collateral.amount.u128() as i128),
-        borrow_asset,
-        position as i32,
+    let msg = ElysMsg::margin_open_position(
+        info.sender,
+        collateral,
+        trading_asset,
+        position,
         leverage,
         take_profit_price,
-        info.sender,
     );
 
-    let mut reply_infos = REPLY_INFO.load(deps.storage)?;
+    let reply_id = MAX_REPLY_ID.load(deps.storage)? + 1;
+    MAX_REPLY_ID.save(deps.storage, &reply_id)?;
 
-    let info_id = if let Some(max_info) = reply_infos.iter().max_by_key(|info| info.id) {
-        max_info.id + 1
-    } else {
-        0
-    };
-
-    reply_infos.push(ReplyInfo {
-        id: info_id,
+    let reply_info = ReplyInfo {
+        id: reply_id,
         reply_type: ReplyType::MarginBrokerMarketOpen,
         data: Some(to_json_binary(&order_id)?),
-    });
+    };
 
-    REPLY_INFO.save(deps.storage, &reply_infos)?;
+    REPLY_INFO.save(deps.storage, reply_id, &reply_info)?;
 
-    let sub_msg = SubMsg::reply_always(msg, info_id);
+    let sub_msg = SubMsg::reply_always(msg, reply_id);
 
     Ok(resp.add_submessage(sub_msg))
 }
@@ -180,7 +179,7 @@ fn create_margin_open_order(
 fn create_margin_close_order(
     info: MessageInfo,
     deps: DepsMut<ElysQuery>,
-    env: Env,
+
     order_type: MarginOrderType,
     position_id: u64,
     trigger_price: Option<OrderPrice>,
@@ -197,7 +196,10 @@ fn create_margin_close_order(
         return Err(StdError::not_found("margin trading position").into());
     };
 
-    let mut orders = MARGIN_ORDER.load(deps.storage)?;
+    let orders: Vec<MarginOrder> = MARGIN_ORDER
+        .prefix_range(deps.storage, None, None, Order::Ascending)
+        .filter_map(|res| res.ok().map(|r| r.1))
+        .collect();
 
     if orders
         .iter()
@@ -222,9 +224,7 @@ fn create_margin_close_order(
 
     let order_id = order.order_id;
 
-    orders.push(order);
-
-    MARGIN_ORDER.save(deps.storage, &orders)?;
+    MARGIN_ORDER.save(deps.storage, order_id, &order)?;
 
     let resp = Response::new().add_event(
         Event::new("create_margin_close_order")
@@ -235,26 +235,24 @@ fn create_margin_close_order(
         return Ok(resp);
     }
 
-    let mut reply_infos = REPLY_INFO.load(deps.storage)?;
+    let msg = ElysMsg::margin_close_position(
+        &info.sender,
+        position_id,
+        mtp.custodies[0].amount.u128() as i128,
+    );
 
-    let msg =
-        ElysMsg::margin_broker_close_position(env.contract.address, position_id, &info.sender);
+    let reply_id = MAX_REPLY_ID.load(deps.storage)? + 1;
+    MAX_REPLY_ID.save(deps.storage, &reply_id)?;
 
-    let info_id = if let Some(max_info) = reply_infos.iter().max_by_key(|info| info.id) {
-        max_info.id + 1
-    } else {
-        0
-    };
-
-    reply_infos.push(ReplyInfo {
-        id: info_id,
+    let reply_info = ReplyInfo {
+        id: reply_id,
         reply_type: ReplyType::MarginBrokerMarketClose,
         data: Some(to_json_binary(&order_id)?),
-    });
+    };
 
-    REPLY_INFO.save(deps.storage, &reply_infos)?;
+    REPLY_INFO.save(deps.storage, reply_id, &reply_info)?;
 
-    let sub_msg = SubMsg::reply_always(msg, info_id);
+    let sub_msg = SubMsg::reply_always(msg, reply_id);
 
     Ok(resp.add_submessage(sub_msg))
 }

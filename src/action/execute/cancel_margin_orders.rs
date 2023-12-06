@@ -15,7 +15,10 @@ pub fn cancel_margin_orders(
         });
     }
 
-    let mut orders: Vec<MarginOrder> = MARGIN_ORDER.load(deps.storage)?;
+    let mut orders: Vec<MarginOrder> = MARGIN_ORDER
+        .prefix_range(deps.storage, None, None, Order::Ascending)
+        .filter_map(|res| res.ok().map(|r| r.1))
+        .collect();
 
     let user_orders: Vec<MarginOrder> = orders
         .iter()
@@ -35,7 +38,7 @@ pub fn cancel_margin_orders(
 
     if let Some(order) = filtered_order
         .iter()
-        .find(|order| order.status != Status::NotProcessed)
+        .find(|order| order.status != Status::Pending)
     {
         return Err(ContractError::CancelStatusError {
             order_id: order.order_id,
@@ -51,10 +54,9 @@ pub fn cancel_margin_orders(
     for order in orders.iter_mut() {
         if order_ids.contains(&order.order_id) {
             order.status = Status::Canceled;
+            MARGIN_ORDER.save(deps.storage, order.order_id, order)?;
         }
     }
-
-    MARGIN_ORDER.save(deps.storage, &orders)?;
 
     let refund_msg = make_refund_msg(filtered_order, owner_address);
 

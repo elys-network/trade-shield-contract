@@ -5,8 +5,12 @@ pub fn get_spot_orders(
     pagination: PageRequest,
     order_owner: Option<String>,
     order_type: Option<SpotOrderType>,
+    order_status: Option<Status>,
 ) -> Result<GetSpotOrdersResp, ContractError> {
-    let orders = SPOT_ORDER.load(deps.storage)?;
+    let orders: Vec<SpotOrder> = SPOT_ORDER
+        .prefix_range(deps.storage, None, None, Order::Ascending)
+        .filter_map(|res| res.ok().map(|r| r.1))
+        .collect();
 
     let (orders, page_response) = pagination.filter(orders)?;
 
@@ -17,24 +21,21 @@ pub fn get_spot_orders(
         });
     };
 
-    let orders = match (order_owner, order_type) {
-        (None, Some(order_type)) => orders
-            .iter()
-            .filter(|order| order.order_type == order_type)
-            .cloned()
-            .collect(),
-        (Some(owner), None) => orders
-            .iter()
-            .filter(|order| order.owner_address == owner)
-            .cloned()
-            .collect(),
-        (Some(owner), Some(order_type)) => orders
-            .iter()
-            .filter(|order| order.owner_address == owner && order.order_type == order_type)
-            .cloned()
-            .collect(),
-        (None, None) => orders,
-    };
+    let orders: Vec<SpotOrder> = orders
+        .iter()
+        .filter(|order| {
+            order_owner
+                .as_ref()
+                .map_or(true, |owner| owner == order.owner_address.as_str())
+                && order_type
+                    .as_ref()
+                    .map_or(true, |order_type| order_type == &order.order_type)
+                && order_status
+                    .as_ref()
+                    .map_or(true, |status| &order.status == status)
+        })
+        .cloned()
+        .collect();
 
     let page_response = match page_response.total {
         Some(_) => PageResponse {

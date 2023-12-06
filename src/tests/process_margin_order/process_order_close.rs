@@ -1,5 +1,5 @@
 use super::*;
-use cosmwasm_std::Coin;
+use cosmwasm_std::{Coin, Int128};
 
 #[test]
 fn successful_process_limit_buy_order() {
@@ -69,6 +69,36 @@ fn successful_process_limit_buy_order() {
     // Execute the order processing.
     app.wasm_sudo(addr.clone(), &sudo_msg).unwrap();
 
+    app.init_modules(|router, _, storage| {
+        router.custom.set_mtp(
+            storage,
+            &vec![Mtp {
+                address: "user".to_string(),
+                collaterals: vec![coin(2, "btc")],
+                liabilities: Int128::zero(),
+                interest_paid_collaterals: vec![],
+                interest_paid_custodies: vec![],
+                interest_unpaid_collaterals: vec![],
+                custodies: vec![coin(5000, "usdc")],
+                take_profit_liabilities: Int128::zero(),
+                take_profit_custodies: vec![],
+                leverages: vec![Decimal::from_str("1.2").unwrap()],
+                mtp_health: Decimal::one(),
+                position: 2,
+                id: 1,
+                amm_pool_id: 1,
+                consolidate_leverage: Decimal::zero(),
+                sum_collateral: Int128::zero(),
+                take_profit_price: Decimal::from_str("1.2").unwrap(),
+                funding_fee_paid_collaterals: vec![],
+                funding_fee_paid_custodies: vec![],
+                funding_fee_received_collaterals: vec![],
+                funding_fee_received_custodies: vec![],
+            }],
+        )
+    })
+    .unwrap();
+
     let last_module =
         app.init_modules(|router, _, store| router.custom.get_last_module(store).unwrap());
 
@@ -85,5 +115,5 @@ fn successful_process_limit_buy_order() {
         .init_modules(|router, _, store| router.custom.get_last_module(store).unwrap())
         .unwrap();
 
-    assert_eq!(last_module, "MarginBrokerClose");
+    assert_eq!(last_module, "MarginClose");
 }

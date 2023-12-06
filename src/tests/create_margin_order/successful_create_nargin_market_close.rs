@@ -68,7 +68,7 @@ fn successful_create_margin_market_open_order() {
             position_id: Some(1),
             position: None,
             leverage: None,
-            borrow_asset: None,
+            trading_asset: None,
             take_profit_price: None,
             order_type: MarginOrderType::MarketClose,
             trigger_price: None,
@@ -81,5 +81,5 @@ fn successful_create_margin_market_open_order() {
         .init_modules(|router, _, store| router.custom.get_last_module(store).unwrap())
         .unwrap();
 
-    assert_eq!(last_module, "MarginBrokerClose");
+    assert_eq!(last_module, "MarginClose");
 }

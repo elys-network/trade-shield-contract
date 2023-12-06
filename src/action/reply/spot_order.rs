@@ -11,25 +11,18 @@ pub fn reply_to_spot_order(
 ) -> Result<Response<ElysMsg>, ContractError> {
     let order_id: u64 = from_json(&data.unwrap()).unwrap();
 
-    let mut orders: Vec<SpotOrder> = SPOT_ORDER.load(deps.storage)?;
-
-    let order: &mut SpotOrder = orders
-        .iter_mut()
-        .find(|order| order.order_id == order_id)
-        .unwrap();
+    let mut order = SPOT_ORDER.load(deps.storage, order_id)?;
 
     let _: AmmSwapExactAmountInResp = match get_response_from_reply(module_resp) {
         Ok(expr) => expr,
         Err(err) => {
-            order.status = Status::NotProcessed;
-            SPOT_ORDER.save(deps.storage, &orders)?;
             return Ok(err);
         }
     };
 
-    order.status = Status::Processed;
+    order.status = Status::Executed;
 
-    SPOT_ORDER.save(deps.storage, &orders)?;
+    SPOT_ORDER.save(deps.storage, order_id, &order)?;
 
     let resp: Response<ElysMsg> = Response::new().add_event(
         Event::new("reply_to_spot_order").add_attribute("order_id", order_id.to_string()),

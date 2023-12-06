@@ -1,3 +1,5 @@
+use cosmwasm_std::Int128;
+
 use super::*;
 
 #[test]
@@ -30,7 +32,10 @@ fn closing_marging_position() {
     app.execute_contract(
         Addr::unchecked("user"),
         addr,
-        &ExecuteMsg::CloseMarginPosition { id: 2 },
+        &ExecuteMsg::CloseMarginPosition {
+            id: 2,
+            amount: Int128::new(300),
+        },
         &[],
     )
     .unwrap();
@@ -38,5 +43,5 @@ fn closing_marging_position() {
     let last_module_used = app
         .init_modules(|router, _, storage| router.custom.get_last_module(storage).unwrap())
         .unwrap();
-    assert_eq!(last_module_used, "MarginBrokerClose");
+    assert_eq!(last_module_used, "MarginClose");
 }

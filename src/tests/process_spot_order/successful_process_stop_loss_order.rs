@@ -36,6 +36,7 @@ fn successful_process_stop_loss_order() {
 
     // Create a "stop-loss" order (dummy order) with trigger price and balance.
     let dummy_order = SpotOrder::new(
+        0,
         SpotOrderType::StopLoss,
         Some(OrderPrice {
             base_denom: "btc".to_string(),
@@ -45,7 +46,6 @@ fn successful_process_stop_loss_order() {
         coin(2, "btc"), // 2 BTC to be sold.
         Addr::unchecked("user"),
         "usdc".to_string(),
-        &vec![],
         &BlockInfo {
             height: 50,
             time: Timestamp::from_seconds(600),

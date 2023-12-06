@@ -90,9 +90,10 @@ fn successful_create_market_buy_order() {
                 pagination: PageRequest::new(5),
                 order_owner: None,
                 order_type: None,
+                order_status: None,
             },
         )
         .unwrap();
 
-    assert_eq!(res.orders[0].status, Status::Processed);
+    assert_eq!(res.orders[0].status, Status::Executed);
 }

@@ -40,7 +40,6 @@ createSpotOrder(
 
 ```js
 createSpotOrder(
-  [{ pool_id: 4, token_out_denom: "BTC" }, "AMM_Route_2"],
   { base_denom: "BTC", quote_denom: "ETH", rate: "0.035" },
   "limit_buy",
   "2.5",
@@ -49,7 +48,6 @@ createSpotOrder(
 );
 
 createSpotOrder(
-  null,
   { base_denom: "BTC", quote_denom: "ETH", rate: "0.035" },
   "limit_buy",
   "2.5",
@@ -78,28 +76,29 @@ cancelSpotOrder("your_order_id_here");
 cancelSpotOrder("8");
 ```
 
-### 3. cancelSpotOrders(pagination, order_type, owner_address)
+### 3. cancelSpotOrders(order_ids, order_type, owner_address)
 
 This function retrieves information about multiple order by querying a CosmWasm contract on the blockchain.
 
 #### Parameters
 
+- `order_ids` ([u64] or null): list of order ids that should be canceled
 - `order_type` (OrderType or null): select the order type that should be canceled
 - `owner_address` (String): select the owner of the order that should be canceled
 
 #### Usage
 
 ```javascript
-cancelSpotOrders("order_type", "owner_address", order_ids);
+cancelSpotOrders("order_ids", "order_type", "order_owner");
 ```
 
 #### Exemple
 
 ```js
 cancelSpotOrders(
+  [5, 4, 6],
   "limit_sell",
-  "elys1x5fehwug2vtkyn4vpunwkfn9zxkpxl8jg0lwuu",
-  [5, 4, 6]
+  "elys1x5fehwug2vtkyn4vpunwkfn9zxkpxl8jg0lwuu"
 );
 ```
 
@@ -123,7 +122,7 @@ getSpotOrder("your_order_id_here");
 getSpotOrder("1");
 ```
 
-### 5. getSpotOrders(pagination, order_type, owner_address)
+### 5. getSpotOrders(pagination, order_type, order_owner, order_status)
 
 This function retrieves information about multiple order by querying a CosmWasm contract on the blockchain.
 
@@ -131,12 +130,13 @@ This function retrieves information about multiple order by querying a CosmWasm 
 
 - `pagination` {PageRequest} :
 - `order_type` (OrderType or null): select the order type that should be querried
-- `owner_address` (String or null): select the owner of the order that should be querried
+- `order_owner` (String or null): select the owner of the order that should be querried
+- `order_status` (String or null) : select the order staus that should be querried (Pending,Executed,Canceled)
 
 #### Usage
 
 ```javascript
-getSpotOrders({"count_total", "limit", "reverse", "key"}, "order_type", "owner_address")
+getSpotOrders({"count_total", "limit", "reverse", "key"}, "order_type", "order_owner", "status")
 ```
 
 ####
@@ -145,23 +145,25 @@ getSpotOrders({"count_total", "limit", "reverse", "key"}, "order_type", "owner_a
 getSpotOrders(
   { count_total: true, limit: 10, reverse: false, key: null },
   "stop_loss",
-  "elys12tzylat4udvjj56uuhu3vj2n4vgp7cf9fwna9w"
+  "elys12tzylat4udvjj56uuhu3vj2n4vgp7cf9fwna9w",
+  null
 );
 ```
 
-### 6. createMarginOrder(position, collateral, leverage, borrow_asset, take_profit_price, order_type, trigger_price)
+### 6. createMarginOrder(position, collateral, leverage, trading_asset, take_profit_price, order_type, trigger_price)
 
 This function allows you to create a margin order by sending a transaction to the CosmWasm contract.
 
 #### Parameters
 
-- `position` (String): The type of position for the margin order (e.g., "long", "short").
 - `collateral` (Coin {demom: String , amount : String}): The amount of collateral for the margin order.
-- `leverage` (String): The leverage for the margin order.
-- `borrow_asset` (String): The asset to borrow for the margin order.
-- `take_profit_price` (String): The price at which the order will take profit.
+- `position` (String): The type of position for the margin order (e.g., "long", "short"). Can be null if it's not a LimitOpen or MarketOpen type
+- `leverage` (String): The leverage for the margin order.Can be null if it's not a LimitOpen or MarketOpen type
+- `trading_asset` (String): The asset to borrow for the margin order. Can be null if it's not a LimitOpen or MarketOpen type
+- `take_profit_price` (String): The price at which the order will take profit. Can be null if it's not a LimitOpen or MarketOpen type
 - `order_type` (String): The type of the order (e.g., "stop_loss", "limit_sell", "limit_buy").
 - `trigger_price` ({`base_denom`:String, `quote_denom`:String, `rate` :String} or null): Price relates two assets exchange rate that the user should define, can only be null if the order type is "market_type"
+- `position_id` (u64) Can be null if it's not a LimitClose, MarketClose or StopLoss type
 
 #### Usage
 
@@ -170,10 +172,11 @@ createMarginOrder(
   "position_type",
   "collateral",
   "leverage_value",
-  "borrow_asset",
+  "trading_asset",
   "take_profit_price",
   "order_type",
   "trigger_price"
+  "position_id"
 );
 ```
 
@@ -188,6 +191,7 @@ createMarginOrder(
   "2.2"
   "limit_buy",
   { base_denom: "ueth", quote_denom: "uusdc", rate: "2076.5" }
+  null
 );
 ```
 
@@ -217,7 +221,6 @@ This function retrieves information about a specific margin order by querying a 
 
 #### Parameters
 
-- `address` (String): The address associated with the margin order.
 - `order_id` (String): The unique identifier for the order you want to retrieve.
 
 #### Usage
@@ -297,6 +300,34 @@ SwapEstimationByDenom({
   denom_in: "usdc",
   denom_out: "atom",
 });
+```
+
+### 12. getMarginOrders(pagination, order_type, order_owner, order_status)
+
+This function retrieves information about multiple order by querying a CosmWasm contract on the blockchain.
+
+#### Parameters
+
+- `pagination` {PageRequest} :
+- `order_type` (OrderType or null): select the order type that should be querried
+- `order_owner` (String or null): select the owner of the order that should be querried
+- `order_status` (String or null) : select the order staus that should be querried (pending,executed,canceled)
+
+#### Usage
+
+```javascript
+getMarginOrders({"count_total", "limit", "reverse", "key"}, "order_type", "order_owner", status)
+```
+
+####
+
+```js
+getMarginOrders(
+  { count_total: true, limit: 10, reverse: false, key: null },
+  "stop_loss",
+  "elys12tzylat4udvjj56uuhu3vj2n4vgp7cf9fwna9w",
+  "pending"
+);
 ```
 
 ## Configuration

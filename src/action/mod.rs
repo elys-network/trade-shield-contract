@@ -1,6 +1,6 @@
 use crate::{states::*, types::*, ContractError};
 use cosmwasm_std::Event;
-use cosmwasm_std::{BankMsg, CosmosMsg, DepsMut, Env, MessageInfo, Response};
+use cosmwasm_std::{BankMsg, CosmosMsg, DepsMut, Env, MessageInfo, Order, Response};
 use elys_bindings::*;
 
 pub mod query {
@@ -39,7 +39,7 @@ pub mod execute {
     mod close_margin_position;
     mod create_margin_order;
     mod create_spot_order;
-    
+
     mod stake_request;
     mod unstake_request;
 
@@ -60,14 +60,14 @@ pub mod execute {
     pub use create_margin_order::create_margin_order;
     pub use create_spot_order::create_spot_order;
 
-    pub use stake_request::stake_request;
-    pub use unstake_request::unstake_request;
     pub use claim_rewards_request::claim_rewards_request;
     pub use claim_validator_commission_request::claim_validator_commission_request;
     pub use eden_cancel_vest_request::eden_cancel_vest_request;
     pub use eden_vest_request::eden_vest_request;
     pub use elys_cancel_unstake_request::elys_cancel_unstake_request;
     pub use elys_redelegation_request::elys_redelegation_request;
+    pub use stake_request::stake_request;
+    pub use unstake_request::unstake_request;
 }
 
 pub mod reply {

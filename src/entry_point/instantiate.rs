@@ -9,9 +9,8 @@ pub fn instantiate(
     _info: MessageInfo,
     _msg: InstantiateMsg,
 ) -> StdResult<Response<ElysMsg>> {
-    SPOT_ORDER.save(deps.storage, &vec![])?;
-    MARGIN_ORDER.save(deps.storage, &vec![])?;
-    REPLY_INFO.save(deps.storage, &vec![])?;
+    MAX_REPLY_ID.save(deps.storage, &0)?;
+    SPOT_ORDER_MAX_ID.save(deps.storage, &0)?;
 
     Ok(Response::new())
 }

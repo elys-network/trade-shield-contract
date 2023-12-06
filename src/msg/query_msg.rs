@@ -1,6 +1,6 @@
 #[allow(unused_imports)]
 use super::query_resp::*;
-use crate::types::{MarginOrderType, SpotOrderType};
+use crate::types::{MarginOrderType, SpotOrderType, Status};
 use cosmwasm_schema::{cw_serde, QueryResponses};
 use cosmwasm_std::Coin;
 #[allow(unused_imports)]
@@ -13,7 +13,7 @@ pub enum QueryMsg {
     #[returns(GetSpotOrderResp)]
     GetSpotOrder { order_id: u64 },
     #[returns(GetAllPricesResponse)]
-    GetAllPrices {},
+    GetAllPrices { limit: u64 },
     #[returns(OracleAssetInfoResponse)]
     AssetInfo { denom: String },
     #[returns(GetMarginOrderResp)]
@@ -23,12 +23,14 @@ pub enum QueryMsg {
         pagination: PageRequest,
         order_owner: Option<String>,
         order_type: Option<SpotOrderType>,
+        order_status: Option<Status>,
     },
     #[returns(GetMarginOrdersResp)]
     GetMarginOrders {
         pagination: PageRequest,
         order_owner: Option<String>,
         order_type: Option<MarginOrderType>,
+        order_status: Option<Status>,
     },
     #[returns(AmmSwapEstimationByDenomResponse)]
     SwapEstimationByDenom {

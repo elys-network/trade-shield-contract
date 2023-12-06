@@ -14,9 +14,7 @@ pub fn create_spot_order(
     order_target_denom: String,
     order_price: Option<OrderPrice>,
 ) -> Result<Response<ElysMsg>, ContractError> {
-    if info.funds.len() != 1 {
-        return Err(ContractError::CoinNumber);
-    };
+    cw_utils::one_coin(&info)?;
 
     let querier = ElysQuerier::new(&deps.querier);
 
@@ -39,15 +37,16 @@ pub fn create_spot_order(
         &Decimal::zero(),
     )?;
 
-    let mut order_vec = SPOT_ORDER.load(deps.storage)?;
+    let order_id = SPOT_ORDER_MAX_ID.load(deps.storage)? + 1;
+    SPOT_ORDER_MAX_ID.save(deps.storage, &order_id)?;
 
     let new_order: SpotOrder = SpotOrder::new(
+        order_id,
         order_type.clone(),
         order_price,
         info.funds[0].clone(),
         info.sender.clone(),
         order_target_denom,
-        &order_vec,
         &env.block,
     );
 
@@ -55,8 +54,6 @@ pub fn create_spot_order(
         to_address: env.contract.address.to_string(),
         amount: info.funds.clone(),
     };
-
-    cw_utils::must_pay(&info, &info.funds[0].denom)?;
 
     let resp = create_resp(
         env.contract.address.as_str(),
@@ -66,8 +63,7 @@ pub fn create_spot_order(
         in_route.unwrap(),
     )?;
 
-    order_vec.push(new_order);
-    SPOT_ORDER.save(deps.storage, &order_vec)?;
+    SPOT_ORDER.save(deps.storage, new_order.order_id, &new_order)?;
 
     Ok(resp)
 }
@@ -93,10 +89,10 @@ fn check_denom_error(
 
     let order_price = order_price.clone().unwrap();
 
-    if (order_price.base_denom != order_source_denom
-        && order_price.base_denom != order_target_denom)
-        || (order_price.quote_denom != order_source_denom
-            && order_price.quote_denom != order_target_denom)
+    if !(order_price.base_denom == order_source_denom
+        && order_price.quote_denom == order_target_denom)
+        && !(order_price.quote_denom == order_source_denom
+            && order_price.base_denom == order_target_denom)
     {
         return Err(ContractError::OrderPriceDenom);
     }
@@ -122,7 +118,8 @@ fn create_resp(
         return Ok(resp);
     }
 
-    let mut reply_infos = REPLY_INFO.load(storage)?;
+    let reply_id = MAX_REPLY_ID.load(storage)? + 1;
+    MAX_REPLY_ID.save(storage, &reply_id)?;
 
     let swap_msg = ElysMsg::amm_swap_exact_amount_in(
         sender,
@@ -133,21 +130,15 @@ fn create_resp(
         &new_order.owner_address,
     );
 
-    let info_id = if let Some(max_info) = reply_infos.iter().max_by_key(|info| info.id) {
-        max_info.id + 1
-    } else {
-        0
-    };
-
-    reply_infos.push(ReplyInfo {
-        id: info_id,
+    let reply_info = ReplyInfo {
+        id: reply_id,
         reply_type: ReplyType::SpotOrderMarketBuy,
         data: Some(to_json_binary(&new_order.order_id)?),
-    });
+    };
 
-    REPLY_INFO.save(storage, &reply_infos)?;
+    REPLY_INFO.save(storage, reply_id, &reply_info)?;
 
-    let sub_msg = SubMsg::reply_always(swap_msg, info_id);
+    let sub_msg = SubMsg::reply_always(swap_msg, reply_id);
 
     Ok(resp.add_submessage(sub_msg))
 }

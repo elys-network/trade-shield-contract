@@ -240,7 +240,7 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
                 quote_denom: "usdc".to_string(),
                 rate: Decimal::from_atomics(Uint128::new(1700), 0).unwrap(),
             },
-            status: Status::NotProcessed,
+            status: Status::Pending,
             date: Date {
                 height: 20,
                 time: Timestamp::from_seconds(500),
@@ -257,7 +257,7 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
                 rate: Decimal::from_atomics(Uint128::new(12000), 0).unwrap(),
             },
             order_target_denom: "usdc".to_string(),
-            status: Status::NotProcessed,
+            status: Status::Pending,
             date: Date {
                 height: 20,
                 time: Timestamp::from_seconds(500),
@@ -274,7 +274,7 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
                 rate: Decimal::from_atomics(Uint128::new(10000), 0).unwrap(),
             },
             order_target_denom: "usdc".to_string(),
-            status: Status::NotProcessed,
+            status: Status::Pending,
             date: Date {
                 height: 20,
                 time: Timestamp::from_seconds(500),
@@ -291,7 +291,7 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
                 rate: Decimal::from_atomics(Uint128::new(1800), 0).unwrap(),
             },
             order_target_denom: "usdc".to_string(),
-            status: Status::NotProcessed,
+            status: Status::Pending,
             date: Date {
                 height: 20,
                 time: Timestamp::from_seconds(500),
@@ -308,7 +308,7 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
                 rate: Decimal::from_atomics(Uint128::new(1200), 0).unwrap(),
             },
             order_target_denom: "usdc".to_string(),
-            status: Status::NotProcessed,
+            status: Status::Pending,
             date: Date {
                 height: 20,
                 time: Timestamp::from_seconds(500),
@@ -325,7 +325,7 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
                 rate: Decimal::from_atomics(Uint128::new(2500), 0).unwrap(),
             },
             order_target_denom: "usdc".to_string(),
-            status: Status::NotProcessed,
+            status: Status::Pending,
             date: Date {
                 height: 20,
                 time: Timestamp::from_seconds(500),
@@ -342,7 +342,7 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
                 rate: Decimal::from_atomics(Uint128::new(21000), 0).unwrap(),
             },
             order_target_denom: "usdc".to_string(),
-            status: Status::NotProcessed,
+            status: Status::Pending,
             date: Date {
                 height: 20,
                 time: Timestamp::from_seconds(500),
@@ -359,7 +359,7 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
                 rate: Decimal::from_atomics(Uint128::new(25000), 0).unwrap(),
             },
             order_target_denom: "usdc".to_string(),
-            status: Status::NotProcessed,
+            status: Status::Pending,
             date: Date {
                 height: 20,
                 time: Timestamp::from_seconds(500),
@@ -376,7 +376,7 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
                 rate: Decimal::from_atomics(Uint128::new(30000), 0).unwrap(),
             },
             order_target_denom: "usdc".to_string(),
-            status: Status::NotProcessed,
+            status: Status::Pending,
             date: Date {
                 height: 20,
                 time: Timestamp::from_seconds(500),
@@ -393,7 +393,7 @@ fn create_dummy_orders() -> Vec<SpotOrder> {
                 rate: Decimal::from_atomics(Uint128::new(2100), 0).unwrap(),
             },
             order_target_denom: "usdc".to_string(),
-            status: Status::NotProcessed,
+            status: Status::Pending,
             date: Date {
                 height: 20,
                 time: Timestamp::from_seconds(500),
