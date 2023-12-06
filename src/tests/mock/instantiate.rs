@@ -28,6 +28,6 @@ pub fn instantiate(
             MARGIN_ORDER.save(deps.storage, order.order_id, order)?;
         }
     }
-    MAX_REPLY_ID.load(deps.storage)?;
+    MAX_REPLY_ID.save(deps.storage, &0)?;
     Ok(Response::new())
 }
