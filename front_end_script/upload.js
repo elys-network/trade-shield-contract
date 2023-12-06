@@ -43,7 +43,6 @@ async function getSpotOrder(order_id) {
 }
 
 async function createSpotOrder(
-  order_amm_routes,
   order_price,
   order_type,
   amount_send,
@@ -62,7 +61,6 @@ async function createSpotOrder(
   const executeFee = calculateFee(300_000, gasPrice);
   const msg = {
     create_spot_order: {
-      order_amm_routes: order_amm_routes,
       order_price: order_price,
       order_type: order_type,
       order_source_denom: denom_send,
@@ -185,10 +183,11 @@ async function createMarginOrder(
   position_type,
   collateral,
   leverage_value,
-  borrow_asset,
+  trading_asset,
   take_profit_price,
   order_type,
-  trigger_price
+  trigger_price,
+  position_id
 ) {
   const gasPrice = GasPrice.fromString(GASPRICE);
   const sender_wallet = await DirectSecp256k1HdWallet.fromMnemonic(
@@ -203,9 +202,9 @@ async function createMarginOrder(
   const msg = {
     create_margin_order: {
       position_type: position_type,
-      collateral: collateral,
       leverage_value: leverage_value,
-      borrow_asset: borrow_asset,
+      trading_asset: trading_asset,
+      position_id: position_id,
       take_profit_price: take_profit_price,
       order_type: order_type,
       trigger_price: trigger_price,

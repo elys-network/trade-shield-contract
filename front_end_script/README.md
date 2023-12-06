@@ -148,19 +148,20 @@ getSpotOrders(
 );
 ```
 
-### 6. createMarginOrder(position, collateral, leverage, borrow_asset, take_profit_price, order_type, trigger_price)
+### 6. createMarginOrder(position, collateral, leverage, trading_asset, take_profit_price, order_type, trigger_price)
 
 This function allows you to create a margin order by sending a transaction to the CosmWasm contract.
 
 #### Parameters
 
-- `position` (String): The type of position for the margin order (e.g., "long", "short").
 - `collateral` (Coin {demom: String , amount : String}): The amount of collateral for the margin order.
-- `leverage` (String): The leverage for the margin order.
-- `borrow_asset` (String): The asset to borrow for the margin order.
-- `take_profit_price` (String): The price at which the order will take profit.
+- `position` (String): The type of position for the margin order (e.g., "long", "short"). Can be null if it's not a LimitOpen or MarketOpen type
+- `leverage` (String): The leverage for the margin order.Can be null if it's not a LimitOpen or MarketOpen type
+- `trading_asset` (String): The asset to borrow for the margin order. Can be null if it's not a LimitOpen or MarketOpen type
+- `take_profit_price` (String): The price at which the order will take profit. Can be null if it's not a LimitOpen or MarketOpen type
 - `order_type` (String): The type of the order (e.g., "stop_loss", "limit_sell", "limit_buy").
 - `trigger_price` ({`base_denom`:String, `quote_denom`:String, `rate` :String} or null): Price relates two assets exchange rate that the user should define, can only be null if the order type is "market_type"
+- `position_id` (u64) Can be null if it's not a LimitClose, MarketClose or StopLoss type
 
 #### Usage
 
@@ -169,10 +170,11 @@ createMarginOrder(
   "position_type",
   "collateral",
   "leverage_value",
-  "borrow_asset",
+  "trading_asset",
   "take_profit_price",
   "order_type",
   "trigger_price"
+  "position_id"
 );
 ```
 
@@ -187,6 +189,7 @@ createMarginOrder(
   "2.2"
   "limit_buy",
   { base_denom: "ueth", quote_denom: "uusdc", rate: "2076.5" }
+  null
 );
 ```
 
@@ -216,7 +219,6 @@ This function retrieves information about a specific margin order by querying a 
 
 #### Parameters
 
-- `address` (String): The address associated with the margin order.
 - `order_id` (String): The unique identifier for the order you want to retrieve.
 
 #### Usage
