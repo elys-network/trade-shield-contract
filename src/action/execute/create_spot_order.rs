@@ -1,4 +1,4 @@
-use cosmwasm_std::{to_json_binary, Decimal, Int128, Order, StdError, StdResult, Storage, SubMsg};
+use cosmwasm_std::{to_json_binary, Decimal, Int128, StdError, StdResult, Storage, SubMsg};
 use elys_bindings::query_resp::AmmSwapEstimationByDenomResponse;
 
 use crate::msg::ReplyType;
@@ -37,18 +37,16 @@ pub fn create_spot_order(
         &Decimal::zero(),
     )?;
 
-    let order_vec: Vec<SpotOrder> = SPOT_ORDER
-        .prefix_range(deps.storage, None, None, Order::Ascending)
-        .filter_map(|res| res.ok().map(|r| r.1))
-        .collect();
+    let order_id = SPOT_ORDER_MAX_ID.load(deps.storage)? + 1;
+    SPOT_ORDER_MAX_ID.save(deps.storage, &order_id)?;
 
     let new_order: SpotOrder = SpotOrder::new(
+        order_id,
         order_type.clone(),
         order_price,
         info.funds[0].clone(),
         info.sender.clone(),
         order_target_denom,
-        &order_vec,
         &env.block,
     );
 

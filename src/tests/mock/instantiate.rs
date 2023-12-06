@@ -18,16 +18,14 @@ pub fn instantiate(
     _info: MessageInfo,
     msg: InstantiateMockMsg,
 ) -> StdResult<Response<ElysMsg>> {
-    if !msg.spot_orders.is_empty() {
-        for order in msg.spot_orders.iter() {
-            SPOT_ORDER.save(deps.storage, order.order_id, order)?;
-        }
+    for order in msg.spot_orders.iter() {
+        SPOT_ORDER.save(deps.storage, order.order_id, order)?;
     }
-    if !msg.margin_orders.is_empty() {
-        for order in msg.margin_orders.iter() {
-            MARGIN_ORDER.save(deps.storage, order.order_id, order)?;
-        }
+    for order in msg.margin_orders.iter() {
+        MARGIN_ORDER.save(deps.storage, order.order_id, order)?;
     }
     MAX_REPLY_ID.save(deps.storage, &0)?;
+    SPOT_ORDER_MAX_ID.save(deps.storage, &0)?;
+
     Ok(Response::new())
 }

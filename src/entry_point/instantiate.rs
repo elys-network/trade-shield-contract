@@ -10,5 +10,7 @@ pub fn instantiate(
     _msg: InstantiateMsg,
 ) -> StdResult<Response<ElysMsg>> {
     MAX_REPLY_ID.save(deps.storage, &0)?;
+    SPOT_ORDER_MAX_ID.save(deps.storage, &0)?;
+
     Ok(Response::new())
 }
