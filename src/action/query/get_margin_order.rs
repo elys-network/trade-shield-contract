@@ -4,9 +4,9 @@ pub fn get_margin_order(
     deps: Deps<ElysQuery>,
     id: u64,
 ) -> Result<GetMarginOrderResp, ContractError> {
-    let orders = MARGIN_ORDER.load(deps.storage)?;
+    let order = MARGIN_ORDER.may_load(deps.storage, id)?;
 
-    match orders.iter().find(|order| order.order_id == id).cloned() {
+    match order {
         Some(order) => Ok(GetMarginOrderResp { order }),
         None => Err(ContractError::OrderNotFound { order_id: id }),
     }

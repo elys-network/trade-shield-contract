@@ -8,7 +8,6 @@ pub fn eden_cancel_vest_request(
     amount: u64,
 ) -> Result<Response<ElysMsg>, ContractError> {
     let msg = ElysMsg::eden_cancel_vesting(
-        env.contract.address.into_string(),
         info.sender.into_string(),
         Int128::from(amount),
         "ueden".to_string(),

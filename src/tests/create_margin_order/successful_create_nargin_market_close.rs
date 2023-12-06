@@ -68,7 +68,7 @@ fn successful_create_margin_market_open_order() {
             position_id: Some(1),
             position: None,
             leverage: None,
-            borrow_asset: None,
+            trading_asset: None,
             take_profit_price: None,
             order_type: MarginOrderType::MarketClose,
             trigger_price: None,

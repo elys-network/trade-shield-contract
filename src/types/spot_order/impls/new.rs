@@ -25,11 +25,7 @@ impl SpotOrder {
             },
         };
 
-        let status = if order_type == SpotOrderType::MarketBuy {
-            Status::Processing
-        } else {
-            Status::NotProcessed
-        };
+        let status = Status::NotProcessed;
 
         SpotOrder {
             order_type,

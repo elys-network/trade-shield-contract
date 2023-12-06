@@ -13,7 +13,7 @@ pub enum QueryMsg {
     #[returns(GetSpotOrderResp)]
     GetSpotOrder { order_id: u64 },
     #[returns(GetAllPricesResponse)]
-    GetAllPrices {},
+    GetAllPrices { limit: u64 },
     #[returns(OracleAssetInfoResponse)]
     AssetInfo { denom: String },
     #[returns(GetMarginOrderResp)]

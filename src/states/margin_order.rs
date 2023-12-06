@@ -1,4 +1,4 @@
 use crate::types::MarginOrder;
-use cw_storage_plus::Item;
+use cw_storage_plus::Map;
 
-pub const MARGIN_ORDER: Item<Vec<MarginOrder>> = Item::new("order");
+pub const MARGIN_ORDER: Map<u64, MarginOrder> = Map::new("margin order");

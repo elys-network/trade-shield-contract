@@ -35,7 +35,7 @@ fn coin_number() {
         &ExecuteMsg::CreateMarginOrder {
             position: Some(MarginPosition::Short),
             leverage: Some(Decimal::from_atomics(Uint128::new(500), 2).unwrap()),
-            borrow_asset: Some("uatom".to_string()),
+            trading_asset: Some("uatom".to_string()),
             take_profit_price: Some(Decimal::from_atomics(Uint128::new(500), 2).unwrap()),
             order_type: MarginOrderType::LimitOpen,
             trigger_price: Some(OrderPrice {

@@ -11,23 +11,20 @@ pub fn stake_request(
     asset: String,
     // The validator Address is required only if the staked asset is
     // uelys.
-    validator_address: Option<String>
+    validator_address: Option<String>,
 ) -> Result<Response<ElysMsg>, ContractError> {
     let querier = ElysQuerier::new(&deps.querier);
     let address = info.sender.into_string();
     let balance = querier.get_balance(address.to_owned(), asset.to_owned())?;
     let token_amount: u128 = balance.amount.into();
     if token_amount < amount as u128 {
-        return Err(ContractError::InsufficientBalanceError { balance: balance.amount.into(), amount: amount });
+        return Err(ContractError::InsufficientBalanceError {
+            balance: balance.amount.into(),
+            amount: amount,
+        });
     }
 
-    let msg = ElysMsg::stake_token(
-        env.contract.address.into_string(),
-        address,
-        Int128::from(amount),
-        asset,
-        validator_address,
-    );
+    let msg = ElysMsg::stake_token(address, Int128::from(amount), asset, validator_address);
 
     let resp = Response::new().add_message(msg);
 

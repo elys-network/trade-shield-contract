@@ -7,11 +7,7 @@ pub fn claim_rewards_request(
     _deps: DepsMut<ElysQuery>,
     withdraw_type: EarnType,
 ) -> Result<Response<ElysMsg>, ContractError> {
-    let msg = ElysMsg::withdraw_rewards(
-        env.contract.address.into_string(),
-        info.sender.into_string(),
-        withdraw_type,
-    );
+    let msg = ElysMsg::withdraw_rewards(info.sender.into_string(), withdraw_type);
 
     let resp = Response::new().add_message(msg);
 

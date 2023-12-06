@@ -11,10 +11,9 @@ pub fn elys_redelegation_request(
     validator_dst_address: String,
     // The validator Address is required only if the staked asset is
     // uelys.
-    amount: Coin
+    amount: Coin,
 ) -> Result<Response<ElysMsg>, ContractError> {
     let msg = ElysMsg::begin_redelegate(
-        env.contract.address.into_string(),
         info.sender.into_string(),
         validator_src_address,
         validator_dst_address,

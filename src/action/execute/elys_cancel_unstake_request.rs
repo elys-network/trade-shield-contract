@@ -10,7 +10,6 @@ pub fn elys_cancel_unstake_request(
     creation_height: i64,
 ) -> Result<Response<ElysMsg>, ContractError> {
     let msg = ElysMsg::cancel_unbonding(
-        env.contract.address.into_string(),
         info.sender.into_string(),
         validator_address,
         amount,

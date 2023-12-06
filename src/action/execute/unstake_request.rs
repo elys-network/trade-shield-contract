@@ -11,10 +11,9 @@ pub fn unstake_request(
     asset: String,
     // The validator Address is required only if the staked asset is
     // uelys.
-    validator_address: Option<String>
+    validator_address: Option<String>,
 ) -> Result<Response<ElysMsg>, ContractError> {
     let msg = ElysMsg::unstake_token(
-        env.contract.address.into_string(),
         info.sender.into_string(),
         Int128::from(amount),
         asset,

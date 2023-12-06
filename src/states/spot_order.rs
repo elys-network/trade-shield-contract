@@ -1,4 +1,4 @@
 use crate::types::SpotOrder;
-use cw_storage_plus::Item;
+use cw_storage_plus::Map;
 
-pub const SPOT_ORDER: Item<Vec<SpotOrder>> = Item::new("spot order");
+pub const SPOT_ORDER: Map<u64, SpotOrder> = Map::new("spot order");

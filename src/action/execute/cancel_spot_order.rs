@@ -5,12 +5,7 @@ pub fn cancel_spot_order(
     deps: DepsMut<ElysQuery>,
     order_id: u64,
 ) -> Result<Response<ElysMsg>, ContractError> {
-    let mut orders_list: Vec<SpotOrder> = SPOT_ORDER.load(deps.storage)?;
-
-    let order: &mut SpotOrder = match orders_list
-        .iter_mut()
-        .find(|order| order.order_id == order_id)
-    {
+    let mut order: SpotOrder = match SPOT_ORDER.may_load(deps.storage, order_id)? {
         Some(order) => order,
         None => return Err(ContractError::OrderNotFound { order_id }),
     };
@@ -38,7 +33,7 @@ pub fn cancel_spot_order(
         .add_message(CosmosMsg::Bank(refund_msg))
         .add_event(Event::new("cancel_spot_order").add_attribute("order_id", order_id.to_string()));
 
-    SPOT_ORDER.save(deps.storage, &orders_list)?;
+    SPOT_ORDER.save(deps.storage, order_id, &order)?;
 
     Ok(resp)
 }

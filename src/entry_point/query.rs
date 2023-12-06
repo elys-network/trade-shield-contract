@@ -8,7 +8,7 @@ pub fn query(deps: Deps<ElysQuery>, _env: Env, msg: QueryMsg) -> Result<Binary, 
 
     match msg {
         GetSpotOrder { order_id } => Ok(to_json_binary(&query::get_spot_order(deps, order_id)?)?),
-        GetAllPrices {} => Ok(to_json_binary(&query::get_all_prices(deps)?)?),
+        GetAllPrices { limit } => Ok(to_json_binary(&query::get_all_prices(deps, limit)?)?),
         AssetInfo { denom } => Ok(to_json_binary(&query::asset_info(deps, denom)?)?),
         GetMarginPosition { address, id } => Ok(to_json_binary(&query::get_margin_position(
             deps, address, id,

@@ -36,7 +36,7 @@ pub fn execute(
         CreateMarginOrder {
             position,
             leverage,
-            borrow_asset,
+            trading_asset,
             take_profit_price,
             order_type,
             trigger_price,
@@ -47,7 +47,7 @@ pub fn execute(
             env,
             position,
             leverage,
-            borrow_asset,
+            trading_asset,
             take_profit_price,
             order_type,
             trigger_price,
@@ -59,15 +59,44 @@ pub fn execute(
             owner_address,
             order_type,
         } => cancel_margin_orders(info, deps, order_ids, owner_address, order_type),
-        CloseMarginPosition { id } => close_margin_position(info, env, id),
+        CloseMarginPosition { id, amount } => close_margin_position(info, env, id, amount),
 
-        StakeRequest { amount, asset, validator_address } => stake_request(env, info, deps, amount, asset, validator_address),
-        UnstakeRequest { amount, asset, validator_address } => unstake_request(env, info, deps, amount, asset, validator_address),
-        ElysRedelegateRequest { validator_src_address, validator_dst_address, amount} => elys_redelegation_request(env, info, deps, validator_src_address, validator_dst_address, amount),
-        ElysCancelUnstakeRequest { validator_address, amount, creation_height } => elys_cancel_unstake_request(env, info, deps, validator_address, amount, creation_height),
-        EdenVestRequest { amount} => eden_vest_request(env, info, deps, amount),
-        EdenCancelVestRequest { amount  } => eden_cancel_vest_request(env, info, deps, amount),
-        ClaimRewardsRequest { withdraw_type } => claim_rewards_request(env, info, deps, withdraw_type),
-        ClaimValidatorCommissionRequest { validator_address } => claim_validator_commission_request(env, info, deps, validator_address),
+        StakeRequest {
+            amount,
+            asset,
+            validator_address,
+        } => stake_request(env, info, deps, amount, asset, validator_address),
+        UnstakeRequest {
+            amount,
+            asset,
+            validator_address,
+        } => unstake_request(env, info, deps, amount, asset, validator_address),
+        ElysRedelegateRequest {
+            validator_src_address,
+            validator_dst_address,
+            amount,
+        } => elys_redelegation_request(
+            env,
+            info,
+            deps,
+            validator_src_address,
+            validator_dst_address,
+            amount,
+        ),
+        ElysCancelUnstakeRequest {
+            validator_address,
+            amount,
+            creation_height,
+        } => {
+            elys_cancel_unstake_request(env, info, deps, validator_address, amount, creation_height)
+        }
+        EdenVestRequest { amount } => eden_vest_request(env, info, deps, amount),
+        EdenCancelVestRequest { amount } => eden_cancel_vest_request(env, info, deps, amount),
+        ClaimRewardsRequest { withdraw_type } => {
+            claim_rewards_request(env, info, deps, withdraw_type)
+        }
+        ClaimValidatorCommissionRequest { validator_address } => {
+            claim_validator_commission_request(env, info, deps, validator_address)
+        }
     }
 }

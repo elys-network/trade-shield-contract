@@ -1,5 +1,5 @@
 use crate::msg::ReplyType;
-use cosmwasm_std::{to_json_binary, Decimal, Int128, StdResult, SubMsg};
+use cosmwasm_std::{to_json_binary, Decimal, Int128, StdResult, Storage, SubMsg};
 use elys_bindings::query_resp::AmmSwapEstimationByDenomResponse;
 use std::ops::Div;
 
@@ -9,14 +9,21 @@ pub fn process_orders(
     deps: DepsMut<ElysQuery>,
     env: Env,
 ) -> Result<Response<ElysMsg>, ContractError> {
-    let mut spot_orders = SPOT_ORDER.load(deps.storage)?;
-    let mut margin_orders = MARGIN_ORDER.load(deps.storage)?;
-    let mut reply_info = REPLY_INFO.load(deps.storage)?;
+    let spot_orders: Vec<SpotOrder> = SPOT_ORDER
+        .prefix_range(deps.storage, None, None, Order::Ascending)
+        .filter_map(|res| res.ok().map(|r| r.1))
+        .collect();
+
+    let margin_orders: Vec<MarginOrder> = MARGIN_ORDER
+        .prefix_range(deps.storage, None, None, Order::Ascending)
+        .filter_map(|res| res.ok().map(|r| r.1))
+        .collect();
+    let mut reply_info_id = MAX_REPLY_ID.load(deps.storage)?;
 
     let querier = ElysQuerier::new(&deps.querier);
     let mut submsgs: Vec<SubMsg<ElysMsg>> = vec![];
 
-    for spot_order in spot_orders.iter_mut() {
+    for spot_order in spot_orders.iter() {
         let amm_swap_estimation = querier.amm_swap_estimation_by_denom(
             &spot_order.order_amount,
             &spot_order.order_amount.denom,
@@ -29,31 +36,27 @@ pub fn process_orders(
                 spot_order,
                 &mut submsgs,
                 env.contract.address.as_str(),
-                &mut reply_info,
+                &mut reply_info_id,
                 amm_swap_estimation,
+                deps.storage,
             )?;
         }
     }
 
-    for margin_order in margin_orders.iter_mut() {
+    for margin_order in margin_orders.iter() {
         let amm_swap_estimation = querier.amm_swap_estimation_by_denom(
             &margin_order.collateral,
             &margin_order.collateral.denom,
-            &margin_order.borrow_asset,
+            &margin_order.trading_asset,
             &Decimal::zero(),
         )?;
 
         if check_margin_order(&margin_order, amm_swap_estimation) {
-            process_margin_order(
-                margin_order,
-                &mut submsgs,
-                env.contract.address.as_str(),
-                &mut reply_info,
-            )?;
+            process_margin_order(margin_order, &mut submsgs, &mut reply_info_id, deps.storage)?;
         }
     }
 
-    REPLY_INFO.save(deps.storage, &reply_info)?;
+    MAX_REPLY_ID.save(deps.storage, &reply_info_id)?;
 
     let resp = Response::new().add_submessages(submsgs);
 
@@ -61,49 +64,44 @@ pub fn process_orders(
 }
 
 fn process_margin_order(
-    order: &mut MarginOrder,
+    order: &MarginOrder,
     submsgs: &mut Vec<SubMsg<ElysMsg>>,
-    contract_address: &str,
-    reply_infos: &mut Vec<ReplyInfo>,
+    reply_info_id: &mut u64,
+    storage: &mut dyn Storage,
 ) -> StdResult<()> {
     let (msg, reply_type) = if order.order_type == MarginOrderType::LimitOpen {
         (
-            ElysMsg::margin_broker_open_position(
-                contract_address,
-                &order.collateral.denom,
-                Int128::new(order.collateral.amount.u128() as i128),
-                &order.borrow_asset,
-                order.position.clone() as i32,
+            ElysMsg::margin_open_position(
+                &order.owner,
+                order.collateral.clone(),
+                &order.trading_asset,
+                order.position.clone(),
                 order.leverage.clone(),
                 order.take_profit_price.clone(),
-                &order.owner,
             ),
             ReplyType::MarginBrokerOpen,
         )
     } else {
         (
-            ElysMsg::margin_broker_close_position(
-                contract_address,
-                order.position_id.unwrap(),
+            ElysMsg::margin_close_position(
                 &order.owner,
+                order.position_id.unwrap(),
+                0, //AMOUNT
             ),
             ReplyType::MarginBrokerClose,
         )
     };
 
-    let info_id = if let Some(max_info) = reply_infos.iter().max_by_key(|info| info.id) {
-        max_info.id + 1
-    } else {
-        0
-    };
-
-    reply_infos.push(ReplyInfo {
-        id: info_id,
+    let reply_info = ReplyInfo {
+        id: *reply_info_id,
         reply_type,
         data: Some(to_json_binary(&order.order_id)?),
-    });
+    };
+    submsgs.push(SubMsg::reply_on_success(msg, *reply_info_id));
 
-    submsgs.push(SubMsg::reply_on_success(msg, info_id));
+    REPLY_INFO.save(storage, *reply_info_id, &reply_info)?;
+
+    *reply_info_id += 1;
     Ok(())
 }
 
@@ -180,17 +178,18 @@ fn check_spot_order(
 }
 
 fn process_spot_order(
-    order: &mut SpotOrder,
+    order: &SpotOrder,
     submsgs: &mut Vec<SubMsg<ElysMsg>>,
     sender: &str,
-    reply_infos: &mut Vec<ReplyInfo>,
+    reply_info_id: &mut u64,
     amm_swap_estimation: AmmSwapEstimationByDenomResponse,
+    storage: &mut dyn Storage,
 ) -> StdResult<()> {
     let token_out_min_amount: Int128 = match order.order_type {
         SpotOrderType::LimitBuy => calculate_token_out_min_amount(order),
         SpotOrderType::LimitSell => calculate_token_out_min_amount(order),
         SpotOrderType::StopLoss => Int128::zero(),
-        SpotOrderType::MarketBuy => Int128::zero(),
+        _ => Int128::zero(),
     };
 
     let msg = ElysMsg::amm_swap_exact_amount_in(
@@ -202,19 +201,18 @@ fn process_spot_order(
         &order.owner_address,
     );
 
-    order.status = Status::Processing;
-
-    let info_id = if let Some(max_info) = reply_infos.iter().max_by_key(|info| info.id) {
-        max_info.id + 1
-    } else {
-        0
-    };
-    reply_infos.push(ReplyInfo {
-        id: info_id,
+    let reply_info = ReplyInfo {
+        id: *reply_info_id,
         reply_type: ReplyType::SpotOrder,
         data: Some(to_json_binary(&order.order_id)?),
-    });
-    submsgs.push(SubMsg::reply_on_success(msg, info_id));
+    };
+
+    submsgs.push(SubMsg::reply_on_success(msg, *reply_info_id));
+
+    REPLY_INFO.save(storage, *reply_info_id, &reply_info)?;
+
+    *reply_info_id += 1;
+
     Ok(())
 }
 
@@ -231,5 +229,5 @@ fn calculate_token_out_min_amount(order: &SpotOrder) -> Int128 {
         order_amount.amount * Decimal::one().div(order_price.rate)
     };
 
-    Int128::new((amount.u128() - 1) as i128) //slippage integration
+    Int128::new((amount.u128()) as i128)
 }

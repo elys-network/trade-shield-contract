@@ -6,7 +6,10 @@ pub fn get_margin_orders(
     order_owner: Option<String>,
     order_type: Option<MarginOrderType>,
 ) -> Result<GetMarginOrdersResp, ContractError> {
-    let orders = MARGIN_ORDER.load(deps.storage)?;
+    let orders: Vec<MarginOrder> = MARGIN_ORDER
+        .prefix_range(deps.storage, None, None, Order::Ascending)
+        .filter_map(|res| res.ok().map(|r| r.1))
+        .collect();
 
     let (orders, page_response) = pagination.filter(orders)?;
 

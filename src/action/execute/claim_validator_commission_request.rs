@@ -6,11 +6,7 @@ pub fn claim_validator_commission_request(
     _deps: DepsMut<ElysQuery>,
     validator_address: String,
 ) -> Result<Response<ElysMsg>, ContractError> {
-    let msg = ElysMsg::withdraw_validator_commissions(
-        env.contract.address.into_string(),
-        info.sender.into_string(),
-        validator_address,
-    );
+    let msg = ElysMsg::withdraw_validator_commissions(info.sender.into_string(), validator_address);
 
     let resp = Response::new().add_message(msg);
 

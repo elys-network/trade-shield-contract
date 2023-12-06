@@ -40,7 +40,6 @@ createSpotOrder(
 
 ```js
 createSpotOrder(
-  [{ pool_id: 4, token_out_denom: "BTC" }, "AMM_Route_2"],
   { base_denom: "BTC", quote_denom: "ETH", rate: "0.035" },
   "limit_buy",
   "2.5",
@@ -49,7 +48,6 @@ createSpotOrder(
 );
 
 createSpotOrder(
-  null,
   { base_denom: "BTC", quote_denom: "ETH", rate: "0.035" },
   "limit_buy",
   "2.5",
@@ -78,28 +76,29 @@ cancelSpotOrder("your_order_id_here");
 cancelSpotOrder("8");
 ```
 
-### 3. cancelSpotOrders(pagination, order_type, owner_address)
+### 3. cancelSpotOrders(order_ids, order_type, owner_address)
 
 This function retrieves information about multiple order by querying a CosmWasm contract on the blockchain.
 
 #### Parameters
 
+- `order_ids` ([u64] or null): list of order ids that should be canceled
 - `order_type` (OrderType or null): select the order type that should be canceled
 - `owner_address` (String): select the owner of the order that should be canceled
 
 #### Usage
 
 ```javascript
-cancelSpotOrders("order_type", "owner_address", order_ids);
+cancelSpotOrders("order_ids", "order_type", "owner_address");
 ```
 
 #### Exemple
 
 ```js
 cancelSpotOrders(
+  [5, 4, 6],
   "limit_sell",
-  "elys1x5fehwug2vtkyn4vpunwkfn9zxkpxl8jg0lwuu",
-  [5, 4, 6]
+  "elys1x5fehwug2vtkyn4vpunwkfn9zxkpxl8jg0lwuu"
 );
 ```
 

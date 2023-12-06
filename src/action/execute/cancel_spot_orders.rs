@@ -15,7 +15,10 @@ pub fn cancel_spot_orders(
         });
     }
 
-    let mut orders: Vec<SpotOrder> = SPOT_ORDER.load(deps.storage)?;
+    let mut orders: Vec<SpotOrder> = SPOT_ORDER
+        .prefix_range(deps.storage, None, None, Order::Ascending)
+        .filter_map(|res| res.ok().map(|r| r.1))
+        .collect();
 
     let user_orders: Vec<SpotOrder> = orders
         .iter()
@@ -51,10 +54,9 @@ pub fn cancel_spot_orders(
     for order in orders.iter_mut() {
         if order_ids.contains(&order.order_id) {
             order.status = Status::Canceled;
+            SPOT_ORDER.save(deps.storage, order.order_id, &order)?;
         }
     }
-
-    SPOT_ORDER.save(deps.storage, &orders)?;
 
     let refund_msg = make_refund_msg(filtered_order, owner_address);
 

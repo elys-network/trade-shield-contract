@@ -39,7 +39,7 @@ fn successful_create_margin_market_open_order() {
         &ExecuteMsg::CreateMarginOrder {
             position: Some(MarginPosition::Long),
             leverage: Some(Decimal::from_atomics(Uint128::new(215), 2).unwrap()),
-            borrow_asset: Some("btc".to_string()),
+            trading_asset: Some("btc".to_string()),
             take_profit_price: Some(Decimal::from_atomics(Uint128::new(200), 2).unwrap()),
             order_type: MarginOrderType::MarketOpen,
             trigger_price: Some(OrderPrice {

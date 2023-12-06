@@ -12,7 +12,7 @@ pub struct MarginOrder {
     pub position: MarginPosition,
     pub trigger_price: Option<OrderPrice>,
     pub collateral: Coin,
-    pub borrow_asset: String,
+    pub trading_asset: String,
     pub leverage: Decimal,
     pub take_profit_price: Decimal,
     pub position_id: Option<u64>,
@@ -25,7 +25,7 @@ impl MarginOrder {
         position: &MarginPosition,
         order_type: &MarginOrderType,
         collateral: &Coin,
-        borrow_asset: impl Into<String>,
+        trading_asset: impl Into<String>,
         leverage: &Decimal,
         take_profit_price: &Decimal,
         trigger_price: &Option<OrderPrice>,
@@ -36,18 +36,14 @@ impl MarginOrder {
             None => 0,
         };
 
-        let status = if order_type == &MarginOrderType::MarketOpen {
-            Status::Processing
-        } else {
-            Status::NotProcessed
-        };
+        let status = Status::NotProcessed;
 
         Self {
             order_id,
             owner: owner.into(),
             position: position.to_owned(),
             collateral: collateral.to_owned(),
-            borrow_asset: borrow_asset.into(),
+            trading_asset: trading_asset.into(),
             leverage: leverage.to_owned(),
             take_profit_price: take_profit_price.to_owned(),
             order_type: order_type.to_owned(),
@@ -61,7 +57,7 @@ impl MarginOrder {
         position: i32,
         order_type: &MarginOrderType,
         collateral: &Coin,
-        borrow_asset: impl Into<String>,
+        trading_asset: impl Into<String>,
         leverage: &Decimal,
         position_id: u64,
         trigger_price: &Option<OrderPrice>,
@@ -73,11 +69,7 @@ impl MarginOrder {
             None => 0,
         };
 
-        let status = if order_type == &MarginOrderType::MarketClose {
-            Status::Processing
-        } else {
-            Status::NotProcessed
-        };
+        let status = Status::NotProcessed;
 
         let position = MarginPosition::try_from_i32(position)?;
 
@@ -89,7 +81,7 @@ impl MarginOrder {
             owner: owner.into(),
             trigger_price: trigger_price.to_owned(),
             collateral: collateral.to_owned(),
-            borrow_asset: borrow_asset.into(),
+            trading_asset: trading_asset.into(),
             position_id: Some(position_id),
             leverage: leverage.to_owned(),
             take_profit_price: take_profit_price.to_owned(),

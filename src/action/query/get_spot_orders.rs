@@ -6,7 +6,10 @@ pub fn get_spot_orders(
     order_owner: Option<String>,
     order_type: Option<SpotOrderType>,
 ) -> Result<GetSpotOrdersResp, ContractError> {
-    let orders = SPOT_ORDER.load(deps.storage)?;
+    let orders: Vec<SpotOrder> = SPOT_ORDER
+        .prefix_range(deps.storage, None, None, Order::Ascending)
+        .filter_map(|res| res.ok().map(|r| r.1))
+        .collect();
 
     let (orders, page_response) = pagination.filter(orders)?;
 

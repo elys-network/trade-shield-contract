@@ -1,6 +1,6 @@
 use crate::types::{MarginOrderType, MarginPosition, OrderPrice, SpotOrderType};
 use cosmwasm_schema::cw_serde;
-use cosmwasm_std::{Decimal, Coin};
+use cosmwasm_std::{Coin, Decimal, Int128};
 use elys_bindings::types::EarnType;
 
 #[cw_serde]
@@ -23,7 +23,7 @@ pub enum ExecuteMsg {
     CreateMarginOrder {
         position: Option<MarginPosition>, // Can be null if it's not a LimitOpen or MarketOpen type
         leverage: Option<Decimal>,        // Can be null if it's not a LimitOpen or MarketOpen type
-        borrow_asset: Option<String>,     // Can be null if it's not a LimitOpen or MarketOpen type
+        trading_asset: Option<String>,    // Can be null if it's not a LimitOpen or MarketOpen type
         take_profit_price: Option<Decimal>, // Can be null if it's not a LimitOpen or MarketOpen type
         order_type: MarginOrderType,
         trigger_price: Option<OrderPrice>, // Can be null if it's a MarketOpen or MarketClose type
@@ -40,6 +40,7 @@ pub enum ExecuteMsg {
     },
     CloseMarginPosition {
         id: u64,
+        amount: Int128,
     },
     StakeRequest {
         amount: u64,
@@ -54,7 +55,7 @@ pub enum ExecuteMsg {
     ElysRedelegateRequest {
         validator_src_address: String,
         validator_dst_address: String,
-        amount:              Coin,
+        amount: Coin,
     },
     ElysCancelUnstakeRequest {
         validator_address: String,
@@ -64,15 +65,15 @@ pub enum ExecuteMsg {
         creation_height: i64,
     },
     EdenVestRequest {
-        amount:  u64,
+        amount: u64,
     },
     EdenCancelVestRequest {
-        amount:  u64,
+        amount: u64,
     },
     ClaimRewardsRequest {
         withdraw_type: EarnType,
     },
     ClaimValidatorCommissionRequest {
         validator_address: String,
-    }
+    },
 }

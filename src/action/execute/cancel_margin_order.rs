@@ -5,9 +5,7 @@ pub fn cancel_margin_order(
     deps: DepsMut<ElysQuery>,
     order_id: u64,
 ) -> Result<Response<ElysMsg>, ContractError> {
-    let mut orders = MARGIN_ORDER.load(deps.storage)?;
-
-    let order = match orders.iter_mut().find(|order| order.order_id == order_id) {
+    let mut order = match MARGIN_ORDER.may_load(deps.storage, order_id)? {
         Some(order) => order,
         None => return Err(ContractError::OrderNotFound { order_id }),
     };
@@ -39,7 +37,7 @@ pub fn cancel_margin_order(
             .add_attribute("margin_order_id", order.order_id.to_string()),
     );
 
-    MARGIN_ORDER.save(deps.storage, &orders)?;
+    MARGIN_ORDER.save(deps.storage, order_id, &order)?;
 
     if order_type == MarginOrderType::LimitOpen {
         Ok(resp.add_message(CosmosMsg::Bank(refund_msg)))

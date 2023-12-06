@@ -11,30 +11,26 @@ pub fn reply_to_close_margin_order(
 ) -> Result<Response<ElysMsg>, ContractError> {
     let order_id: u64 = from_json(&data.unwrap()).unwrap();
 
-    let mut orders: Vec<MarginOrder> = MARGIN_ORDER.load(deps.storage)?;
+    let mut order: MarginOrder = MARGIN_ORDER.load(deps.storage, order_id)?;
 
-    let order: &mut MarginOrder = orders
-        .iter_mut()
-        .find(|order| order.order_id == order_id)
-        .unwrap();
-
-    let res: MarginBrokerCloseResResponse = match get_response_from_reply(module_resp) {
+    let res: MarginCloseResponse = match get_response_from_reply(module_resp) {
         Ok(expr) => expr,
         Err(err) => {
             order.status = Status::NotProcessed;
-            MARGIN_ORDER.save(deps.storage, &orders)?;
+            MARGIN_ORDER.save(deps.storage, order_id, &order)?;
             return Ok(err);
         }
     };
 
     order.status = Status::Processed;
 
-    MARGIN_ORDER.save(deps.storage, &orders)?;
+    MARGIN_ORDER.save(deps.storage, order_id, &order)?;
 
     let resp: Response<ElysMsg> = Response::new().add_event(
         Event::new("reply_to_close_margin_order")
             .add_attribute("margin_order_id", order_id.to_string())
-            .add_attribute("margin_trading_position_closed_id", res.id.to_string()),
+            .add_attribute("margin_trading_position_closed_id", res.id.to_string())
+            .add_attribute("margin_amount_closed", res.amount.i128().to_string()),
     );
 
     Ok(resp)
