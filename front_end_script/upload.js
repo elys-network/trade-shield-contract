@@ -135,7 +135,12 @@ async function cancelSpotOrders(order_type, owner_address, order_ids) {
   console.log("create_spot_orders_res:", create_spot_orders_res);
 }
 
-async function getSpotOrders(pagination, order_type, owner_address) {
+async function getSpotOrders(
+  pagination,
+  order_type,
+  order_owner,
+  order_status
+) {
   const sender_wallet = await DirectSecp256k1HdWallet.fromMnemonic(
     sender.mnemonic,
     { prefix: "elys" }
@@ -150,7 +155,36 @@ async function getSpotOrders(pagination, order_type, owner_address) {
       get_spot_orders: {
         pagination: pagination,
         order_type: order_type,
-        owner_address: owner_address,
+        order_owner: order_owner,
+        order_status: order_status,
+      },
+    }
+  );
+  console.log(`Result: `, result);
+}
+
+async function getSpotOrders(
+  pagination,
+  order_type,
+  order_owner,
+  order_status
+) {
+  const sender_wallet = await DirectSecp256k1HdWallet.fromMnemonic(
+    sender.mnemonic,
+    { prefix: "elys" }
+  );
+  const sender_client = await SigningCosmWasmClient.connectWithSigner(
+    rpcEndpoint,
+    sender_wallet
+  );
+  const result = await sender_client.queryContractSmart(
+    trade_shield_contract_addr,
+    {
+      get_spot_orders: {
+        pagination: pagination,
+        order_type: order_type,
+        order_owner: order_owner,
+        order_status: order_status,
       },
     }
   );

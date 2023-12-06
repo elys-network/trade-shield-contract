@@ -4,7 +4,7 @@ use super::*;
 
 pub fn close_margin_position(
     info: MessageInfo,
-    env: Env,
+
     id: u64,
     amount: Int128,
 ) -> Result<Response<ElysMsg>, ContractError> {

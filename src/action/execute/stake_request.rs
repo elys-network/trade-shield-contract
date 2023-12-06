@@ -2,7 +2,6 @@ use super::*;
 use cosmwasm_std::Int128;
 
 pub fn stake_request(
-    env: Env,
     info: MessageInfo,
     deps: DepsMut<ElysQuery>,
     // the amount to be staked in base denomination.

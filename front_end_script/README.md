@@ -89,7 +89,7 @@ This function retrieves information about multiple order by querying a CosmWasm 
 #### Usage
 
 ```javascript
-cancelSpotOrders("order_ids", "order_type", "owner_address");
+cancelSpotOrders("order_ids", "order_type", "order_owner");
 ```
 
 #### Exemple
@@ -122,7 +122,7 @@ getSpotOrder("your_order_id_here");
 getSpotOrder("1");
 ```
 
-### 5. getSpotOrders(pagination, order_type, owner_address)
+### 5. getSpotOrders(pagination, order_type, order_owner, order_status)
 
 This function retrieves information about multiple order by querying a CosmWasm contract on the blockchain.
 
@@ -130,12 +130,13 @@ This function retrieves information about multiple order by querying a CosmWasm 
 
 - `pagination` {PageRequest} :
 - `order_type` (OrderType or null): select the order type that should be querried
-- `owner_address` (String or null): select the owner of the order that should be querried
+- `order_owner` (String or null): select the owner of the order that should be querried
+- `order_status` (String or null) : select the order staus that should be querried (Pending,Executed,Canceled)
 
 #### Usage
 
 ```javascript
-getSpotOrders({"count_total", "limit", "reverse", "key"}, "order_type", "owner_address")
+getSpotOrders({"count_total", "limit", "reverse", "key"}, "order_type", "order_owner", "status")
 ```
 
 ####
@@ -144,7 +145,8 @@ getSpotOrders({"count_total", "limit", "reverse", "key"}, "order_type", "owner_a
 getSpotOrders(
   { count_total: true, limit: 10, reverse: false, key: null },
   "stop_loss",
-  "elys12tzylat4udvjj56uuhu3vj2n4vgp7cf9fwna9w"
+  "elys12tzylat4udvjj56uuhu3vj2n4vgp7cf9fwna9w",
+  null
 );
 ```
 
@@ -298,6 +300,34 @@ SwapEstimationByDenom({
   denom_in: "usdc",
   denom_out: "atom",
 });
+```
+
+### 12. getMarginOrders(pagination, order_type, order_owner, order_status)
+
+This function retrieves information about multiple order by querying a CosmWasm contract on the blockchain.
+
+#### Parameters
+
+- `pagination` {PageRequest} :
+- `order_type` (OrderType or null): select the order type that should be querried
+- `order_owner` (String or null): select the owner of the order that should be querried
+- `order_status` (String or null) : select the order staus that should be querried (pending,executed,canceled)
+
+#### Usage
+
+```javascript
+getMarginOrders({"count_total", "limit", "reverse", "key"}, "order_type", "order_owner", status)
+```
+
+####
+
+```js
+getMarginOrders(
+  { count_total: true, limit: 10, reverse: false, key: null },
+  "stop_loss",
+  "elys12tzylat4udvjj56uuhu3vj2n4vgp7cf9fwna9w",
+  "pending"
+);
 ```
 
 ## Configuration

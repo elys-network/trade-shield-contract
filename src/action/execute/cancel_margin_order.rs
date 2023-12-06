@@ -18,7 +18,7 @@ pub fn cancel_margin_order(
         });
     }
 
-    if order.status != Status::NotProcessed {
+    if order.status != Status::Pending {
         return Err(ContractError::CancelStatusError {
             order_id,
             status: order.status.clone(),

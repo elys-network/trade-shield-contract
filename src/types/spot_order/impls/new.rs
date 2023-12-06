@@ -25,7 +25,7 @@ impl SpotOrder {
             },
         };
 
-        let status = Status::NotProcessed;
+        let status = Status::Pending;
 
         SpotOrder {
             order_type,

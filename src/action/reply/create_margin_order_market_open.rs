@@ -30,7 +30,7 @@ pub fn reply_to_create_margin_market_open(
         Err(err) => return Err(err.into()),
     };
 
-    order.status = Status::Processed;
+    order.status = Status::Executed;
     order.position_id = Some(margin_resp.id);
 
     MARGIN_ORDER.save(deps.storage, order_id, &order)?;

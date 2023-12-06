@@ -118,5 +118,5 @@ fn successful_process_limit_buy_order() {
         .init_modules(|router, _, store| router.custom.get_last_module(store).unwrap())
         .unwrap();
 
-    assert_eq!(last_module, "MarginBrokerOpen");
+    assert_eq!(last_module, "MarginOpen");
 }

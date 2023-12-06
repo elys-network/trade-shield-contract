@@ -16,13 +16,13 @@ pub fn reply_to_open_margin_position(
     let res: MarginOpenResponse = match get_response_from_reply(module_resp) {
         Ok(expr) => expr,
         Err(err) => {
-            order.status = Status::NotProcessed;
+            order.status = Status::Pending;
             MARGIN_ORDER.save(deps.storage, order_id, &order)?;
             return Ok(err);
         }
     };
 
-    order.status = Status::Processed;
+    order.status = Status::Executed;
 
     MARGIN_ORDER.save(deps.storage, order_id, &order)?;
 

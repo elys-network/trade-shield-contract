@@ -21,7 +21,7 @@ fn successfully_cancel_orders_ids() {
             order_amount: coin(10, "btc"),
             owner_address: Addr::unchecked("user"),
             order_target_denom: "".to_string(),
-            status: Status::NotProcessed,
+            status: Status::Pending,
             date: Date {
                 height: 20,
                 time: Timestamp::from_seconds(500),
@@ -38,7 +38,7 @@ fn successfully_cancel_orders_ids() {
             order_amount: coin(5, "eth"),
             owner_address: Addr::unchecked("user"),
             order_target_denom: "".to_string(),
-            status: Status::NotProcessed,
+            status: Status::Pending,
             date: Date {
                 height: 20,
                 time: Timestamp::from_seconds(500),
@@ -55,7 +55,7 @@ fn successfully_cancel_orders_ids() {
             order_amount: coin(20, "usdt"),
             owner_address: Addr::unchecked("user1"),
             order_target_denom: "".to_string(),
-            status: Status::NotProcessed,
+            status: Status::Pending,
             date: Date {
                 height: 20,
                 time: Timestamp::from_seconds(500),
@@ -72,7 +72,7 @@ fn successfully_cancel_orders_ids() {
             order_amount: coin(6, "btc"),
             owner_address: Addr::unchecked("user"),
             order_target_denom: "".to_string(),
-            status: Status::NotProcessed,
+            status: Status::Pending,
             date: Date {
                 height: 20,
                 time: Timestamp::from_seconds(500),

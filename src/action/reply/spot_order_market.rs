@@ -18,7 +18,7 @@ pub fn reply_to_spot_order_market(
 
     let mut order = SPOT_ORDER.load(deps.storage, order_id)?;
 
-    order.status = Status::Processed;
+    order.status = Status::Executed;
 
     SPOT_ORDER.save(deps.storage, order_id, &order)?;
 

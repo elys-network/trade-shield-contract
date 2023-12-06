@@ -30,7 +30,7 @@ pub fn reply_to_create_margin_market_close(
         Err(err) => return Err(err.into()),
     };
 
-    order.status = Status::Processed;
+    order.status = Status::Executed;
 
     let resp = Response::new().add_event(
         Event::new("reply_to_create_margin_market_close")

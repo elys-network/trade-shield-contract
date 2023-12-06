@@ -8,7 +8,6 @@ use MarginOrderType::*;
 pub fn create_margin_order(
     info: MessageInfo,
     deps: DepsMut<ElysQuery>,
-    env: Env,
     position: Option<MarginPosition>,
     leverage: Option<Decimal>,
     trading_asset: Option<String>,
@@ -31,7 +30,6 @@ pub fn create_margin_order(
         create_margin_open_order(
             info,
             deps,
-            env,
             order_type,
             position.unwrap(),
             trading_asset.unwrap(),
@@ -40,14 +38,7 @@ pub fn create_margin_order(
             trigger_price,
         )
     } else {
-        create_margin_close_order(
-            info,
-            deps,
-            env,
-            order_type,
-            position_id.unwrap(),
-            trigger_price,
-        )
+        create_margin_close_order(info, deps, order_type, position_id.unwrap(), trigger_price)
     }
 }
 
@@ -101,7 +92,7 @@ fn check_order_type(
 fn create_margin_open_order(
     info: MessageInfo,
     deps: DepsMut<ElysQuery>,
-    env: Env,
+
     order_type: MarginOrderType,
     position: MarginPosition,
     trading_asset: String,
@@ -120,7 +111,20 @@ fn create_margin_open_order(
         return Err(StdError::generic_err("margin position cannot be set at: Unspecified").into());
     }
 
-    //TODO: include query to test if the collateral is valid
+    let querrier = ElysQuerier::new(&deps.querier);
+
+    let open_estimation = querrier.margin_open_estimation(
+        position.clone(),
+        leverage.clone(),
+        &trading_asset,
+        collateral.clone(),
+        take_profit_price.clone(),
+        Decimal::zero(),
+    )?;
+
+    if !open_estimation.valid_collateral {
+        return Err(StdError::generic_err("not valid collateral").into());
+    }
 
     let order = MarginOrder::new_open(
         &info.sender,
@@ -175,7 +179,7 @@ fn create_margin_open_order(
 fn create_margin_close_order(
     info: MessageInfo,
     deps: DepsMut<ElysQuery>,
-    env: Env,
+
     order_type: MarginOrderType,
     position_id: u64,
     trigger_price: Option<OrderPrice>,
@@ -231,14 +235,18 @@ fn create_margin_close_order(
         return Ok(resp);
     }
 
-    let msg = ElysMsg::margin_close_position(&info.sender, position_id, 0 /*AMOUNT */);
+    let msg = ElysMsg::margin_close_position(
+        &info.sender,
+        position_id,
+        mtp.custodies[0].amount.u128() as i128,
+    );
 
     let reply_id = MAX_REPLY_ID.load(deps.storage)? + 1;
     MAX_REPLY_ID.save(deps.storage, &reply_id)?;
 
     let reply_info = ReplyInfo {
         id: reply_id,
-        reply_type: ReplyType::MarginBrokerMarketOpen,
+        reply_type: ReplyType::MarginBrokerMarketClose,
         data: Some(to_json_binary(&order_id)?),
     };
 

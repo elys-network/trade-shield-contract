@@ -38,6 +38,7 @@ fn get_spot_orders() {
                 pagination: page_req.clone(),
                 order_owner: None,
                 order_type: None,
+                order_status: None,
             },
         )
         .unwrap();
@@ -56,6 +57,7 @@ fn get_spot_orders() {
                 pagination: page_req.clone(),
                 order_owner: None,
                 order_type: None,
+                order_status: None,
             },
         )
         .unwrap();
@@ -74,6 +76,7 @@ fn get_spot_orders() {
                 pagination: page_req.clone(),
                 order_owner: None,
                 order_type: None,
+                order_status: None,
             },
         )
         .unwrap();
@@ -94,7 +97,7 @@ fn create_orders() -> Vec<SpotOrder> {
             order_amount: coin(255, "btc"),
             owner_address: Addr::unchecked("userA"),
             order_target_denom: "btc".to_owned(),
-            status: Status::NotProcessed,
+            status: Status::Pending,
             date: Date {
                 height: 20,
                 time: Timestamp::from_seconds(600),
@@ -111,7 +114,7 @@ fn create_orders() -> Vec<SpotOrder> {
             order_amount: coin(100, "eth"),
             owner_address: Addr::unchecked("userB"),
             order_target_denom: "eth".to_owned(),
-            status: Status::NotProcessed,
+            status: Status::Pending,
             date: Date {
                 height: 20,
                 time: Timestamp::from_seconds(600),
@@ -128,7 +131,7 @@ fn create_orders() -> Vec<SpotOrder> {
             order_amount: coin(500, "xrp"),
             owner_address: Addr::unchecked("userC"),
             order_target_denom: "xrp".to_owned(),
-            status: Status::NotProcessed,
+            status: Status::Pending,
             date: Date {
                 height: 20,
                 time: Timestamp::from_seconds(600),
@@ -145,7 +148,7 @@ fn create_orders() -> Vec<SpotOrder> {
             order_amount: coin(75, "ltc"),
             owner_address: Addr::unchecked("userD"),
             order_target_denom: "ltc".to_owned(),
-            status: Status::NotProcessed,
+            status: Status::Pending,
             date: Date {
                 height: 20,
                 time: Timestamp::from_seconds(600),
@@ -162,7 +165,7 @@ fn create_orders() -> Vec<SpotOrder> {
             order_amount: coin(200, "ada"),
             owner_address: Addr::unchecked("userE"),
             order_target_denom: "ada".to_owned(),
-            status: Status::NotProcessed,
+            status: Status::Pending,
             date: Date {
                 height: 20,
                 time: Timestamp::from_seconds(600),

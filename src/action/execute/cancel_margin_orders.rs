@@ -38,7 +38,7 @@ pub fn cancel_margin_orders(
 
     if let Some(order) = filtered_order
         .iter()
-        .find(|order| order.status != Status::NotProcessed)
+        .find(|order| order.status != Status::Pending)
     {
         return Err(ContractError::CancelStatusError {
             order_id: order.order_id,

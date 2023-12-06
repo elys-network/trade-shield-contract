@@ -25,7 +25,7 @@ fn process_spot_order_processing() {
         order_amount: coin(120, "usdc"), // 120 USDC to be used for buying,
         owner_address: Addr::unchecked("user"),
         order_target_denom: "ubtc".to_string(),
-        status: Status::Processed,
+        status: Status::Executed,
         date: Date {
             height: 20,
             time: Timestamp::from_seconds(644),
@@ -98,7 +98,7 @@ fn process_spot_order_processing() {
     assert_eq!(
         ContractError::CancelStatusError {
             order_id: 0,
-            status: Status::Processed
+            status: Status::Executed
         },
         err.downcast().unwrap()
     );

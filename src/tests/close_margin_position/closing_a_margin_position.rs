@@ -43,5 +43,5 @@ fn closing_marging_position() {
     let last_module_used = app
         .init_modules(|router, _, storage| router.custom.get_last_module(storage).unwrap())
         .unwrap();
-    assert_eq!(last_module_used, "MarginBrokerClose");
+    assert_eq!(last_module_used, "MarginClose");
 }

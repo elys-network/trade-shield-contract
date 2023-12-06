@@ -20,7 +20,7 @@ pub fn reply_to_spot_order(
         }
     };
 
-    order.status = Status::Processed;
+    order.status = Status::Executed;
 
     SPOT_ORDER.save(deps.storage, order_id, &order)?;
 

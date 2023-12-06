@@ -1,7 +1,6 @@
 use super::*;
 // delegator_address, validator_address, denom
 pub fn claim_validator_commission_request(
-    env: Env,
     info: MessageInfo,
     _deps: DepsMut<ElysQuery>,
     validator_address: String,

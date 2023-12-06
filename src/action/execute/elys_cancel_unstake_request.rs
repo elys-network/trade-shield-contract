@@ -2,7 +2,6 @@ use super::*;
 use cosmwasm_std::Coin;
 
 pub fn elys_cancel_unstake_request(
-    env: Env,
     info: MessageInfo,
     _deps: DepsMut<ElysQuery>,
     validator_address: String,

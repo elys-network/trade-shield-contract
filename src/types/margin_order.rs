@@ -36,7 +36,7 @@ impl MarginOrder {
             None => 0,
         };
 
-        let status = Status::NotProcessed;
+        let status = Status::Pending;
 
         Self {
             order_id,
@@ -69,7 +69,7 @@ impl MarginOrder {
             None => 0,
         };
 
-        let status = Status::NotProcessed;
+        let status = Status::Pending;
 
         let position = MarginPosition::try_from_i32(position)?;
 

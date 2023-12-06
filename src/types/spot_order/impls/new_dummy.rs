@@ -14,7 +14,7 @@ impl SpotOrder {
                 rate: Decimal::from_atomics(Uint128::new(5), 0).unwrap(),
             },
             order_target_denom: "eth".to_string(),
-            status: Status::NotProcessed,
+            status: Status::Pending,
             date: Date {
                 height: 12,
                 time: Timestamp::from_nanos(500000),

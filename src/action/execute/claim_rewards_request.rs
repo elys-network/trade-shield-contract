@@ -2,7 +2,6 @@ use super::*;
 use elys_bindings::types::EarnType;
 
 pub fn claim_rewards_request(
-    env: Env,
     info: MessageInfo,
     _deps: DepsMut<ElysQuery>,
     withdraw_type: EarnType,

@@ -52,7 +52,13 @@ pub fn process_orders(
         )?;
 
         if check_margin_order(&margin_order, amm_swap_estimation) {
-            process_margin_order(margin_order, &mut submsgs, &mut reply_info_id, deps.storage)?;
+            process_margin_order(
+                margin_order,
+                &mut submsgs,
+                &mut reply_info_id,
+                deps.storage,
+                &querier,
+            )?;
         }
     }
 
@@ -68,6 +74,7 @@ fn process_margin_order(
     submsgs: &mut Vec<SubMsg<ElysMsg>>,
     reply_info_id: &mut u64,
     storage: &mut dyn Storage,
+    querier: &ElysQuerier<'_>,
 ) -> StdResult<()> {
     let (msg, reply_type) = if order.order_type == MarginOrderType::LimitOpen {
         (
@@ -82,12 +89,10 @@ fn process_margin_order(
             ReplyType::MarginBrokerOpen,
         )
     } else {
+        let mtp = querier.mtp(order.owner.clone(), order.position_id.unwrap())?;
+        let amount = mtp.mtp.unwrap().custodies[0].amount.u128() as i128;
         (
-            ElysMsg::margin_close_position(
-                &order.owner,
-                order.position_id.unwrap(),
-                0, //AMOUNT
-            ),
+            ElysMsg::margin_close_position(&order.owner, order.position_id.unwrap(), amount),
             ReplyType::MarginBrokerClose,
         )
     };
@@ -97,7 +102,7 @@ fn process_margin_order(
         reply_type,
         data: Some(to_json_binary(&order.order_id)?),
     };
-    submsgs.push(SubMsg::reply_on_success(msg, *reply_info_id));
+    submsgs.push(SubMsg::reply_always(msg, *reply_info_id));
 
     REPLY_INFO.save(storage, *reply_info_id, &reply_info)?;
 
@@ -111,7 +116,7 @@ fn check_margin_order(
 ) -> bool {
     if order.order_type == MarginOrderType::MarketClose
         || order.order_type == MarginOrderType::MarketOpen
-        || order.status != Status::NotProcessed
+        || order.status != Status::Pending
     {
         return false;
     }
@@ -156,7 +161,7 @@ fn check_spot_order(
     if order.order_type == SpotOrderType::MarketBuy {
         return false;
     }
-    if order.status != Status::NotProcessed {
+    if order.status != Status::Pending {
         return false;
     }
 
@@ -207,7 +212,7 @@ fn process_spot_order(
         data: Some(to_json_binary(&order.order_id)?),
     };
 
-    submsgs.push(SubMsg::reply_on_success(msg, *reply_info_id));
+    submsgs.push(SubMsg::reply_always(msg, *reply_info_id));
 
     REPLY_INFO.save(storage, *reply_info_id, &reply_info)?;
 
