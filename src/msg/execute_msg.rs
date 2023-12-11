@@ -1,6 +1,6 @@
 use crate::types::{MarginOrderType, MarginPosition, OrderPrice, SpotOrderType};
 use cosmwasm_schema::cw_serde;
-use cosmwasm_std::{Coin, Decimal, Int128};
+use cosmwasm_std::{Coin, Decimal, Int128, Uint128};
 use elys_bindings::types::EarnType;
 
 #[cw_serde]
@@ -76,4 +76,16 @@ pub enum ExecuteMsg {
     ClaimValidatorCommissionRequest {
         validator_address: String,
     },
+    AmmJoinPoolRequest {
+        pool_id: u64,
+        max_amounts_in: Vec<Coin>,
+        share_amount_out: Uint128,
+        no_remaining: bool,
+    },
+    AmmExitPoolRequest {
+        pool_id: u64,
+        min_amounts_out: Vec<Coin>,
+        share_amount_in: Uint128,
+        token_out_denom: String,
+    }
 }

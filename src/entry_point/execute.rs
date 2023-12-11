@@ -91,6 +91,18 @@ pub fn execute(
         ClaimRewardsRequest { withdraw_type } => claim_rewards_request(info, deps, withdraw_type),
         ClaimValidatorCommissionRequest { validator_address } => {
             claim_validator_commission_request(info, deps, validator_address)
-        }
+        },
+        AmmJoinPoolRequest {
+            pool_id,
+            max_amounts_in,
+            share_amount_out,
+            no_remaining,
+        } => join_amm_pool_request(info, deps, pool_id, max_amounts_in, share_amount_out, no_remaining),
+        AmmExitPoolRequest {
+            pool_id,
+            min_amounts_out,
+            share_amount_in,
+            token_out_denom,
+        }=> exit_amm_pool_request(info, deps, pool_id, min_amounts_out, share_amount_in, token_out_denom),
     }
 }

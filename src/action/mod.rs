@@ -49,6 +49,8 @@ pub mod execute {
     mod eden_vest_request;
     mod elys_cancel_unstake_request;
     mod elys_redelegation_request;
+    mod join_amm_pool_request;
+    mod exit_amm_pool_request;
 
     use super::*;
 
@@ -68,6 +70,8 @@ pub mod execute {
     pub use elys_redelegation_request::elys_redelegation_request;
     pub use stake_request::stake_request;
     pub use unstake_request::unstake_request;
+    pub use join_amm_pool_request::join_amm_pool_request;
+    pub use exit_amm_pool_request::exit_amm_pool_request;
 }
 
 pub mod reply {
