@@ -8,12 +8,14 @@ use elys_bindings::*;
 
 mod execute;
 mod instantiate;
+mod migrate;
 mod query;
 mod reply;
 mod sudo;
 
 pub use execute::execute;
 pub use instantiate::instantiate;
+pub use migrate::migrate;
 pub use query::query;
 pub use reply::reply;
 pub use sudo::sudo;

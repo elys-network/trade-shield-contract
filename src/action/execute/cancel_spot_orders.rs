@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use cosmwasm_std::{to_json_binary, Coin, StdError};
 
 use super::*;
@@ -15,92 +17,70 @@ pub fn cancel_spot_orders(
         });
     }
 
-    let mut orders: Vec<SpotOrder> = SPOT_ORDER
-        .prefix_range(deps.storage, None, None, Order::Ascending)
-        .filter_map(|res| res.ok().map(|r| r.1))
-        .collect();
+    let orders: Vec<SpotOrder> = if let Some(ids) = &order_ids {
+        if ids.is_empty() {
+            return Err(StdError::generic_err("order_ids is defined empty").into());
+        };
+        let orders = ids
+            .iter()
+            .map(|id| SPOT_ORDER.load(deps.storage, *id))
+            .collect::<Result<Vec<SpotOrder>, StdError>>()?;
 
-    let user_orders: Vec<SpotOrder> = orders
-        .iter()
-        .filter(|order| order.owner_address == info.sender)
-        .cloned()
-        .collect();
+        if orders
+            .iter()
+            .any(|order| order.owner_address != owner_address)
+        {
+            return Err(ContractError::Unauthorized {
+                sender: info.sender,
+            });
+        }
 
-    if user_orders.is_empty() {
-        return Err(ContractError::StdError(StdError::not_found(
-            "no order found for this user",
-        )));
-    }
+        if let Some(order) = orders.iter().find(|order| order.status != Status::Pending) {
+            return Err(ContractError::CancelStatusError {
+                order_id: order.order_id,
+                status: order.status.clone(),
+            });
+        }
 
-    let filtered_order: Vec<SpotOrder> = filter_order_by_id(&user_orders, &order_ids)?;
+        orders
+    } else {
+        let orders: Vec<SpotOrder> = SPOT_ORDER
+            .prefix_range(deps.storage, None, None, Order::Ascending)
+            .filter_map(|res| {
+                if let Some(r) = res.ok() {
+                    Some(r.1)
+                } else {
+                    None
+                }
+            })
+            .filter(|order| {
+                order.owner_address.as_str() == &owner_address && order.status == Status::Pending
+            })
+            .collect();
 
-    let filtered_order = filter_order_by_type(filtered_order, order_type)?;
+        if orders.is_empty() {
+            return Err(ContractError::StdError(StdError::not_found(
+                "no order found for this user",
+            )));
+        };
 
-    if let Some(order) = filtered_order
-        .iter()
-        .find(|order| order.status != Status::Pending)
-    {
-        return Err(ContractError::CancelStatusError {
-            order_id: order.order_id,
-            status: order.status.clone(),
-        });
-    }
-
-    let order_ids: Vec<u64> = match order_ids {
-        Some(order_ids) => order_ids,
-        None => filtered_order.iter().map(|order| order.order_id).collect(),
+        orders
     };
 
+    let mut orders = filter_order_by_type(orders, order_type)?;
+
     for order in orders.iter_mut() {
-        if order_ids.contains(&order.order_id) {
-            order.status = Status::Canceled;
-            SPOT_ORDER.save(deps.storage, order.order_id, &order)?;
-        }
+        order.status = Status::Canceled;
+        SPOT_ORDER.save(deps.storage, order.order_id, &order)?;
     }
 
-    let refund_msg = make_refund_msg(filtered_order, owner_address);
+    let order_ids: Vec<u64> = orders.iter().map(|order| order.order_id).collect();
+
+    let refund_msg = make_refund_msg(orders, owner_address);
 
     Ok(Response::new()
         .add_message(refund_msg)
         .set_data(to_json_binary(&order_ids)?))
-}
-
-fn filter_order_by_id(
-    orders: &Vec<SpotOrder>,
-    order_ids: &Option<Vec<u64>>,
-) -> Result<Vec<SpotOrder>, ContractError> {
-    let order_ids = match order_ids {
-        Some(order_ids) => order_ids,
-        None => return Ok(orders.to_owned()),
-    };
-
-    if order_ids.is_empty() {
-        return Err(StdError::generic_err("order_ids is defined empty").into());
-    }
-
-    let filtered_order: Vec<SpotOrder> = orders
-        .iter()
-        .filter(|order| order_ids.contains(&order.order_id))
-        .cloned()
-        .collect();
-
-    if order_ids.len() != filtered_order.len() {
-        let missing_order_ids: Vec<u64> = order_ids
-            .iter()
-            .filter(|order_id| {
-                !filtered_order
-                    .iter()
-                    .any(|order| order.order_id == **order_id)
-            })
-            .cloned()
-            .collect();
-
-        return Err(ContractError::OrdersNotFound {
-            order_ids: missing_order_ids,
-        });
-    }
-
-    Ok(filtered_order)
 }
 
 fn filter_order_by_type(
@@ -130,18 +110,17 @@ fn filter_order_by_type(
 fn make_refund_msg(orders: Vec<SpotOrder>, user: String) -> BankMsg {
     let orders_amount: Vec<Coin> = orders.into_iter().map(|order| order.order_amount).collect();
 
-    let mut merged_amounts: Vec<Coin> = Vec::new();
+    let mut merged_amounts: HashMap<String, Coin> = HashMap::new();
 
-    for amount in orders_amount {
-        if let Some(existing_amount) = merged_amounts
-            .iter_mut()
-            .find(|coin| coin.denom == amount.denom)
-        {
-            existing_amount.amount += amount.amount;
+    for order_amount in orders_amount {
+        if let Some(entry) = merged_amounts.get_mut(&order_amount.denom) {
+            entry.amount += order_amount.amount;
         } else {
-            merged_amounts.push(amount);
+            merged_amounts.insert(order_amount.denom.clone(), order_amount);
         }
     }
+
+    let merged_amounts: Vec<Coin> = merged_amounts.values().cloned().collect();
 
     BankMsg::Send {
         to_address: user,
