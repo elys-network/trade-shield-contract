@@ -1,7 +1,9 @@
 use crate::msg::ReplyType;
 
 use super::*;
-use cosmwasm_std::{to_json_binary, Decimal, StdError, StdResult, SubMsg};
+use cosmwasm_std::{
+    to_json_binary, Decimal, OverflowError, OverflowOperation, StdError, StdResult, SubMsg,
+};
 use cw_utils;
 use MarginOrderType::*;
 
@@ -92,7 +94,6 @@ fn check_order_type(
 fn create_margin_open_order(
     info: MessageInfo,
     deps: DepsMut<ElysQuery>,
-
     order_type: MarginOrderType,
     position: MarginPosition,
     trading_asset: String,
@@ -136,7 +137,7 @@ fn create_margin_open_order(
         &take_profit_price,
         &trigger_price,
         &orders,
-    );
+    )?;
 
     let order_id = order.order_id;
 
@@ -160,7 +161,19 @@ fn create_margin_open_order(
         take_profit_price,
     );
 
-    let reply_id = MAX_REPLY_ID.load(deps.storage)? + 1;
+    let reply_info_max_id = MAX_REPLY_ID.load(deps.storage)?;
+
+    let reply_id = match reply_info_max_id.checked_add(1) {
+        Some(id) => id,
+        None => {
+            return Err(StdError::overflow(OverflowError::new(
+                OverflowOperation::Add,
+                "reply_info_max_id",
+                "increment one",
+            ))
+            .into())
+        }
+    };
     MAX_REPLY_ID.save(deps.storage, &reply_id)?;
 
     let reply_info = ReplyInfo {
@@ -241,7 +254,19 @@ fn create_margin_close_order(
         mtp.custodies[0].amount.u128() as i128,
     );
 
-    let reply_id = MAX_REPLY_ID.load(deps.storage)? + 1;
+    let reply_info_max_id = MAX_REPLY_ID.load(deps.storage)?;
+
+    let reply_id = match reply_info_max_id.checked_add(1) {
+        Some(id) => id,
+        None => {
+            return Err(StdError::overflow(OverflowError::new(
+                OverflowOperation::Add,
+                "reply_info_max_id",
+                "increment one",
+            ))
+            .into())
+        }
+    };
     MAX_REPLY_ID.save(deps.storage, &reply_id)?;
 
     let reply_info = ReplyInfo {
