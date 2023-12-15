@@ -1,4 +1,6 @@
-use cosmwasm_std::{to_json_binary, Decimal, Int128, StdError, StdResult, Storage, SubMsg};
+use cosmwasm_std::{
+    to_json_binary, Decimal, Int128, OverflowError, StdError, StdResult, Storage, SubMsg,
+};
 use elys_bindings::query_resp::AmmSwapEstimationByDenomResponse;
 
 use crate::msg::ReplyType;
@@ -36,8 +38,18 @@ pub fn create_spot_order(
         &order_target_denom,
         &Decimal::zero(),
     )?;
-
-    let order_id = SPOT_ORDER_MAX_ID.load(deps.storage)? + 1;
+    let spot_order_max_id = SPOT_ORDER_MAX_ID.load(deps.storage)?;
+    let order_id = match spot_order_max_id.checked_add(1) {
+        Some(id) => id,
+        None => {
+            return Err(StdError::overflow(OverflowError::new(
+                cosmwasm_std::OverflowOperation::Add,
+                "spot_order_max_id",
+                "increment one",
+            ))
+            .into())
+        }
+    };
     SPOT_ORDER_MAX_ID.save(deps.storage, &order_id)?;
 
     let new_order: SpotOrder = SpotOrder::new(
@@ -118,7 +130,20 @@ fn create_resp(
         return Ok(resp);
     }
 
-    let reply_id = MAX_REPLY_ID.load(storage)? + 1;
+    let reply_info_max_id = MAX_REPLY_ID.load(storage)?;
+
+    let reply_id = match reply_info_max_id.checked_add(1) {
+        Some(id) => id,
+        None => {
+            return Err(StdError::overflow(OverflowError::new(
+                cosmwasm_std::OverflowOperation::Add,
+                "reply_info_max_id",
+                "increment one",
+            ))
+            .into())
+        }
+    };
+
     MAX_REPLY_ID.save(storage, &reply_id)?;
 
     let swap_msg = ElysMsg::amm_swap_exact_amount_in(
