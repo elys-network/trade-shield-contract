@@ -23,7 +23,8 @@ fn unauthorize() {
                 rate: Decimal::from_str("20000.0").unwrap(),
             }),
             &vec![],
-        )],
+        )
+        .unwrap()],
     };
 
     // Create a contract wrapper and store its code.

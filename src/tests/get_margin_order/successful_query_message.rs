@@ -21,7 +21,8 @@ fn successful_query_message() {
             rate: Decimal::one(),
         }),
         &vec![],
-    );
+    )
+    .unwrap();
 
     // Create a mock message to instantiate the contract with an initial dummy order.
     let instantiate_msg = InstantiateMockMsg {
