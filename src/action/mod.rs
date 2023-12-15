@@ -12,6 +12,7 @@ pub mod query {
     mod get_margin_positions;
     mod get_spot_order;
     mod get_spot_orders;
+    mod margin_open_estimation;
     mod swap_estimation_by_denom;
 
     use super::*;
@@ -28,6 +29,7 @@ pub mod query {
     pub use get_margin_positions::get_margin_positions;
     pub use get_spot_order::get_spot_order;
     pub use get_spot_orders::get_spot_orders;
+    pub use margin_open_estimation::margin_open_estimation;
     pub use swap_estimation_by_denom::swap_estimation_by_denom;
 }
 
@@ -49,8 +51,8 @@ pub mod execute {
     mod eden_vest_request;
     mod elys_cancel_unstake_request;
     mod elys_redelegation_request;
-    mod join_amm_pool_request;
     mod exit_amm_pool_request;
+    mod join_amm_pool_request;
 
     use super::*;
 
@@ -68,10 +70,10 @@ pub mod execute {
     pub use eden_vest_request::eden_vest_request;
     pub use elys_cancel_unstake_request::elys_cancel_unstake_request;
     pub use elys_redelegation_request::elys_redelegation_request;
+    pub use exit_amm_pool_request::exit_amm_pool_request;
+    pub use join_amm_pool_request::join_amm_pool_request;
     pub use stake_request::stake_request;
     pub use unstake_request::unstake_request;
-    pub use join_amm_pool_request::join_amm_pool_request;
-    pub use exit_amm_pool_request::exit_amm_pool_request;
 }
 
 pub mod reply {

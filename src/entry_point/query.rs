@@ -48,5 +48,21 @@ pub fn query(deps: Deps<ElysQuery>, _env: Env, msg: QueryMsg) -> Result<Binary, 
             deps, amount, denom_in, denom_out,
         )?)?),
         GetMarginOrder { id } => Ok(to_json_binary(&query::get_margin_order(deps, id)?)?),
+        MarginOpenEstimation {
+            position,
+            leverage,
+            trading_asset,
+            collateral,
+            take_profit_price,
+            discount,
+        } => Ok(to_json_binary(&query::margin_open_estimation(
+            deps,
+            position,
+            leverage,
+            trading_asset,
+            collateral,
+            take_profit_price,
+            discount,
+        )?)?),
     }
 }
