@@ -22,6 +22,12 @@ pub fn create_spot_order(
         return Err(StdError::not_found("order price").into());
     }
 
+    if let Some(price) = &order_price {
+        if price.rate.is_zero() {
+            return Err(StdError::generic_err("order_price: The rate cannot be zero").into());
+        }
+    }
+
     check_denom_error(
         &order_source_denom,
         &order_target_denom,

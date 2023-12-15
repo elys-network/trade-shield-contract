@@ -126,6 +126,12 @@ fn create_margin_open_order(
         return Err(StdError::generic_err("not valid collateral").into());
     }
 
+    if let Some(price) = &trigger_price {
+        if price.rate.is_zero() {
+            return Err(StdError::generic_err("trigger_price: The rate cannot be zero").into());
+        }
+    }
+
     let order = MarginOrder::new_open(
         &info.sender,
         &position,
@@ -208,6 +214,12 @@ fn create_margin_close_order(
     {
         return Err(StdError::generic_err("this position had an order already assigned").into());
     };
+
+    if let Some(price) = &trigger_price {
+        if price.rate.is_zero() {
+            return Err(StdError::generic_err("trigger_price: The rate cannot be zero").into());
+        }
+    }
 
     let order = MarginOrder::new_close(
         &info.sender,
