@@ -106,7 +106,7 @@ async function cancelSpotOrder(order_id) {
   console.log("create_spot_order_res:", create_spot_order_res);
 }
 
-async function cancelSpotOrders(order_type, owner_address, order_ids) {
+async function cancelSpotOrders(order_ids, order_type, owner_address) {
   const gasPrice = GasPrice.fromString(GASPRICE);
   const sender_wallet = await DirectSecp256k1HdWallet.fromMnemonic(
     sender.mnemonic,
@@ -135,7 +135,7 @@ async function cancelSpotOrders(order_type, owner_address, order_ids) {
   console.log("create_spot_orders_res:", create_spot_orders_res);
 }
 
-async function getSpotOrders(
+async function getMarginOrders(
   pagination,
   order_type,
   order_owner,
@@ -152,7 +152,7 @@ async function getSpotOrders(
   const result = await sender_client.queryContractSmart(
     trade_shield_contract_addr,
     {
-      get_spot_orders: {
+      get_margin_orders: {
         pagination: pagination,
         order_type: order_type,
         order_owner: order_owner,
@@ -244,6 +244,13 @@ async function createMarginOrder(
       trigger_price: trigger_price,
     },
   };
+  let amount_send;
+
+  if (collateral == null) {
+    amount_send = [];
+  } else {
+    amount_send = coins(collateral.amount, collateral.denom);
+  }
 
   const create_margin_order_res = await sender_client.execute(
     sender.address,
@@ -251,7 +258,7 @@ async function createMarginOrder(
     msg,
     executeFee,
     "",
-    coins(collateral.amount, collateral.denom)
+    amount_send
   );
   console.log("create_margin_order_res:", create_margin_order_res);
 }

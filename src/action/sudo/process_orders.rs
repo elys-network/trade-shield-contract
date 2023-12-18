@@ -1,5 +1,7 @@
 use crate::msg::ReplyType;
-use cosmwasm_std::{to_json_binary, Decimal, Int128, StdResult, Storage, SubMsg};
+use cosmwasm_std::{
+    to_json_binary, Decimal, Int128, OverflowError, StdError, StdResult, Storage, SubMsg,
+};
 use elys_bindings::query_resp::AmmSwapEstimationByDenomResponse;
 use std::ops::Div;
 
@@ -97,6 +99,18 @@ fn process_margin_order(
         )
     };
 
+    *reply_info_id = match reply_info_id.checked_add(1) {
+        Some(id) => id,
+        None => {
+            return Err(StdError::overflow(OverflowError::new(
+                cosmwasm_std::OverflowOperation::Add,
+                "reply_info_max_id",
+                "increment one",
+            ))
+            .into())
+        }
+    };
+
     let reply_info = ReplyInfo {
         id: *reply_info_id,
         reply_type,
@@ -106,7 +120,6 @@ fn process_margin_order(
 
     REPLY_INFO.save(storage, *reply_info_id, &reply_info)?;
 
-    *reply_info_id += 1;
     Ok(())
 }
 
@@ -206,6 +219,18 @@ fn process_spot_order(
         &order.owner_address,
     );
 
+    *reply_info_id = match reply_info_id.checked_add(1) {
+        Some(id) => id,
+        None => {
+            return Err(StdError::overflow(OverflowError::new(
+                cosmwasm_std::OverflowOperation::Add,
+                "reply_info_max_id",
+                "increment one",
+            ))
+            .into())
+        }
+    };
+
     let reply_info = ReplyInfo {
         id: *reply_info_id,
         reply_type: ReplyType::SpotOrder,
@@ -215,8 +240,6 @@ fn process_spot_order(
     submsgs.push(SubMsg::reply_always(msg, *reply_info_id));
 
     REPLY_INFO.save(storage, *reply_info_id, &reply_info)?;
-
-    *reply_info_id += 1;
 
     Ok(())
 }
