@@ -156,14 +156,14 @@ This function allows you to create a margin order by sending a transaction to th
 
 #### Parameters
 
-- `collateral` (Coin {demom: String , amount : String}): The amount of collateral for the margin order.
-- `position` (String): The type of position for the margin order (e.g., "long", "short"). Can be null if it's not a LimitOpen or MarketOpen type
-- `leverage` (String): The leverage for the margin order.Can be null if it's not a LimitOpen or MarketOpen type
-- `trading_asset` (String): The asset to borrow for the margin order. Can be null if it's not a LimitOpen or MarketOpen type
-- `take_profit_price` (String): The price at which the order will take profit. Can be null if it's not a LimitOpen or MarketOpen type
+- `collateral` (Coin {demom: String , amount : String} or null): The amount of collateral for the margin order. Can only be null if it's not a LimitOpen or MarketOpen type.
+- `position` (String or null): The type of position for the margin order (e.g., "long", "short"). Can be null if it's not a LimitOpen or MarketOpen type
+- `leverage` (String or null): The leverage for the margin order.Can be null if it's not a LimitOpen or MarketOpen type
+- `trading_asset` (String or null): The asset to borrow for the margin order. Can be null if it's not a LimitOpen or MarketOpen type
+- `take_profit_price` (String or null): The price at which the order will take profit. Can be null if it's not a LimitOpen or MarketOpen type
 - `order_type` (String): The type of the order (e.g., "stop_loss", "limit_sell", "limit_buy").
 - `trigger_price` ({`base_denom`:String, `quote_denom`:String, `rate` :String} or null): Price relates two assets exchange rate that the user should define, can only be null if the order type is "market_type"
-- `position_id` (u64) Can be null if it's not a LimitClose, MarketClose or StopLoss type
+- `position_id` (u64 or null) Can be null if it's not a LimitClose, MarketClose or StopLoss type
 
 #### Usage
 
