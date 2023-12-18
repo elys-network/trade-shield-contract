@@ -2,10 +2,10 @@
 use super::query_resp::*;
 use crate::types::{MarginOrderType, SpotOrderType, Status};
 use cosmwasm_schema::{cw_serde, QueryResponses};
-use cosmwasm_std::Coin;
+use cosmwasm_std::{Coin, Decimal};
 #[allow(unused_imports)]
 use elys_bindings::query_resp::*;
-use elys_bindings::types::PageRequest;
+use elys_bindings::types::{MarginPosition, PageRequest};
 
 #[cw_serde]
 #[derive(QueryResponses)]
@@ -37,9 +37,19 @@ pub enum QueryMsg {
         amount: Coin,
         denom_in: String,
         denom_out: String,
+        user_address: String,
     },
     #[returns(MarginMtpResponse)]
     GetMarginPosition { id: u64, address: String },
     #[returns(MarginQueryPositionsResponse)]
     GetMarginPositions { pagination: PageRequest },
+    #[returns(MarginOpenEstimationResponse)]
+    MarginOpenEstimation {
+        position: MarginPosition,
+        leverage: Decimal,
+        trading_asset: String,
+        collateral: Coin,
+        take_profit_price: Decimal,
+        user_address: String,
+    },
 }

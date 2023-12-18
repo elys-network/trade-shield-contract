@@ -36,7 +36,7 @@ createSpotOrder(
 );
 ```
 
-#### Exemple
+#### Example
 
 ```js
 createSpotOrder(
@@ -70,7 +70,7 @@ This function allows you to cancel an existing order by sending a transaction to
 cancelSpotOrder("your_order_id_here");
 ```
 
-#### Exemple
+#### Example
 
 ```js
 cancelSpotOrder("8");
@@ -92,7 +92,7 @@ This function retrieves information about multiple order by querying a CosmWasm 
 cancelSpotOrders("order_ids", "order_type", "order_owner");
 ```
 
-#### Exemple
+#### Example
 
 ```js
 cancelSpotOrders(
@@ -116,7 +116,7 @@ This function retrieves information about a specific order by querying a CosmWas
 getSpotOrder("your_order_id_here");
 ```
 
-#### Exemple
+#### Example
 
 ```js
 getSpotOrder("1");
@@ -180,7 +180,7 @@ createMarginOrder(
 );
 ```
 
-#### Exemple
+#### Example
 
 ```javascript
 createMarginOrder(
@@ -209,7 +209,7 @@ This function allows you to cancel a margin order by sending a transaction to th
 cancelMarginOrder("your_order_id_here");
 ```
 
-#### Exemple
+#### Example
 
 ```js
 cancelMarginOrder("1");
@@ -229,7 +229,7 @@ This function retrieves information about a specific margin order by querying a 
 getMarginOrder("your_order_id_here");
 ```
 
-#### Exemple
+#### Example
 
 ```js
 getMarginOrder("2");
@@ -250,7 +250,7 @@ This function retrieves information about a specific margin order by querying a 
 getMarginPosition("your_address", "your_order_id_here");
 ```
 
-#### Exemple
+#### Example
 
 ```js
 getMarginPosition("elys1x5fehwug2vtkyn4vpunwkfn9zxkpxl8jg0lwuu", "255");
@@ -270,35 +270,37 @@ This function retrieves multiple margin orders by querying a CosmWasm contract o
 getMarginPositions("pagination");
 ```
 
-#### Exemple
+#### Example
 
 ```js
 getMarginPositions({ count_total: true, limit: 10, reverse: false, key: null });
 ```
 
-### 11. SwapEstimationByDenom(amount, denom_in, denom_out)
+### 11. SwapEstimationByDenom(amount, denom_in, denom_out, user_address)
 
 This function retrieves an estimation of the value obtained by swapping one asset for another.
 
 #### Parameters
 
 - `amount` {Coin} : the amount of the value that you want to send or recive.
-- `denom_in` {String} : The asset that you will send.
-- `denom_out` {String} : The asset that you will recive.
+- `denom_in` (String) : The asset that you will send.
+- `denom_out` (String) : The asset that you will recive.
+- `user_address` (String): user_address to calculate the discount that the user have access
 
 #### Usage
 
 ```js
- SwapEstimationByDenom({"amount", "denom"}, "denom_in", "denom_out")
+ SwapEstimationByDenom({"amount", "denom"}, "denom_in", "denom_out", "user_address")
 ```
 
-#### Exemple
+#### Example
 
 ```js
 SwapEstimationByDenom({
   amount: { amount: 200, denom: "usdc" },
   denom_in: "usdc",
   denom_out: "atom",
+  user_address: "elys12tzylat4udvjj56uuhu3vj2n4vgp7cf9fwna9w",
 });
 ```
 
@@ -319,7 +321,7 @@ This function retrieves information about multiple order by querying a CosmWasm 
 getMarginOrders({"count_total", "limit", "reverse", "key"}, "order_type", "order_owner", status)
 ```
 
-####
+#### Example
 
 ```js
 getMarginOrders(
@@ -327,6 +329,45 @@ getMarginOrders(
   "stop_loss",
   "elys12tzylat4udvjj56uuhu3vj2n4vgp7cf9fwna9w",
   "pending"
+);
+```
+
+### 13. marginOpenEstimation (position,leverage,trading_asset,collateral,take_profit_price,user_address)
+
+this function query an estimation on opening a MarginPosition.
+
+#### Parameters
+
+- `position` (String): The type of position for the margin order (e.g., "long", "short")
+- `leverage` (String): The leverage for the margin position
+- `trading_asset` (String): The trading asset
+- `collateral` (Coin {`denom`: String, `amount`: String}) The amount that the user would like to send as a collateral
+- `take_profit_price` (String): the take profit price for the open position
+- `user_address` (String): user_address to calculate the discount that the user have access
+
+#### Usage
+
+```js
+marginOpenEstimation(
+  "position",
+  "leverage",
+  "trading_asset",
+  "collateral",
+  "take_profit_price",
+  "user_address"
+);
+```
+
+#### Example
+
+```js
+marginOpenEstimation(
+  "long",
+  "2.5",
+  "ubtc",
+  { denom: "uusdc", amount: "20000" },
+  "1.5",
+  "elys12tzylat4udvjj56uuhu3vj2n4vgp7cf9fwna9w"
 );
 ```
 
