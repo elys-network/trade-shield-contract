@@ -38,7 +38,8 @@ fn successful_process_limit_buy_order() {
             rate: Decimal::from_atomics(Uint128::new(38), 0).unwrap(), // Rate at which ubtc will be bought (38 USDC per ubtc).
         }),
         &vec![],
-    );
+    )
+    .unwrap();
 
     // Create a mock message to instantiate the contract with the dummy order.
     let instantiate_msg = InstantiateMockMsg {
