@@ -14,7 +14,11 @@ pub fn stake_request(
 ) -> Result<Response<ElysMsg>, ContractError> {
     let querier = ElysQuerier::new(&deps.querier);
     let address = info.sender.into_string();
-    let balance = querier.get_balance(address.to_owned(), asset.to_owned())?;
+
+    let denom_entry = querier.get_asset_profile(asset.clone())?;
+    let real_denom = denom_entry.entry.denom;
+
+    let balance = querier.get_balance(address.to_owned(), real_denom.clone())?;
     let token_amount: u128 = balance.amount.into();
     if token_amount < amount as u128 {
         return Err(ContractError::InsufficientBalanceError {
@@ -24,8 +28,6 @@ pub fn stake_request(
     }
 
     let msg = ElysMsg::stake_token(address, Int128::from(amount), asset, validator_address);
-
     let resp = Response::new().add_message(msg);
-
     Ok(resp)
 }
