@@ -49,6 +49,6 @@ pub enum QueryMsg {
         trading_asset: String,
         collateral: Coin,
         take_profit_price: Decimal,
-        discount: Decimal,
+        user_address: String,
     },
 }

@@ -319,7 +319,7 @@ This function retrieves information about multiple order by querying a CosmWasm 
 getMarginOrders({"count_total", "limit", "reverse", "key"}, "order_type", "order_owner", status)
 ```
 
-####
+#### Exemple
 
 ```js
 getMarginOrders(
@@ -327,6 +327,45 @@ getMarginOrders(
   "stop_loss",
   "elys12tzylat4udvjj56uuhu3vj2n4vgp7cf9fwna9w",
   "pending"
+);
+```
+
+### 13. marginOpenEstimation (position,leverage,trading_asset,collateral,take_profit_price,user_address)
+
+this function query an estimation on opening a MarginPosition.
+
+#### Parameters
+
+- `position` (String): The type of position for the margin order (e.g., "long", "short")
+- `leverage` (String): The leverage for the margin position
+- `trading_asset` (String): The trading asset
+- `collateral` (Coin {`denom`: String, `amount`: String}) The amount that the user would like to send as a collateral
+- `take_profit_price` (String): the take profit price for the open position
+- `user_address` (String): user_address to calculate the discount that the user have access
+
+#### Usage
+
+```js
+marginOpenEstimation(
+  "position",
+  "leverage",
+  "trading_asset",
+  "collateral",
+  "take_profit_price",
+  "user_address"
+);
+```
+
+#### Exemple
+
+```js
+marginOpenEstimation(
+  "long",
+  "2.5",
+  "ubtc",
+  { denom: "uusdc", amount: "20000" },
+  "1.5",
+  "elys12tzylat4udvjj56uuhu3vj2n4vgp7cf9fwna9w"
 );
 ```
 

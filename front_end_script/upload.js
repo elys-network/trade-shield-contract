@@ -343,3 +343,35 @@ async function getMarginPositions(pagination) {
   );
   console.log(`Result: `, result);
 }
+
+async function getMarginPositions(
+  position,
+  leverage,
+  trading_asset,
+  collateral,
+  take_profit_price,
+  user_address
+) {
+  const sender_wallet = await DirectSecp256k1HdWallet.fromMnemonic(
+    sender.mnemonic,
+    { prefix: "elys" }
+  );
+  const sender_client = await SigningCosmWasmClient.connectWithSigner(
+    rpcEndpoint,
+    sender_wallet
+  );
+  const result = await sender_client.queryContractSmart(
+    trade_shield_contract_addr,
+    {
+      margin_open_estimation: {
+        position: position,
+        leverage: leverage,
+        trading_asset: trading_asset,
+        collateral: collateral,
+        take_profit_price: take_profit_price,
+        user_address: user_address,
+      },
+    }
+  );
+  console.log(`Result: `, result);
+}

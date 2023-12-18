@@ -9,7 +9,7 @@ pub fn margin_open_estimation(
     trading_asset: String,
     collateral: Coin,
     take_profit_price: Decimal,
-    discount: Decimal,
+    _user_address: String,
 ) -> StdResult<MarginOpenEstimationResponse> {
     let querier = ElysQuerier::new(&deps.querier);
 
@@ -19,6 +19,6 @@ pub fn margin_open_estimation(
         trading_asset,
         collateral,
         take_profit_price,
-        discount,
+        Decimal::zero(),
     )
 }

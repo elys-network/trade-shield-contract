@@ -54,7 +54,7 @@ pub fn query(deps: Deps<ElysQuery>, _env: Env, msg: QueryMsg) -> Result<Binary, 
             trading_asset,
             collateral,
             take_profit_price,
-            discount,
+            user_address,
         } => Ok(to_json_binary(&query::margin_open_estimation(
             deps,
             position,
@@ -62,7 +62,7 @@ pub fn query(deps: Deps<ElysQuery>, _env: Env, msg: QueryMsg) -> Result<Binary, 
             trading_asset,
             collateral,
             take_profit_price,
-            discount,
+            user_address,
         )?)?),
     }
 }
