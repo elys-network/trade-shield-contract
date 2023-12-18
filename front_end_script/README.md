@@ -276,7 +276,7 @@ getMarginPositions("pagination");
 getMarginPositions({ count_total: true, limit: 10, reverse: false, key: null });
 ```
 
-### 11. SwapEstimationByDenom(amount, denom_in, denom_out,user_address)
+### 11. SwapEstimationByDenom(amount, denom_in, denom_out, user_address)
 
 This function retrieves an estimation of the value obtained by swapping one asset for another.
 
