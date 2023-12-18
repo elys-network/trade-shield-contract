@@ -36,7 +36,7 @@ createSpotOrder(
 );
 ```
 
-#### Exemple
+#### Example
 
 ```js
 createSpotOrder(
@@ -70,7 +70,7 @@ This function allows you to cancel an existing order by sending a transaction to
 cancelSpotOrder("your_order_id_here");
 ```
 
-#### Exemple
+#### Example
 
 ```js
 cancelSpotOrder("8");
@@ -92,7 +92,7 @@ This function retrieves information about multiple order by querying a CosmWasm 
 cancelSpotOrders("order_ids", "order_type", "order_owner");
 ```
 
-#### Exemple
+#### Example
 
 ```js
 cancelSpotOrders(
@@ -116,7 +116,7 @@ This function retrieves information about a specific order by querying a CosmWas
 getSpotOrder("your_order_id_here");
 ```
 
-#### Exemple
+#### Example
 
 ```js
 getSpotOrder("1");
@@ -180,7 +180,7 @@ createMarginOrder(
 );
 ```
 
-#### Exemple
+#### Example
 
 ```javascript
 createMarginOrder(
@@ -209,7 +209,7 @@ This function allows you to cancel a margin order by sending a transaction to th
 cancelMarginOrder("your_order_id_here");
 ```
 
-#### Exemple
+#### Example
 
 ```js
 cancelMarginOrder("1");
@@ -229,7 +229,7 @@ This function retrieves information about a specific margin order by querying a 
 getMarginOrder("your_order_id_here");
 ```
 
-#### Exemple
+#### Example
 
 ```js
 getMarginOrder("2");
@@ -250,7 +250,7 @@ This function retrieves information about a specific margin order by querying a 
 getMarginPosition("your_address", "your_order_id_here");
 ```
 
-#### Exemple
+#### Example
 
 ```js
 getMarginPosition("elys1x5fehwug2vtkyn4vpunwkfn9zxkpxl8jg0lwuu", "255");
@@ -270,7 +270,7 @@ This function retrieves multiple margin orders by querying a CosmWasm contract o
 getMarginPositions("pagination");
 ```
 
-#### Exemple
+#### Example
 
 ```js
 getMarginPositions({ count_total: true, limit: 10, reverse: false, key: null });
@@ -292,7 +292,7 @@ This function retrieves an estimation of the value obtained by swapping one asse
  SwapEstimationByDenom({"amount", "denom"}, "denom_in", "denom_out")
 ```
 
-#### Exemple
+#### Example
 
 ```js
 SwapEstimationByDenom({
@@ -319,7 +319,7 @@ This function retrieves information about multiple order by querying a CosmWasm 
 getMarginOrders({"count_total", "limit", "reverse", "key"}, "order_type", "order_owner", status)
 ```
 
-#### Exemple
+#### Example
 
 ```js
 getMarginOrders(
@@ -356,7 +356,7 @@ marginOpenEstimation(
 );
 ```
 
-#### Exemple
+#### Example
 
 ```js
 marginOpenEstimation(
