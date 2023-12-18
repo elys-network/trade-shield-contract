@@ -191,7 +191,12 @@ async function getSpotOrders(
   console.log(`Result: `, result);
 }
 
-async function SwapEstimationByDenom(amount, denom_in, denom_out) {
+async function SwapEstimationByDenom(
+  amount,
+  denom_in,
+  denom_out,
+  user_address
+) {
   const sender_wallet = await DirectSecp256k1HdWallet.fromMnemonic(
     sender.mnemonic,
     { prefix: "elys" }
@@ -207,6 +212,7 @@ async function SwapEstimationByDenom(amount, denom_in, denom_out) {
         amount: amount,
         denom_in: denom_in,
         denom_out: denom_out,
+        user_address: user_address,
       },
     }
   );
@@ -344,7 +350,7 @@ async function getMarginPositions(pagination) {
   console.log(`Result: `, result);
 }
 
-async function getMarginPositions(
+async function marginOpenEstimation(
   position,
   leverage,
   trading_asset,

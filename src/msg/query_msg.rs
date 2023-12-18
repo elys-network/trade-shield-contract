@@ -37,6 +37,7 @@ pub enum QueryMsg {
         amount: Coin,
         denom_in: String,
         denom_out: String,
+        user_address: String,
     },
     #[returns(MarginMtpResponse)]
     GetMarginPosition { id: u64, address: String },

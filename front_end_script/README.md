@@ -276,20 +276,21 @@ getMarginPositions("pagination");
 getMarginPositions({ count_total: true, limit: 10, reverse: false, key: null });
 ```
 
-### 11. SwapEstimationByDenom(amount, denom_in, denom_out)
+### 11. SwapEstimationByDenom(amount, denom_in, denom_out,user_address)
 
 This function retrieves an estimation of the value obtained by swapping one asset for another.
 
 #### Parameters
 
 - `amount` {Coin} : the amount of the value that you want to send or recive.
-- `denom_in` {String} : The asset that you will send.
-- `denom_out` {String} : The asset that you will recive.
+- `denom_in` (String) : The asset that you will send.
+- `denom_out` (String) : The asset that you will recive.
+- `user_address` (String): user_address to calculate the discount that the user have access
 
 #### Usage
 
 ```js
- SwapEstimationByDenom({"amount", "denom"}, "denom_in", "denom_out")
+ SwapEstimationByDenom({"amount", "denom"}, "denom_in", "denom_out", "user_address")
 ```
 
 #### Example
@@ -299,6 +300,7 @@ SwapEstimationByDenom({
   amount: { amount: 200, denom: "usdc" },
   denom_in: "usdc",
   denom_out: "atom",
+  user_address: "elys12tzylat4udvjj56uuhu3vj2n4vgp7cf9fwna9w",
 });
 ```
 
