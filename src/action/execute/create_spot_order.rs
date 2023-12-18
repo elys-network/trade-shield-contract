@@ -68,15 +68,9 @@ pub fn create_spot_order(
         &env.block,
     );
 
-    let bank_msg: BankMsg = BankMsg::Send {
-        to_address: env.contract.address.to_string(),
-        amount: info.funds.clone(),
-    };
-
     let resp = create_resp(
         env.contract.address.as_str(),
         &new_order,
-        bank_msg,
         deps.storage,
         in_route.unwrap(),
     )?;
@@ -121,16 +115,12 @@ fn check_denom_error(
 fn create_resp(
     sender: &str,
     new_order: &SpotOrder,
-    bank_msg: BankMsg,
     storage: &mut dyn Storage,
     in_route: Vec<SwapAmountInRoute>,
 ) -> StdResult<Response<ElysMsg>> {
-    let resp = Response::new()
-        .add_event(
-            Event::new("create_spot_order")
-                .add_attribute("order_id", new_order.order_id.to_string()),
-        )
-        .add_message(bank_msg); // information message
+    let resp = Response::new().add_event(
+        Event::new("create_spot_order").add_attribute("order_id", new_order.order_id.to_string()),
+    );
 
     if new_order.order_type != SpotOrderType::MarketBuy {
         return Ok(resp);
