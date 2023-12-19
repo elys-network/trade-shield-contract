@@ -27,7 +27,7 @@ pub fn stake_request(
         });
     }
 
-    let msg = ElysMsg::stake_token(address, Int128::from(amount), asset, validator_address);
+    let msg = ElysMsg::stake_token(address, Int128::from(amount), real_denom.clone(), validator_address);
     let resp = Response::new().add_message(msg);
     Ok(resp)
 }
