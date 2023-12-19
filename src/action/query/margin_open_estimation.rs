@@ -9,7 +9,7 @@ pub fn margin_open_estimation(
     trading_asset: String,
     collateral: Coin,
     take_profit_price: Decimal,
-    _user_address: String, // Parameter unused until account history work
+    _user_address: Option<String>, // Parameter unused until account history work
 ) -> StdResult<MarginOpenEstimationResponse> {
     let querier = ElysQuerier::new(&deps.querier);
 

@@ -6,7 +6,7 @@ pub fn swap_estimation_by_denom(
     amount: Coin,
     denom_in: String,
     denom_out: String,
-    _user_address: String,
+    _user_address: Option<String>, // Parameter unused until account history work
 ) -> Result<AmmSwapEstimationByDenomResponse, ContractError> {
     let querier = ElysQuerier::new(&deps.querier);
 
