@@ -285,7 +285,7 @@ This function retrieves an estimation of the value obtained by swapping one asse
 - `amount` {Coin} : the amount of the value that you want to send or recive.
 - `denom_in` (String) : The asset that you will send.
 - `denom_out` (String) : The asset that you will recive.
-- `user_address` (String): user_address to calculate the discount that the user have access
+- `user_address` (String or null): user_address to calculate the discount that the user have access
 
 #### Usage
 
@@ -343,7 +343,7 @@ this function query an estimation on opening a MarginPosition.
 - `trading_asset` (String): The trading asset
 - `collateral` (Coin {`denom`: String, `amount`: String}) The amount that the user would like to send as a collateral
 - `take_profit_price` (String): the take profit price for the open position
-- `user_address` (String): user_address to calculate the discount that the user have access
+- `user_address` (String or null): user_address to calculate the discount that the user have access
 
 #### Usage
 
