@@ -371,6 +371,388 @@ marginOpenEstimation(
 );
 ```
 
+### 14. stakeRequest (amount, asset, validator_address?)
+
+you can use this function to stake uelys, ueden, uedenb and uusdc.
+
+#### Parameters
+
+- `amount` (uint64): The amount of token to stake
+- `asset` (String): The denomination of the token to stake
+- `validator_address?` (String): Validator address to stake. This is optional parameter which is only used for uelys staking.
+
+#### Usage
+
+```js
+stake_request(
+  "amount",
+  "asset",
+  "validator_address"?,
+);
+```
+
+#### Example
+
+```js
+stake_request(
+  3000000,
+  "uelys",
+  "elysvaloper17wc3s7am5qgjk4pm0k96kg6laxq8hkyq0dzq5n",
+);
+```
+
+```js
+stake_request(
+  3000000,
+  "ueden",
+);
+```
+
+```js
+stake_request(
+  3000000,
+  "uedenb",
+);
+```
+
+```js
+stake_request(
+  3000000,
+  "uusdc",
+);
+```
+
+### 15. unstakeRequest (amount, asset, validator_address?)
+
+you can use this function to unstake uelys, ueden, uedenb and uusdc.
+
+#### Parameters
+
+- `amount` (uint64): The amount of token to unstake
+- `asset` (String): The denomination of the token to unstake
+- `validator_address?` (String): Validator address to unstake. This is optional parameter which is only used for uelys unstaking.
+
+#### Usage
+
+```js
+unstake_request(
+  "amount",
+  "asset",
+  "validator_address"?,
+);
+```
+
+#### Example
+
+```js
+unstake_request(
+  3000000,
+  "uelys",
+  "elysvaloper17wc3s7am5qgjk4pm0k96kg6laxq8hkyq0dzq5n",
+);
+```
+
+```js
+unstake_request(
+  3000000,
+  "ueden",
+);
+```
+
+```js
+unstake_request(
+  3000000,
+  "uedenb",
+);
+```
+
+```js
+unstake_request(
+  3000000,
+  "uusdc",
+);
+```
+
+### 16. elysRedelegationRequest (validator_src_address, validator_dst_address, amount)
+
+you can use this function to re-delegate token.
+
+#### Parameters
+
+- `validator_src_address` (String): The source validator address.
+- `validator_dst_address` (String): The destination validator address.
+- `amount` (Coin): The amount of token to re-delegate.
+
+#### Usage
+
+```js
+elys_redelegation_request(
+  "validator_src_address",
+  "validator_dst_address",
+  "amount",
+);
+```
+
+#### Example
+
+```js
+elys_redelegation_request(
+  "elysvaloper12tzylat4udvjj56uuhu3vj2n4vgp7cf9pwcqcs",
+  "elysvaloper17wc3s7am5qgjk4pm0k96kg6laxq8hkyq0dzq5n",
+  { denom: "uelys", amount: "20000" },
+);
+```
+
+### 17. elysCancelUnstakeRequest (validator_address, amount, creation_height)
+
+you can use this function to cancel unbonding.
+
+#### Parameters
+
+- `validator_address` (String): The source validator address.
+- `amount` (Coin): The amount of token to cancel un-stake.
+- `creation_height` (int64): The block height that the bonding created.
+
+#### Usage
+
+```js
+elys_cancel_unstake_request(
+  "validator_address",
+  "amount",
+  "creation_height",
+);
+```
+
+#### Example
+
+```js
+elys_cancel_unstake_request(
+  "elysvaloper12tzylat4udvjj56uuhu3vj2n4vgp7cf9pwcqcs",
+  { denom: "uelys", amount: "20000" },
+  100000,
+);
+```
+
+### 18. edenVestRequest (amount)
+
+you can use this function to vest eden token
+
+#### Parameters
+
+- `amount` (Coin): The amount of eden to vest.
+
+#### Usage
+
+```js
+eden_vest_request(
+  "amount",
+);
+```
+
+#### Example
+
+```js
+eden_vest_request(
+  { denom: "uelys", amount: "20000" },
+);
+```
+
+### 19. edenCancelVestRequest (amount)
+
+you can use this function to cancel vesting of eden.
+
+#### Parameters
+
+- `amount` (Coin): The amount of eden to cancel vest.
+
+#### Usage
+
+```js
+eden_cancel_vest_request(
+  "amount",
+);
+```
+
+#### Example
+
+```js
+eden_cancel_vest_request(
+  { denom: "uelys", amount: "20000" },
+);
+```
+
+### 20. claimRewardsRequest (amount)
+
+you can use this function to claim rewards.
+
+#### Parameters
+
+- `withdraw_type` (i32): The program type to claim rewards.
+
+#### Usage
+
+```js
+claim_rewards_request(
+  "withdraw_type",
+);
+```
+
+#### Example
+
+```js
+claim_rewards_request(
+  1, // Earntype_UsdcProgram
+);
+```
+
+#### Enum types
+```
+pub enum EarnType {
+    AllProgram = 0,
+    UsdcProgram = 1,
+    ElysProgram = 2,
+    EdenProgram = 3,
+    EdenBProgram = 4,
+}
+```
+
+### 21. claimValidatorCommissionRequest (validator_address)
+
+you can use this function to claim validator's commission.
+
+#### Parameters
+
+- `validator_address` (String): The validator address to claim rewards.
+
+#### Usage
+
+```js
+claim_validator_commission_request(
+  "validator_address",
+);
+```
+
+#### Example
+
+```js
+claim_validator_commission_request(
+  "elysvaloper12tzylat4udvjj56uuhu3vj2n4vgp7cf9pwcqcs",
+);
+```
+
+### 22. ammJoinPoolRequest (pool_id, max_amounts_in, share_amount_out, no_remaining)
+
+you can use this function to join amm pool
+
+#### Parameters
+
+- `pool_id` (uint64): Pool id to join.
+- `max_amounts_in` (Array<Coin>): The array of maximum tokens in.
+- `share_amount_out` (Uint128): The amount of share tokens out.
+- `no_remaining` (bool): The boolean flag that indicates that the amount of token in should be exactly the same amount of LP liquidity.
+
+#### Usage
+
+```js
+join_amm_pool_request(
+  "pool_id",
+  "max_amounts_in",
+  "share_amount_out",
+  "no_remaining",
+);
+```
+
+#### Example
+
+```js
+join_amm_pool_request(
+  1,
+  [{denom: "uelys", amount: "20000"}, {denom: "usdc", amount: "10000"}],
+  10000,
+  true,
+);
+```
+
+### 23. ammExitPoolRequest (pool_id, min_amounts_out, share_amount_in, token_out_denom)
+
+you can use this function to exit amm pool
+
+#### Parameters
+
+- `pool_id` (uint64): Pool id to exit.
+- `min_amounts_out` (Array<Coin>): The array of maximum tokens out.
+- `share_amount_in` (Uint128): The amount of share tokens in.
+- `token_out_denom` (String): The out token denom.
+
+#### Usage
+
+```js
+exit_amm_pool_request(
+  "pool_id",
+  "min_amounts_out",
+  "share_amount_in",
+  "token_out_denom",
+);
+```
+
+#### Example
+
+```js
+join_amm_pool_request(
+  1,
+  [{denom: "uelys", amount: "20000"}, {denom: "usdc", amount: "10000"}],
+  10000,
+  "uelys",
+);
+```
+
+### 24. getLiquidityPools (pool_ids?, filter_type, pagination?)
+
+you can use this function to exit amm pool
+
+#### Parameters
+
+- `pool_ids` (uint64): Pool id to exit.
+- `filter_type` (Array<Coin>): The array of maximum tokens out.
+- `pagination` (Uint128): The amount of share tokens in.
+
+#### Usage
+
+```js
+get_liquidity_pools(
+  "pool_ids"?,
+  "filter_type",
+  "pagination"?,
+);
+```
+
+#### Example
+
+```js
+get_liquidity_pools(
+  [],
+  "filter_all,
+  10000,
+  "{"offset":0, "limit":10, "count_total": false, "reverse": true}}",
+);
+```
+
+```js
+get_liquidity_pools(
+  [1,2],
+  "filter_all,
+  10000,
+  "{"offset":1, "limit":10, "count_total": false, "reverse": true}}",
+);
+```
+
+```js
+get_liquidity_pools(
+  "filter_all,
+  10000,
+  "{"offset":0, "limit":10, "count_total": false, "reverse": false}}}",
+);
+```
 ## Configuration
 
 Before using these functions, you need to configure the following parameters in the script:
