@@ -654,7 +654,7 @@ you can use this function to join amm pool
 #### Usage
 
 ```js
-join_amm_pool_request(
+amm_join_pool_request(
   "pool_id",
   "max_amounts_in",
   "share_amount_out",
@@ -665,7 +665,7 @@ join_amm_pool_request(
 #### Example
 
 ```js
-join_amm_pool_request(
+amm_join_pool_request(
   1,
   [{denom: "uelys", amount: "20000"}, {denom: "usdc", amount: "10000"}],
   10000,
@@ -687,7 +687,7 @@ you can use this function to exit amm pool
 #### Usage
 
 ```js
-exit_amm_pool_request(
+amm_exit_pool_request(
   "pool_id",
   "min_amounts_out",
   "share_amount_in",
@@ -698,7 +698,7 @@ exit_amm_pool_request(
 #### Example
 
 ```js
-join_amm_pool_request(
+amm_exit_pool_request(
   1,
   [{denom: "uelys", amount: "20000"}, {denom: "usdc", amount: "10000"}],
   10000,
