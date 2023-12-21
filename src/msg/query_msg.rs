@@ -52,4 +52,9 @@ pub enum QueryMsg {
         take_profit_price: Decimal,
         user_address: Option<String>,
     },
+    #[returns(MarginGetPositionsForAddressResponse)]
+    MarginGetPositionsForAddress {
+        address: String,
+        pagination: PageRequest,
+    },
 }
