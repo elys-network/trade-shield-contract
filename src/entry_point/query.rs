@@ -69,5 +69,11 @@ pub fn query(deps: Deps<ElysQuery>, _env: Env, msg: QueryMsg) -> Result<Binary, 
             take_profit_price,
             user_address,
         )?)?),
+        MarginGetPositionsForAddress {
+            address,
+            pagination,
+        } => Ok(to_json_binary(&query::margin_get_position_for_address(
+            deps, address, pagination,
+        )?)?),
     }
 }

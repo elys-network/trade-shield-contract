@@ -12,6 +12,7 @@ pub mod query {
     mod get_margin_positions;
     mod get_spot_order;
     mod get_spot_orders;
+    mod margin_get_position_for_address;
     mod margin_open_estimation;
     mod swap_estimation_by_denom;
 
@@ -29,6 +30,7 @@ pub mod query {
     pub use get_margin_positions::get_margin_positions;
     pub use get_spot_order::get_spot_order;
     pub use get_spot_orders::get_spot_orders;
+    pub use margin_get_position_for_address::margin_get_position_for_address;
     pub use margin_open_estimation::margin_open_estimation;
     pub use swap_estimation_by_denom::swap_estimation_by_denom;
 }
