@@ -1,6 +1,6 @@
 use crate::{
     states::*,
-    types::{MarginOrder, SpotOrder},
+    types::{MarginOrder, SpotOrder, Status},
 };
 use cosmwasm_schema::cw_serde;
 use cosmwasm_std::{DepsMut, Env, MessageInfo, Response, StdResult};
@@ -20,9 +20,15 @@ pub fn instantiate(
 ) -> StdResult<Response<ElysMsg>> {
     for order in msg.spot_orders.iter() {
         SPOT_ORDER.save(deps.storage, order.order_id, order)?;
+        if order.status == Status::Pending {
+            PENDING_SPOT_ORDER.save(deps.storage, order.order_id, order)?;
+        }
     }
     for order in msg.margin_orders.iter() {
         MARGIN_ORDER.save(deps.storage, order.order_id, order)?;
+        if order.status == Status::Pending {
+            PENDING_MARGIN_ORDER.save(deps.storage, order.order_id, order)?;
+        }
     }
     MAX_REPLY_ID.save(deps.storage, &0)?;
     SPOT_ORDER_MAX_ID.save(deps.storage, &0)?;

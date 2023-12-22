@@ -38,6 +38,7 @@ pub fn cancel_margin_order(
     );
 
     MARGIN_ORDER.save(deps.storage, order_id, &order)?;
+    PENDING_MARGIN_ORDER.remove(deps.storage, order.order_id);
 
     if order_type == MarginOrderType::LimitOpen {
         Ok(resp.add_message(CosmosMsg::Bank(refund_msg)))

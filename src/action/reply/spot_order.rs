@@ -23,6 +23,7 @@ pub fn reply_to_spot_order(
     order.status = Status::Executed;
 
     SPOT_ORDER.save(deps.storage, order_id, &order)?;
+    PENDING_SPOT_ORDER.remove(deps.storage, order.order_id);
 
     let resp: Response<ElysMsg> = Response::new().add_event(
         Event::new("reply_to_spot_order").add_attribute("order_id", order_id.to_string()),
