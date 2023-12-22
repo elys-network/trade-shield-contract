@@ -381,3 +381,24 @@ async function marginOpenEstimation(
   );
   console.log(`Result: `, result);
 }
+
+async function marginGetPositionsForAddress(address, pagination) {
+  const sender_wallet = await DirectSecp256k1HdWallet.fromMnemonic(
+    sender.mnemonic,
+    { prefix: "elys" }
+  );
+  const sender_client = await SigningCosmWasmClient.connectWithSigner(
+    rpcEndpoint,
+    sender_wallet
+  );
+  const result = await sender_client.queryContractSmart(
+    trade_shield_contract_addr,
+    {
+      margin_get_position_for_address: {
+        address: address,
+        pagination: pagination,
+      },
+    }
+  );
+  console.log(`Result: `, result);
+}

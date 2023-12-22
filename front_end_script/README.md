@@ -397,29 +397,20 @@ stake_request(
 stake_request(
   3000000,
   "uelys",
-  "elysvaloper17wc3s7am5qgjk4pm0k96kg6laxq8hkyq0dzq5n",
+  "elysvaloper17wc3s7am5qgjk4pm0k96kg6laxq8hkyq0dzq5n"
 );
 ```
 
 ```js
-stake_request(
-  3000000,
-  "ueden",
-);
+stake_request(3000000, "ueden");
 ```
 
 ```js
-stake_request(
-  3000000,
-  "uedenb",
-);
+stake_request(3000000, "uedenb");
 ```
 
 ```js
-stake_request(
-  3000000,
-  "uusdc",
-);
+stake_request(3000000, "uusdc");
 ```
 
 ### 15. unstakeRequest (amount, asset, validator_address?)
@@ -448,29 +439,20 @@ unstake_request(
 unstake_request(
   3000000,
   "uelys",
-  "elysvaloper17wc3s7am5qgjk4pm0k96kg6laxq8hkyq0dzq5n",
+  "elysvaloper17wc3s7am5qgjk4pm0k96kg6laxq8hkyq0dzq5n"
 );
 ```
 
 ```js
-unstake_request(
-  3000000,
-  "ueden",
-);
+unstake_request(3000000, "ueden");
 ```
 
 ```js
-unstake_request(
-  3000000,
-  "uedenb",
-);
+unstake_request(3000000, "uedenb");
 ```
 
 ```js
-unstake_request(
-  3000000,
-  "uusdc",
-);
+unstake_request(3000000, "uusdc");
 ```
 
 ### 16. elysRedelegationRequest (validator_src_address, validator_dst_address, amount)
@@ -489,7 +471,7 @@ you can use this function to re-delegate token.
 elys_redelegation_request(
   "validator_src_address",
   "validator_dst_address",
-  "amount",
+  "amount"
 );
 ```
 
@@ -499,7 +481,7 @@ elys_redelegation_request(
 elys_redelegation_request(
   "elysvaloper12tzylat4udvjj56uuhu3vj2n4vgp7cf9pwcqcs",
   "elysvaloper17wc3s7am5qgjk4pm0k96kg6laxq8hkyq0dzq5n",
-  { denom: "uelys", amount: "20000" },
+  { denom: "uelys", amount: "20000" }
 );
 ```
 
@@ -516,11 +498,7 @@ you can use this function to cancel unbonding.
 #### Usage
 
 ```js
-elys_cancel_unstake_request(
-  "validator_address",
-  "amount",
-  "creation_height",
-);
+elys_cancel_unstake_request("validator_address", "amount", "creation_height");
 ```
 
 #### Example
@@ -529,7 +507,7 @@ elys_cancel_unstake_request(
 elys_cancel_unstake_request(
   "elysvaloper12tzylat4udvjj56uuhu3vj2n4vgp7cf9pwcqcs",
   { denom: "uelys", amount: "20000" },
-  100000,
+  100000
 );
 ```
 
@@ -544,17 +522,13 @@ you can use this function to vest eden token
 #### Usage
 
 ```js
-eden_vest_request(
-  "amount",
-);
+eden_vest_request("amount");
 ```
 
 #### Example
 
 ```js
-eden_vest_request(
-  { denom: "uelys", amount: "20000" },
-);
+eden_vest_request({ denom: "uelys", amount: "20000" });
 ```
 
 ### 19. edenCancelVestRequest (amount)
@@ -568,17 +542,13 @@ you can use this function to cancel vesting of eden.
 #### Usage
 
 ```js
-eden_cancel_vest_request(
-  "amount",
-);
+eden_cancel_vest_request("amount");
 ```
 
 #### Example
 
 ```js
-eden_cancel_vest_request(
-  { denom: "uelys", amount: "20000" },
-);
+eden_cancel_vest_request({ denom: "uelys", amount: "20000" });
 ```
 
 ### 20. claimRewardsRequest (amount)
@@ -592,20 +562,19 @@ you can use this function to claim rewards.
 #### Usage
 
 ```js
-claim_rewards_request(
-  "withdraw_type",
-);
+claim_rewards_request("withdraw_type");
 ```
 
 #### Example
 
 ```js
 claim_rewards_request(
-  1, // Earntype_UsdcProgram
+  1 // Earntype_UsdcProgram
 );
 ```
 
 #### Enum types
+
 ```
 pub enum EarnType {
     AllProgram = 0,
@@ -627,16 +596,14 @@ you can use this function to claim validator's commission.
 #### Usage
 
 ```js
-claim_validator_commission_request(
-  "validator_address",
-);
+claim_validator_commission_request("validator_address");
 ```
 
 #### Example
 
 ```js
 claim_validator_commission_request(
-  "elysvaloper12tzylat4udvjj56uuhu3vj2n4vgp7cf9pwcqcs",
+  "elysvaloper12tzylat4udvjj56uuhu3vj2n4vgp7cf9pwcqcs"
 );
 ```
 
@@ -658,7 +625,7 @@ amm_join_pool_request(
   "pool_id",
   "max_amounts_in",
   "share_amount_out",
-  "no_remaining",
+  "no_remaining"
 );
 ```
 
@@ -667,9 +634,12 @@ amm_join_pool_request(
 ```js
 amm_join_pool_request(
   1,
-  [{denom: "uelys", amount: "20000"}, {denom: "usdc", amount: "10000"}],
+  [
+    { denom: "uelys", amount: "20000" },
+    { denom: "usdc", amount: "10000" },
+  ],
   10000,
-  true,
+  true
 );
 ```
 
@@ -691,7 +661,7 @@ amm_exit_pool_request(
   "pool_id",
   "min_amounts_out",
   "share_amount_in",
-  "token_out_denom",
+  "token_out_denom"
 );
 ```
 
@@ -700,9 +670,12 @@ amm_exit_pool_request(
 ```js
 amm_exit_pool_request(
   1,
-  [{denom: "uelys", amount: "20000"}, {denom: "usdc", amount: "10000"}],
+  [
+    { denom: "uelys", amount: "20000" },
+    { denom: "usdc", amount: "10000" },
+  ],
   10000,
-  "uelys",
+  "uelys"
 );
 ```
 
@@ -753,6 +726,31 @@ get_liquidity_pools(
   "{"offset":0, "limit":10, "count_total": false, "reverse": false}}}",
 );
 ```
+
+### 24. marginGetPositionsForAddress(address, pagination)
+
+Query margin position using address
+
+- `address` (String) addres of the user
+- `pagination` (PageRequest)
+
+#### Usage.
+
+```js
+marginGetPositionsForAddress("address", "pagination");
+```
+
+#### Exemple
+
+```js
+marginGetPositionsForAddress("elys1x5fehwug2vtkyn4vpunwkfn9zxkpxl8jg0lwuu", {
+  offset: 0,
+  limit: 10,
+  count_total: false,
+  reverse: true,
+});
+```
+
 ## Configuration
 
 Before using these functions, you need to configure the following parameters in the script:

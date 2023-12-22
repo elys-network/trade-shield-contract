@@ -23,6 +23,7 @@ pub fn reply_to_open_margin_position(
     };
 
     order.status = Status::Executed;
+    order.position_id = Some(res.id);
 
     PENDING_MARGIN_ORDER.remove(deps.storage, order.order_id);
     MARGIN_ORDER.save(deps.storage, order_id, &order)?;
