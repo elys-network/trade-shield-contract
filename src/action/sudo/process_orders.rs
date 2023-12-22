@@ -98,8 +98,9 @@ fn process_margin_order(
             Some(mtp) => mtp,
             None => {
                 let mut order = order.to_owned();
-                order.status = Status::error("Position Already Closed");
+                order.status = Status::Canceled;
                 PENDING_MARGIN_ORDER.remove(storage, order.order_id);
+                MARGIN_ORDER.save(storage, order.order_id, &order)?;
                 return Ok(());
             }
         };
