@@ -69,6 +69,7 @@ pub fn cancel_margin_orders(
     for order in orders.iter_mut() {
         order.status = Status::Canceled;
         MARGIN_ORDER.save(deps.storage, order.order_id, order)?;
+        PENDING_MARGIN_ORDER.remove(deps.storage, order.order_id);
     }
 
     let order_ids: Vec<u64> = orders.iter().map(|order| order.order_id).collect();

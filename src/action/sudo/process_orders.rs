@@ -11,12 +11,12 @@ pub fn process_orders(
     deps: DepsMut<ElysQuery>,
     env: Env,
 ) -> Result<Response<ElysMsg>, ContractError> {
-    let spot_orders: Vec<SpotOrder> = SPOT_ORDER
+    let spot_orders: Vec<SpotOrder> = PENDING_SPOT_ORDER
         .prefix_range(deps.storage, None, None, Order::Ascending)
         .filter_map(|res| res.ok().map(|r| r.1))
         .collect();
 
-    let margin_orders: Vec<MarginOrder> = MARGIN_ORDER
+    let margin_orders: Vec<MarginOrder> = PENDING_MARGIN_ORDER
         .prefix_range(deps.storage, None, None, Order::Ascending)
         .filter_map(|res| res.ok().map(|r| r.1))
         .collect();

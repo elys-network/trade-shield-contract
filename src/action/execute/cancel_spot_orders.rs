@@ -72,6 +72,7 @@ pub fn cancel_spot_orders(
     for order in orders.iter_mut() {
         order.status = Status::Canceled;
         SPOT_ORDER.save(deps.storage, order.order_id, &order)?;
+        PENDING_SPOT_ORDER.remove(deps.storage, order.order_id);
     }
 
     let order_ids: Vec<u64> = orders.iter().map(|order| order.order_id).collect();

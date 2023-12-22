@@ -148,6 +148,9 @@ fn create_margin_open_order(
     let order_id = order.order_id;
 
     MARGIN_ORDER.save(deps.storage, order_id, &order)?;
+    if order.order_type != MarginOrderType::MarketOpen {
+        PENDING_MARGIN_ORDER.save(deps.storage, order_id, &order)?;
+    }
 
     let resp = Response::new().add_event(
         Event::new("create_margin_open_order")
@@ -250,6 +253,9 @@ fn create_margin_close_order(
     let order_id = order.order_id;
 
     MARGIN_ORDER.save(deps.storage, order_id, &order)?;
+    if order.order_type != MarginOrderType::MarketClose {
+        PENDING_MARGIN_ORDER.save(deps.storage, order_id, &order)?;
+    }
 
     let resp = Response::new().add_event(
         Event::new("create_margin_close_order")
