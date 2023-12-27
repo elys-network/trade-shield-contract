@@ -105,7 +105,7 @@ fn process_margin_order(
             }
         };
 
-        let amount = mtp.custodies[0].amount.u128() as i128;
+        let amount = mtp.custody.i128();
         (
             ElysMsg::margin_close_position(&order.owner, order.position_id.unwrap(), amount),
             ReplyType::MarginBrokerClose,
