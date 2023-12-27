@@ -2,7 +2,7 @@ use crate::msg::ReplyType;
 use cosmwasm_std::{
     to_json_binary, Decimal, Int128, OverflowError, StdError, StdResult, Storage, SubMsg,
 };
-use elys_bindings::query_resp::{AmmSwapEstimationByDenomResponse, MarginMtpResponse};
+use elys_bindings::query_resp::AmmSwapEstimationByDenomResponse;
 use std::ops::Div;
 
 use super::*;
