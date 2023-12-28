@@ -2,7 +2,7 @@ use crate::msg::ReplyType;
 
 use super::*;
 use cosmwasm_std::{
-    to_json_binary, Decimal, OverflowError, OverflowOperation, StdError, StdResult, SubMsg,
+    coin, to_json_binary, Decimal, OverflowError, OverflowOperation, StdError, StdResult, SubMsg,
 };
 use cw_utils;
 use MarginOrderType::*;
@@ -241,9 +241,9 @@ fn create_margin_close_order(
         &info.sender,
         mtp.position,
         &order_type,
-        &mtp.collaterals[0],
-        &mtp.custodies[0].denom,
-        &mtp.leverages[0],
+        &coin(mtp.collateral.i128() as u128, &mtp.collateral_asset),
+        &mtp.trading_asset,
+        &mtp.leverage,
         position_id,
         &trigger_price,
         &mtp.take_profit_price,
@@ -266,11 +266,7 @@ fn create_margin_close_order(
         return Ok(resp);
     }
 
-    let msg = ElysMsg::margin_close_position(
-        &info.sender,
-        position_id,
-        mtp.custodies[0].amount.u128() as i128,
-    );
+    let msg = ElysMsg::margin_close_position(&info.sender, position_id, mtp.custody.i128());
 
     let reply_info_max_id = MAX_REPLY_ID.load(deps.storage)?;
 

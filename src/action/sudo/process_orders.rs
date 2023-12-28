@@ -91,8 +91,21 @@ fn process_margin_order(
             ReplyType::MarginBrokerOpen,
         )
     } else {
-        let mtp = querier.mtp(order.owner.clone(), order.position_id.unwrap())?;
-        let amount = mtp.mtp.unwrap().custodies[0].amount.u128() as i128;
+        let mtp = match querier
+            .mtp(order.owner.clone(), order.position_id.unwrap())?
+            .mtp
+        {
+            Some(mtp) => mtp,
+            None => {
+                let mut order = order.to_owned();
+                order.status = Status::Canceled;
+                PENDING_MARGIN_ORDER.remove(storage, order.order_id);
+                MARGIN_ORDER.save(storage, order.order_id, &order)?;
+                return Ok(());
+            }
+        };
+
+        let amount = mtp.custody.i128();
         (
             ElysMsg::margin_close_position(&order.owner, order.position_id.unwrap(), amount),
             ReplyType::MarginBrokerClose,
@@ -129,7 +142,6 @@ fn check_margin_order(
 ) -> bool {
     if order.order_type == MarginOrderType::MarketClose
         || order.order_type == MarginOrderType::MarketOpen
-        || order.status != Status::Pending
     {
         return false;
     }
@@ -172,9 +184,6 @@ fn check_spot_order(
     amm_swap_estimation: &AmmSwapEstimationByDenomResponse,
 ) -> bool {
     if order.order_type == SpotOrderType::MarketBuy {
-        return false;
-    }
-    if order.status != Status::Pending {
         return false;
     }
 
